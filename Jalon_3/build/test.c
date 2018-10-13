@@ -57,7 +57,7 @@ void see_user(struct Liste *liste, struct Users *user){
   cur_user = liste->first;
 
   while (cur_user->next != NULL){
-  printf(" Pseudo : %s",cur_user->pseudo);
+  printf(" Pseudo : %s\n",cur_user->pseudo);
   cur_user = cur_user->next;
 }
 }
@@ -67,7 +67,7 @@ int main(int argc, char** argv){
     struct Liste* liste;
     struct Users* user;
 
-    init(3);
+    liste=init(3);
     add_user(liste,user,"leo",4);
     add_user(liste,user,"kevin",5);
 
