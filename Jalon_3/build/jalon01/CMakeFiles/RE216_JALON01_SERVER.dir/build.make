@@ -52,9 +52,32 @@ include jalon01/CMakeFiles/RE216_JALON01_SERVER.dir/progress.make
 # Include the compile flags for this target's objects.
 include jalon01/CMakeFiles/RE216_JALON01_SERVER.dir/flags.make
 
+jalon01/CMakeFiles/RE216_JALON01_SERVER.dir/user.c.o: jalon01/CMakeFiles/RE216_JALON01_SERVER.dir/flags.make
+jalon01/CMakeFiles/RE216_JALON01_SERVER.dir/user.c.o: /net/t/jrajaona/Documents/C/Projet/Chat/Jalon_3/src/jalon01/user.c
+	$(CMAKE_COMMAND) -E cmake_progress_report /net/t/jrajaona/Documents/C/Projet/Chat/Jalon_3/build/CMakeFiles $(CMAKE_PROGRESS_1)
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building C object jalon01/CMakeFiles/RE216_JALON01_SERVER.dir/user.c.o"
+	cd /net/t/jrajaona/Documents/C/Projet/Chat/Jalon_3/build/jalon01 && /usr/bin/cc  $(C_DEFINES) $(C_FLAGS) -o CMakeFiles/RE216_JALON01_SERVER.dir/user.c.o   -c /net/t/jrajaona/Documents/C/Projet/Chat/Jalon_3/src/jalon01/user.c
+
+jalon01/CMakeFiles/RE216_JALON01_SERVER.dir/user.c.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/RE216_JALON01_SERVER.dir/user.c.i"
+	cd /net/t/jrajaona/Documents/C/Projet/Chat/Jalon_3/build/jalon01 && /usr/bin/cc  $(C_DEFINES) $(C_FLAGS) -E /net/t/jrajaona/Documents/C/Projet/Chat/Jalon_3/src/jalon01/user.c > CMakeFiles/RE216_JALON01_SERVER.dir/user.c.i
+
+jalon01/CMakeFiles/RE216_JALON01_SERVER.dir/user.c.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/RE216_JALON01_SERVER.dir/user.c.s"
+	cd /net/t/jrajaona/Documents/C/Projet/Chat/Jalon_3/build/jalon01 && /usr/bin/cc  $(C_DEFINES) $(C_FLAGS) -S /net/t/jrajaona/Documents/C/Projet/Chat/Jalon_3/src/jalon01/user.c -o CMakeFiles/RE216_JALON01_SERVER.dir/user.c.s
+
+jalon01/CMakeFiles/RE216_JALON01_SERVER.dir/user.c.o.requires:
+.PHONY : jalon01/CMakeFiles/RE216_JALON01_SERVER.dir/user.c.o.requires
+
+jalon01/CMakeFiles/RE216_JALON01_SERVER.dir/user.c.o.provides: jalon01/CMakeFiles/RE216_JALON01_SERVER.dir/user.c.o.requires
+	$(MAKE) -f jalon01/CMakeFiles/RE216_JALON01_SERVER.dir/build.make jalon01/CMakeFiles/RE216_JALON01_SERVER.dir/user.c.o.provides.build
+.PHONY : jalon01/CMakeFiles/RE216_JALON01_SERVER.dir/user.c.o.provides
+
+jalon01/CMakeFiles/RE216_JALON01_SERVER.dir/user.c.o.provides.build: jalon01/CMakeFiles/RE216_JALON01_SERVER.dir/user.c.o
+
 jalon01/CMakeFiles/RE216_JALON01_SERVER.dir/server.c.o: jalon01/CMakeFiles/RE216_JALON01_SERVER.dir/flags.make
 jalon01/CMakeFiles/RE216_JALON01_SERVER.dir/server.c.o: /net/t/jrajaona/Documents/C/Projet/Chat/Jalon_3/src/jalon01/server.c
-	$(CMAKE_COMMAND) -E cmake_progress_report /net/t/jrajaona/Documents/C/Projet/Chat/Jalon_3/build/CMakeFiles $(CMAKE_PROGRESS_1)
+	$(CMAKE_COMMAND) -E cmake_progress_report /net/t/jrajaona/Documents/C/Projet/Chat/Jalon_3/build/CMakeFiles $(CMAKE_PROGRESS_2)
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building C object jalon01/CMakeFiles/RE216_JALON01_SERVER.dir/server.c.o"
 	cd /net/t/jrajaona/Documents/C/Projet/Chat/Jalon_3/build/jalon01 && /usr/bin/cc  $(C_DEFINES) $(C_FLAGS) -o CMakeFiles/RE216_JALON01_SERVER.dir/server.c.o   -c /net/t/jrajaona/Documents/C/Projet/Chat/Jalon_3/src/jalon01/server.c
 
@@ -77,11 +100,13 @@ jalon01/CMakeFiles/RE216_JALON01_SERVER.dir/server.c.o.provides.build: jalon01/C
 
 # Object files for target RE216_JALON01_SERVER
 RE216_JALON01_SERVER_OBJECTS = \
+"CMakeFiles/RE216_JALON01_SERVER.dir/user.c.o" \
 "CMakeFiles/RE216_JALON01_SERVER.dir/server.c.o"
 
 # External object files for target RE216_JALON01_SERVER
 RE216_JALON01_SERVER_EXTERNAL_OBJECTS =
 
+jalon01/RE216_JALON01_SERVER: jalon01/CMakeFiles/RE216_JALON01_SERVER.dir/user.c.o
 jalon01/RE216_JALON01_SERVER: jalon01/CMakeFiles/RE216_JALON01_SERVER.dir/server.c.o
 jalon01/RE216_JALON01_SERVER: jalon01/CMakeFiles/RE216_JALON01_SERVER.dir/build.make
 jalon01/RE216_JALON01_SERVER: jalon01/CMakeFiles/RE216_JALON01_SERVER.dir/link.txt
@@ -92,6 +117,7 @@ jalon01/RE216_JALON01_SERVER: jalon01/CMakeFiles/RE216_JALON01_SERVER.dir/link.t
 jalon01/CMakeFiles/RE216_JALON01_SERVER.dir/build: jalon01/RE216_JALON01_SERVER
 .PHONY : jalon01/CMakeFiles/RE216_JALON01_SERVER.dir/build
 
+jalon01/CMakeFiles/RE216_JALON01_SERVER.dir/requires: jalon01/CMakeFiles/RE216_JALON01_SERVER.dir/user.c.o.requires
 jalon01/CMakeFiles/RE216_JALON01_SERVER.dir/requires: jalon01/CMakeFiles/RE216_JALON01_SERVER.dir/server.c.o.requires
 .PHONY : jalon01/CMakeFiles/RE216_JALON01_SERVER.dir/requires
 

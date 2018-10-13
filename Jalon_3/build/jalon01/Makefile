@@ -177,6 +177,30 @@ server.c.s:
 	cd /net/t/jrajaona/Documents/C/Projet/Chat/Jalon_3/build && $(MAKE) -f jalon01/CMakeFiles/RE216_JALON01_SERVER.dir/build.make jalon01/CMakeFiles/RE216_JALON01_SERVER.dir/server.c.s
 .PHONY : server.c.s
 
+user.o: user.c.o
+.PHONY : user.o
+
+# target to build an object file
+user.c.o:
+	cd /net/t/jrajaona/Documents/C/Projet/Chat/Jalon_3/build && $(MAKE) -f jalon01/CMakeFiles/RE216_JALON01_SERVER.dir/build.make jalon01/CMakeFiles/RE216_JALON01_SERVER.dir/user.c.o
+.PHONY : user.c.o
+
+user.i: user.c.i
+.PHONY : user.i
+
+# target to preprocess a source file
+user.c.i:
+	cd /net/t/jrajaona/Documents/C/Projet/Chat/Jalon_3/build && $(MAKE) -f jalon01/CMakeFiles/RE216_JALON01_SERVER.dir/build.make jalon01/CMakeFiles/RE216_JALON01_SERVER.dir/user.c.i
+.PHONY : user.c.i
+
+user.s: user.c.s
+.PHONY : user.s
+
+# target to generate assembly for a file
+user.c.s:
+	cd /net/t/jrajaona/Documents/C/Projet/Chat/Jalon_3/build && $(MAKE) -f jalon01/CMakeFiles/RE216_JALON01_SERVER.dir/build.make jalon01/CMakeFiles/RE216_JALON01_SERVER.dir/user.c.s
+.PHONY : user.c.s
+
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -193,6 +217,9 @@ help:
 	@echo "... server.o"
 	@echo "... server.i"
 	@echo "... server.s"
+	@echo "... user.o"
+	@echo "... user.i"
+	@echo "... user.s"
 .PHONY : help
 
 

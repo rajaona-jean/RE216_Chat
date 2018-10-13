@@ -13,9 +13,8 @@ add_executable(RE216_JALON01_CLIENT ${SRC_CLIENT})
 
 #add here source files you need to compile and link to the server app
 SET(SRC_SERVER
+				user.c
         server.c)
 
 
 add_executable(RE216_JALON01_SERVER  ${SRC_SERVER})
-
-

@@ -189,6 +189,11 @@
 			<locationURI>virtual:/virtual</locationURI>
 		</link>
 		<link>
+			<name>[Targets]/[exe] RE216_JALON01_SERVER/Source Files/user.c</name>
+			<type>1</type>
+			<location>/net/t/jrajaona/Documents/C/Projet/Chat/Jalon_3/src/jalon01/user.c</location>
+		</link>
+		<link>
 			<name>[Targets]/[exe] RE216_JALON01_SERVER/Source Files/server.c</name>
 			<type>1</type>
 			<location>/net/t/jrajaona/Documents/C/Projet/Chat/Jalon_3/src/jalon01/server.c</location>

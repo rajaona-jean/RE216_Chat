@@ -9,50 +9,11 @@
 #include <errno.h>
 #include <sys/time.h>
 #include <signal.h>
+
+#include "user.h"
+
 char buffer[512];
 int N = 4;
-
-
-struct Users {
-  int user_sock;
-  char* pseudo;
-  struct Users *next;
-};
-
-struct Liste{
-  struct Users *first;
-};
-
-struct Liste* init(int server_sock){
-  struct Liste *liste = malloc(sizeof(*liste));
-  struct Users *user = malloc(sizeof(*user));
-
-  user->user_sock = server_sock;
-  user->pseudo = "server";
-  user->next = NULL;
-  liste->first = user;
-
-  return liste;
-}
-
-void add_user(struct Liste *liste, struct Users *user,char* pseudo, int client_socket){
-  struct Users *new = malloc(sizeof(*new));
-  new->user_sock = client_socket;
-  new->pseudo = pseudo;
-
-  new->suivant = liste->first;
-  liste->first = new;
-}
-
-void del_user(struct Liste *liste, struct Users *user,char* pseudo){
-      struct Users* previous;
-      struct Users* todel;
-      {
-          struct Users *todel = liste->first;
-          liste->first = liste->first->next;
-          free(aSupprimer);
-      }
-}
 
 struct sockaddr_in init_serv_addr(int port){
   struct sockaddr_in sin;
@@ -176,7 +137,6 @@ void clean_up_client_socket(int client_sock,int server_sock, int q){
     close(server_sock);error("send");
   }
 }
-struct Liste *liste, struct Users *user,char* pseudo, int client_socket
 void clean_up_server_socket(int server_sock){
   int s = close(server_sock);
   if(s!=-1){
@@ -194,6 +154,13 @@ int main(int argc, char** argv){
   int server_sock;
   int client_sock;
   struct pollfd fds[N];
+  struct Liste* liste;
+  struct Users* user;
+
+  liste=init(3);
+  add_user(liste,user,"theo",4);
+  see_user(liste,user);
+
 
   struct sockaddr_in sin = init_serv_addr(atoi(argv[1])); //init the serv_add structure
   struct sockaddr_in c_sin;
