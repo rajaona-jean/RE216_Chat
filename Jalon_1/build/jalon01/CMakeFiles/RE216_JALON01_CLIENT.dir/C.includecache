@@ -1,0 +1,28 @@
+#IncludeRegexLine: ^[ 	]*#[ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/net/t/jrajaona/Documents/C/Projet/Chat/Jalon_1/src/jalon01/client.c
+stdlib.h
+-
+unistd.h
+-
+stdio.h
+-
+string.h
+-
+sys/types.h
+-
+sys/socket.h
+-
+sys/time.h
+-
+netdb.h
+-
+errno.h
+-
+
