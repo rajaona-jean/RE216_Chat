@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "user.h"
+//#include "user.h"
 
 struct Users {
 	int user_sock;
@@ -137,12 +137,17 @@ int nb_of_user(){
 	fich = fopen("./users.txt","r");
 	while(fin == 0){
 		fread(buffer,1,1,fich);
+		printf("%s\n",buffer);
+		fflush(stdout);
 		ok = strcmp(buffer,"\n");
+		//		printf("%d\n",ok);
+		//		fflush(stdout);
 		if(ok == 0)
 			nb_mot++;
 		fin = feof(fich);
 	}
 
+	printf("nb de mot: %d\n",nb_mot);
 	fclose(fich);
 	return nb_mot;
 }
@@ -154,6 +159,8 @@ void init_users(struct Liste* liste,int nb_mot,char user_liste[][28]){
 	int fin = 0;
 	int ok;
 	fich = fopen("./users.txt","r");
+	printf("%p\n\n",&fich);
+	fflush(stdout);
 	if(fich==NULL){
 		printf("oups");
 	}
@@ -176,6 +183,7 @@ void init_users(struct Liste* liste,int nb_mot,char user_liste[][28]){
 			strcat(mots[i],buffer);
 		if(ok == 0){
 			strcat(mots[i],"\0");
+			printf("%s\n",mots[i]);
 			i++;
 
 		}
@@ -198,24 +206,24 @@ void fill_users(struct Liste* liste,int nb_user,char user_list[][28]){
 	}
 
 }
-//int main(int argc, char** argv){
-//
-//	struct Liste* liste;
-//	int user_nb = nb_of_user();
-//	char user_liste[user_nb][28];
-//
-//	liste=init(3);
-//	init_users(liste,user_nb,user_liste);
-//	fill_users(liste,user_nb,user_liste);
-//	//   add_user(liste,user,"leo",4);
-//	//   add_user(liste,user,"kevin",5);
-//	//   add_user(liste,user,"emilie",6);
-//	//
-//	//   see_user(liste,user);
-//	//   edit_pseudo(liste,user,"emilie","emilio");
-//
-//	see_user(liste);
-//
-//	return 0;
-//
-//}
+int main(int argc, char** argv){
+
+	struct Liste* liste;
+	int user_nb = nb_of_user();
+	char user_liste[user_nb][28];
+
+	liste=init(3);
+	init_users(liste,user_nb,user_liste);
+	fill_users(liste,user_nb,user_liste);
+	//   add_user(liste,user,"leo",4);
+	//   add_user(liste,user,"kevin",5);
+	//   add_user(liste,user,"emilie",6);
+	//
+	//   see_user(liste,user);
+	//   edit_pseudo(liste,user,"emilie","emilio");
+
+	see_user(liste);
+
+	return 0;
+
+}
