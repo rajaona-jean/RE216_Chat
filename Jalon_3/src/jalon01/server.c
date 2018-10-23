@@ -34,7 +34,7 @@ void setsock(int socket_fd){
 
 void sigintHandler(int sig_num)
 {
-	signal(SIGINT, sigintHandler);
+	//signal(SIGINT, sigintHandler);
 	printf("\n Cannot be terminated using Ctrl+C \n");
 	fflush(stdout);
 }
@@ -111,11 +111,11 @@ int do_accept(int server_sock,struct sockaddr_in* c_sin,int q){
 	return client_sock;
 }
 
-void do_read(int client_sock,int server_sock,struct sockaddr_in* sin){
+void do_read(int client_sock,int server_sock,struct sockaddr_in* sin, int q){
 	int txt_size;
 	int size_buff = 512;
 	txt_size = recv(client_sock,buffer,size_buff,0);
-	if(txt_size!=-1){
+	if(txt_size!=-1 && q == 1){
 		printf(" [MESSAGE FROM CLIENT %d]: %s\n",client_sock,buffer);
 		fflush(stdout);
 	}
@@ -163,21 +163,25 @@ void clean_up_server_socket(int server_sock){
 	}
 }
 
+char* get_nick(char * msg){
+	int size = strlen(msg);
+	char* nick = malloc((size-6)*sizeof(char));
+	int i;
+	for(i=6;i<size;i++){
+		nick[i-6]=msg[i];
+	}
+	printf("get nick:%s\n",msg);
+	fflush(stdout);
+	return nick;
+}
+
 /////////////////////////MAIN//////////////////////////////////////////////////
 
 int main(int argc, char** argv){
 	int server_sock;
 	int client_sock;
 	struct pollfd fds[N];
-	struct Liste* liste;
-	int user_nb = nb_of_user();
-	char user_liste[user_nb][28];
-
-	liste=init(3);
-	init_users(liste,user_nb,user_liste);
-	fill_users(liste,user_nb,user_liste);
-	see_user(liste);
-
+	struct Liste* liste = malloc(sizeof(liste));
 
 	struct sockaddr_in sin = init_serv_addr(atoi(argv[1])); //init the serv_add structure
 	struct sockaddr_in c_sin;
@@ -187,7 +191,18 @@ int main(int argc, char** argv){
 	int j=0;
 	int ok = 0;
 	int p;
+	int connect = 0;
+	int verify_nick=0;
 
+	char* pseudo = malloc(30*sizeof(char));
+	int user_nb = nb_of_user();
+	char user_liste[user_nb][28];
+
+	liste=init(3);
+	init_users(liste,user_nb,user_liste);
+	fill_users(liste,user_nb,user_liste);
+
+	see_user(liste);
 	if (argc != 2)
 	{
 		fprintf(stderr, "usage: RE216_SERVER port\n");
@@ -212,23 +227,29 @@ int main(int argc, char** argv){
 	fds[0].fd = server_sock;
 	fds[0].events = POLLIN;
 	for(i=0;i<N;i++)
-		fds[i].events = POLLIN;
+	fds[i].events = POLLIN;
 
 	signal(SIGINT, sigintHandler);
 
 	for (;;)
 	{
+
 		while(1){
+
 			memset (buffer, 0, 512);
 			p = poll(fds,N,0);
+
 			for(i=0;i<N;i++){
 				if(fds[i].revents == POLLIN){
-					if((i==0) && (fds[N-1].fd==0)){
+
+					if((i==0) && (fds[N-1].fd==0)){// On accepte la connexion et on cherche le bon emplacement pour ajouter
+
 						client_sock = do_accept(server_sock,&c_sin,0);
-						char* accept="You are connected";
+						char* accept="Please enter your pseudo";
 						strcpy(buffer,accept);
 						do_write(client_sock,server_sock);
 						ok = 0;
+
 						while(ok==0){
 							j++;
 							if (fds[j].fd == 0){
@@ -237,8 +258,10 @@ int main(int argc, char** argv){
 								j=0;
 							}
 						}
+
 					}
-					else if((i==0) && (fds[N-1].fd!=0)){
+
+					else if((i==0) && (fds[N-1].fd!=0)){ // Trop de connexions
 						client_sock = do_accept(server_sock,&c_sin,1);
 						char* no_accept="Server cannot accept incoming connections anymore. Try again later.";
 						strcpy(buffer,no_accept);
@@ -246,35 +269,51 @@ int main(int argc, char** argv){
 						clean_up_client_socket(client_sock,server_sock,1);
 					}
 
-					if(i!=0){
+
+
+					if(i!=0){ // On parle avec le client, la connexion s'est bien passée
 						client_sock = fds[i].fd ;
-						//read what the client has to say
-						do_read(client_sock,server_sock,&sin);
-						//we write back to the client
-						msg=do_write(client_sock,server_sock);
-					}
-
+						do_read(client_sock,server_sock,&sin,1);
+						printf("%s\n",buffer);
+						fflush(stdout);
+						pseudo = get_nick(buffer);
+						printf("read:%s\n",pseudo);
+						fflush(stdout);
+						memset (buffer, 0, 512);
+						verify_nick = verify_pseudo(liste,pseudo);
+						if(verify_nick == 1){
+							set_connect(liste,pseudo);
+						}
+						if(verify_connect(liste,pseudo)==1){
+							//read what the client has to say
+							do_read(client_sock,server_sock,&sin,1);
+							//we write back to the client
+							msg=do_write(client_sock,server_sock);
+						}
 
 				}
 
-				if(strcmp(msg,"/quit\n")==0){
 
-					for(i=1;i<N;i++){
-						if(fds[i].fd == client_sock)
-							fds[i].fd = 0;
-					}
-					//clean up client socket
-					clean_up_client_socket(client_sock,server_sock,0);
+			} // end of if, gestion evenement
 
+			if(strcmp(msg,"/quit\n")==0){ // Si on lit /quit
 
+				for(i=1;i<N;i++){
+					if(fds[i].fd == client_sock)
+					fds[i].fd = 0;
 				}
+				//clean up client socket
+				clean_up_client_socket(client_sock,server_sock,0);
 
 
-			} //end of for
-		}
+			}
+
+
+		} //end of for
+	}//end of while
 
 
 
-		return 0;
-	}
+	return 0;
+}
 }
