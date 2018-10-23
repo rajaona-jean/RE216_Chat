@@ -6,6 +6,7 @@
 struct Users {
 	int user_sock;
 	char* pseudo;
+	int connect;
 	struct Users *next;
 };
 
@@ -19,6 +20,7 @@ struct Liste* init(int server_sock){
 
 	user->user_sock = server_sock;
 	user->pseudo = "server";
+	user->connect = 1;
 	user->next = NULL;
 	liste->first = user;
 
@@ -37,6 +39,7 @@ void add_user(struct Liste *liste,char* pseudo, int client_socket){
 
 	new->user_sock = client_socket;
 	new->pseudo = pseudo;
+	new->connect = 0;
 	new->next = NULL;
 	previous = liste->first ;
 	while(previous->next != NULL)
@@ -117,6 +120,138 @@ void edit_pseudo(struct Liste *liste,char* pseudo,char* new_pseudo){
 
 }
 
+int verify_pseudo(struct Liste *liste,char* pseudo){
+	struct Users* previous;
+	struct Users* cur_user;
+	int find = 0;
+	int stop = 0;
+	char* name;
+
+
+	if (liste == NULL){ // si la liste est NULL on s'arrete tout de suite
+		printf("error: Pas d'utilisateurs dans la liste\n");
+		exit(EXIT_FAILURE);
+	}
+
+	previous = liste->first;// c'est le serveur
+	cur_user = previous->next;
+
+	while(find!=1 && stop!=1){
+
+		if(!strcmp(cur_user->pseudo,pseudo)){
+			find = 1;
+			fprintf(stdout,"pseudo trouvé");
+		}
+		previous = cur_user;
+		cur_user = cur_user->next;
+
+		if(cur_user == NULL)
+			stop=1;
+	}
+
+	return find;
+
+}
+
+int verify_connect(struct Liste *liste,char* pseudo){
+	struct Users* previous;
+	struct Users* cur_user;
+	int find = 0;
+	int stop = 0;
+	char* name;
+
+
+	if (liste == NULL){ // si la liste est NULL on s'arrete tout de suite
+		printf("error: Pas d'utilisateurs dans la liste\n");
+		exit(EXIT_FAILURE);
+	}
+
+	previous = liste->first;// c'est le serveur
+	cur_user = previous->next;
+
+	while(find!=1 && stop!=1){
+
+		if(!strcmp(cur_user->pseudo,pseudo)){
+			find = 1;
+			fprintf(stdout,"pseudo trouvé");
+		}
+		previous = cur_user;
+		cur_user = cur_user->next;
+
+		if(cur_user == NULL)
+			stop=1;
+	}
+
+	return find;
+
+}
+
+char* pseudo_from_sock(struct Liste *liste,int client_sock){
+	struct Users* previous;
+	struct Users* cur_user;
+	int find = 0;
+	int stop = 0;
+	char* name=NULL;
+
+
+	if (liste == NULL){ // si la liste est NULL on s'arrete tout de suite
+		printf("error: Pas d'utilisateurs dans la liste\n");
+		exit(EXIT_FAILURE);
+	}
+
+	previous = liste->first;// c'est le serveur
+	cur_user = previous->next;
+
+	while(find!=1 && stop!=1){
+
+		if(cur_user->user_sock == client_sock){
+			find = 1;
+			name = cur_user->pseudo;
+			fprintf(stdout,"pseudo trouvé");
+		}
+		previous = cur_user;
+		cur_user = cur_user->next;
+
+		if(cur_user == NULL)
+			stop=1;
+	}
+
+	return ;
+}
+
+int set_connect(struct Liste *liste,char* pseudo){
+	struct Users* previous;
+	struct Users* cur_user;
+	int find = 0;
+	int stop = 0;
+
+
+	if (liste == NULL){ // si la liste est NULL on s'arrete tout de suite
+		printf("error: Pas d'utilisateurs dans la liste\n");
+		exit(EXIT_FAILURE);
+	}
+
+	previous = liste->first;// c'est le serveur
+	cur_user = previous->next;
+
+	while(find!=1 && stop!=1){
+
+		if(!strcmp(cur_user->pseudo,pseudo)){
+			find = 1;
+			cur_user->connect = 1;
+			fprintf(stdout,"pseudo trouvé");
+		}
+		previous = cur_user;
+		cur_user = cur_user->next;
+
+		if(cur_user == NULL)
+			stop=1;
+	}
+
+	return find;
+
+}
+
 void see_user(struct Liste *liste){
 	struct Users* cur_user;
 	cur_user = liste->first;
@@ -131,7 +266,7 @@ void see_user(struct Liste *liste){
 int nb_of_user(){
 	FILE* fich;
 	int nb_mot = -1;
-	char buffer[1];
+	char* buffer = malloc(sizeof(char));
 	int fin = 0;
 	int ok;
 	fich = fopen("./users.txt","r");
@@ -150,7 +285,7 @@ int nb_of_user(){
 void init_users(struct Liste* liste,int nb_mot,char user_liste[][28]){
 	FILE* fich;
 	//int nb_mot = -1;
-	char buffer[1];
+	char* buffer = malloc(sizeof(char));
 	int fin = 0;
 	int ok;
 	fich = fopen("./users.txt","r");
