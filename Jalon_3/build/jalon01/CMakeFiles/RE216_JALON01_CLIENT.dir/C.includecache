@@ -1,4 +1,4 @@
-#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+#IncludeRegexLine: ^[ 	]*#[ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
 
 #IncludeRegexScan: ^.*$
 
@@ -6,7 +6,7 @@
 
 #IncludeRegexTransform: 
 
-/home/rajaona/Documents/C/Projet/RE216_Chat/Jalon_3/src/jalon01/client.c
+/net/t/jrajaona/Documents/C/Projet/RE216_Chat/Jalon_3/src/jalon01/client.c
 stdlib.h
 -
 unistd.h

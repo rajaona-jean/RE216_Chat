@@ -11,6 +11,7 @@
 #include <signal.h>
 
 #include "user.h"
+#include "server.h"
 
 char buffer[512];
 int N = 4;
@@ -111,18 +112,19 @@ int do_accept(int server_sock,struct sockaddr_in* c_sin,int q){
 	return client_sock;
 }
 
-void do_read(int client_sock,int server_sock,struct sockaddr_in* sin, int q){
+char* do_read(int client_sock,int server_sock,struct sockaddr_in* sin, int q){
 	int txt_size;
 	int size_buff = 512;
+	char* msg = buffer;
 	txt_size = recv(client_sock,buffer,size_buff,0);
 	if(txt_size!=-1 && q == 1){
 		printf(" [MESSAGE FROM CLIENT %d]: %s\n",client_sock,buffer);
 		fflush(stdout);
 	}
-	else{
+	else if (txt_size!=-1){
 		close(server_sock);error("recv");
 	}
-
+	return msg;
 }
 
 char* do_write(int client_sock,int server_sock){
@@ -163,17 +165,65 @@ void clean_up_server_socket(int server_sock){
 	}
 }
 
+//get the nickname  from the  message
 char* get_nick(char * msg){
 	int size = strlen(msg);
-	char* nick = malloc((size-6)*sizeof(char));
+	char* nick = malloc(30*sizeof(char));
 	int i;
-	for(i=6;i<size;i++){
+	for(i=6;i<size-1;i++){ //size-1 car \n
 		nick[i-6]=msg[i];
 	}
-	printf("get nick:%s\n",msg);
-	fflush(stdout);
 	return nick;
 }
+
+//check if the message starts with "/nick" to edit the nickname
+short if_slash(char* msg){
+	int size = strlen(msg);
+	char* cmd = malloc(6*sizeof(char));
+	int i;
+	printf(" if_slash : %s\n",msg);
+	fflush(stdout);
+	if(msg[0]=='/'){
+		printf(" SLASH !!!!!\n");
+		fflush(stdout);
+		for(i=1;i<5;i++){ //size-1 car \n
+			cmd[i-1]=msg[i];
+		}
+		if(strcmp(cmd,"nick")==0){
+			printf(" NICK !!!!!\n");
+			fflush(stdout);
+			return 1;
+		}
+		if(strcmp(cmd,"who\n")==0){
+			printf(" WHO !!!!!\n");
+			fflush(stdout);
+			return 2;
+		}
+
+	}
+
+	printf(" RIEN !!!!!\n");
+	fflush(stdout);
+	return 0;
+}
+
+
+//short if_who(char* msg){
+//	int size = strlen(msg);
+//	char* _who = malloc(6*sizeof(char));
+//	int i;
+//	for(i=0;i<4;i++){ //size-1 car \n
+//		_who[i]=msg[i];
+//	}
+//
+//	if(strcmp(_who,"/who")==0){
+//		return 1;
+//	}
+//
+//	return 0;
+//}
+
+
 
 /////////////////////////MAIN//////////////////////////////////////////////////
 
@@ -192,11 +242,14 @@ int main(int argc, char** argv){
 	int ok = 0;
 	int p;
 	int connect = 0;
-	int verify_nick=0;
+	short verify_nick=0;
 
-	char* pseudo = malloc(30*sizeof(char));
+	char* pseudo;
 	int user_nb = nb_of_user();
 	char user_liste[user_nb][28];
+
+	short sl_check=0;
+	short pseudo_of_sock = 0;
 
 	liste=init(3);
 	init_users(liste,user_nb,user_liste);
@@ -227,7 +280,7 @@ int main(int argc, char** argv){
 	fds[0].fd = server_sock;
 	fds[0].events = POLLIN;
 	for(i=0;i<N;i++)
-	fds[i].events = POLLIN;
+		fds[i].events = POLLIN;
 
 	signal(SIGINT, sigintHandler);
 
@@ -237,17 +290,20 @@ int main(int argc, char** argv){
 		while(1){
 
 			memset (buffer, 0, 512);
-			p = poll(fds,N,0);
+			p = poll(fds,N,-1);
 
-			for(i=0;i<N;i++){
-				if(fds[i].revents == POLLIN){
+			for(i=0;i<N;i++){ // Gestion event (qui crée l'event)
+				if(fds[i].revents == POLLIN){// On voit ce que veut le client
 
 					if((i==0) && (fds[N-1].fd==0)){// On accepte la connexion et on cherche le bon emplacement pour ajouter
 
 						client_sock = do_accept(server_sock,&c_sin,0);
+
+						memset(buffer,0,512);
 						char* accept="Please enter your pseudo";
 						strcpy(buffer,accept);
 						do_write(client_sock,server_sock);
+						memset(buffer,0,512);
 						ok = 0;
 
 						while(ok==0){
@@ -263,57 +319,121 @@ int main(int argc, char** argv){
 
 					else if((i==0) && (fds[N-1].fd!=0)){ // Trop de connexions
 						client_sock = do_accept(server_sock,&c_sin,1);
+						memset(buffer,0,512);
 						char* no_accept="Server cannot accept incoming connections anymore. Try again later.";
 						strcpy(buffer,no_accept);
 						do_write(client_sock,server_sock);
+						memset(buffer,0,512);
 						clean_up_client_socket(client_sock,server_sock,1);
 					}
 
 
 
-					if(i!=0){ // On parle avec le client, la connexion s'est bien passée
+					if(i!=0){ // On parle avec le client
+
 						client_sock = fds[i].fd ;
+						pseudo_of_sock = pseudo_from_sock(liste,client_sock);
 						do_read(client_sock,server_sock,&sin,1);
-						printf("%s\n",buffer);
+						sl_check = if_slash(buffer);
+						printf(" buffer : %s\n",msg);
 						fflush(stdout);
-						pseudo = get_nick(buffer);
-						printf("read:%s\n",pseudo);
-						fflush(stdout);
-						memset (buffer, 0, 512);
-						verify_nick = verify_pseudo(liste,pseudo);
-						if(verify_nick == 1){
-							set_connect(liste,pseudo);
-						}
-						if(verify_connect(liste,pseudo)==1){
-							//read what the client has to say
-							do_read(client_sock,server_sock,&sin,1);
-							//we write back to the client
+						if(sl_check!=0){
+							if(sl_check == 1){// On verifie /nick
+
+								if(see_connected_user(liste,client_sock,server_sock,0) == 0){//Le client n'est pas connecté
+
+									printf(" buffer 2: %s\n",buffer);
+									fflush(stdout);
+									pseudo = get_nick(buffer);
+									printf(" Pseudo : %s\n",pseudo);
+									fflush(stdout);
+									memset(buffer, 0, 512);
+									verify_nick = verify_pseudo(liste,pseudo);
+									printf(" verify_nick : %d\n",verify_nick);
+									fflush(stdout);
+									if(verify_nick == 1){ // On reconnait le client // Bon pseudo
+										set_connect(liste,pseudo); // On connecte le client
+										memset(buffer, 0, 512);
+										strcpy(buffer,"1");
+										printf(" envoie client : %s\n",buffer);
+										fflush(stdout);
+										do_write(client_sock,server_sock);
+										memset(buffer, 0, 512);
+										set_client_sock(liste,pseudo,client_sock);
+									}
+									else{ // On connait pas le client // Mauvais pseudo
+										strcpy(buffer,"Try to reconnect");
+										msg=do_write(client_sock,server_sock);
+										memset(buffer,'\0',512);
+									}
+
+								}
+								else{ // Le client est deja connecté, on change le pseudo
+									msg = get_nick(buffer);
+									edit_pseudo_from_sock(liste,client_sock,msg);
+									msg=do_write(client_sock,server_sock);
+								}//fin changement pseudo
+							}// Fin /nick
+							if(sl_check == 2){
+								see_connected_user(liste,client_sock,server_sock,1);
+								//we write back to the client
+								msg=do_write(client_sock,server_sock);
+							}
+
+						}// Fin slash
+						else{
 							msg=do_write(client_sock,server_sock);
+							memset(buffer,'\0',512);
 						}
 
+						/*if(pseudo_of_sock == 1){ // Parle tranquillement si le client est connecté
+							do_read(client_sock,server_sock,&sin,1);
+							if(if_nick(buffer)==0){
+								//we write back to the client
+								msg=do_write(client_sock,server_sock);
+								//memset(buffer,0,512);
+							}
+							else{
+								msg = get_nick(buffer);
+								edit_pseudo_from_sock(liste,client_sock,msg);
+								msg=do_write(client_sock,server_sock);
+							}
+
+							if(if_who(buffer)==1){
+								see_connected_user(liste,client_sock,server_sock);
+								//we write back to the client
+								msg=do_write(client_sock,server_sock);
+							}
+
+
+						}*/
+
+						} // Fin du dialogue
+					}// Fin d
+
+				} // end of if, gestion evenement
+
+				if(strcmp(msg,"/quit\n")==0){ // Si on lit /quit
+					//memset (msg, 0, sizeof(msg));
+					for(i=1;i<N;i++){
+						if(fds[i].fd == client_sock)
+							fds[i].fd = 0;
+					}
+					down_connect(liste,client_sock);
+					down_client_sock(liste,client_sock);
+					//memset (msg, 0, sizeof(msg));
+					//clean up client socket
+					clean_up_client_socket(client_sock,server_sock,0);
+
+
 				}
 
 
-			} // end of if, gestion evenement
-
-			if(strcmp(msg,"/quit\n")==0){ // Si on lit /quit
-
-				for(i=1;i<N;i++){
-					if(fds[i].fd == client_sock)
-					fds[i].fd = 0;
-				}
-				//clean up client socket
-				clean_up_client_socket(client_sock,server_sock,0);
-
-
-			}
-
-
-		} //end of for
-	}//end of while
+			} //end of for
+		}//end of while
 
 
 
-	return 0;
+		return 0;
 }
-}
+
