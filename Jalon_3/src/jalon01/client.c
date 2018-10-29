@@ -167,6 +167,7 @@ int main(int argc,char** argv){
 				printf("\nPlease enter your pseudo:\n");
 				fflush(stdout);
 				fgets(msg,L,stdin);
+
 				if (strcmp(msg, "/quit\n") == 0){
 					strcpy(buffer, "end of communication");
 					handle_client_message(client_sock,msg);
@@ -185,6 +186,7 @@ int main(int argc,char** argv){
 				printf("\nPlease enter your line:\n");
 				fflush(stdout);
 				fgets(msg,L,stdin);
+
 				if (strcmp(msg, "/quit\n") == 0){
 					strcpy(buffer, "end of communication");
 					handle_client_message(client_sock,msg);

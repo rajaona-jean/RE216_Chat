@@ -244,10 +244,10 @@ int main(int argc, char** argv){
 	int connect = 0;
 	short verify_nick=0;
 
+
 	char* pseudo;
 	int user_nb = nb_of_user();
 	char user_liste[user_nb][28];
-
 	short sl_check=0;
 	short pseudo_of_sock = 0;
 
@@ -351,17 +351,20 @@ int main(int argc, char** argv){
 									pseudo = get_nick(buffer);
 									printf(" Pseudo : %s\n",pseudo);
 									fflush(stdout);
+
 									memset(buffer, '\0', 512);
 									verify_nick = verify_pseudo(liste,pseudo);
 									printf(" verify_nick : %d\n",verify_nick);
 									fflush(stdout);
 									if(verify_nick == 1){ // On reconnait le client // Bon pseudo
 										set_connect(liste,pseudo); // On connecte le client
+
 										memset(buffer, '\0', 512);
 										strcpy(buffer,"1");
 										printf(" envoie client : %s\n",buffer);
 										fflush(stdout);
 										do_write(client_sock,server_sock);
+
 										memset(buffer, '\0', 512);
 										set_client_sock(liste,pseudo,client_sock);
 									}
@@ -402,6 +405,7 @@ int main(int argc, char** argv){
 								edit_pseudo_from_sock(liste,client_sock,msg);
 								msg=do_write(client_sock,server_sock);
 							}
+
 
 							if(if_who(buffer)==1){
 								see_connected_user(liste,client_sock,server_sock);
