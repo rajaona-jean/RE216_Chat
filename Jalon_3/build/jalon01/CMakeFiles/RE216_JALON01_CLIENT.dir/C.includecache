@@ -15,6 +15,8 @@ stdio.h
 -
 string.h
 -
+time.h
+-
 sys/types.h
 -
 sys/socket.h

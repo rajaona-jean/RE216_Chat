@@ -6,15 +6,35 @@
 
 #IncludeRegexTransform: 
 
-/home/rajaona/Documents/C/Projet/RE216_Chat/Jalon_3/src/jalon01/user.c
+/home/rajaona/Documents/C/Projet/RE216_Chat/Jalon_3/src/jalon01/server.c
 stdio.h
 -
 stdlib.h
 -
 string.h
 -
+unistd.h
+-
+poll.h
+-
+sys/types.h
+-
+sys/socket.h
+-
+netinet/in.h
+-
+errno.h
+-
+sys/time.h
+-
+signal.h
+-
 user.h
 /home/rajaona/Documents/C/Projet/RE216_Chat/Jalon_3/src/jalon01/user.h
+server.h
+/home/rajaona/Documents/C/Projet/RE216_Chat/Jalon_3/src/jalon01/server.h
+
+/home/rajaona/Documents/C/Projet/RE216_Chat/Jalon_3/src/jalon01/server.h
 
 /home/rajaona/Documents/C/Projet/RE216_Chat/Jalon_3/src/jalon01/user.h
 

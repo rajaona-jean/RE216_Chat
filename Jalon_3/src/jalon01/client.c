@@ -2,6 +2,7 @@
 #include <unistd.h>
 #include <stdio.h>
 #include <string.h>
+#include <time.h>
 
 #include <sys/types.h>
 #include <sys/socket.h>
@@ -17,9 +18,9 @@ char buffer[512];
 
 void sigintHandler(int sig_num)
 {
-    signal(SIGINT, sigintHandler);
-    printf("\n Cannot be terminated using Ctrl+C , do you mean /quit? \n");
-    fflush(stdout);
+	signal(SIGINT, sigintHandler);
+	printf("\n Cannot be terminated using Ctrl+C , do you mean /quit? \n");
+	fflush(stdout);
 }
 
 
@@ -102,6 +103,18 @@ char* do_read(int client_sock){
 	return buffer;
 }
 
+char* get_nick_client(char * msg){
+	int size = strlen(msg);
+	char* nick = malloc(30*sizeof(char));
+	int i;
+	int fin;
+	for(i=6;i<size-1;i++){ //size-1 car \n
+		nick[i-6]=msg[i];
+		fin = i;
+	}
+	return nick;
+}
+
 int main(int argc,char** argv){
 	int error;
 	int client_sock;
@@ -110,6 +123,8 @@ int main(int argc,char** argv){
 	struct addrinfo* infoptr;
 	struct sockaddr_in server_sock;
 	int first = 0;
+	int first_connection = 0;
+	char* pseudo;
 
 	if (argc != 2)
 	{
@@ -145,24 +160,50 @@ int main(int argc,char** argv){
 
 			first=1;
 		}
-		memset (buffer, 0, L);
+		memset (buffer, '\0', L);
 		signal(SIGINT, sigintHandler);
 		while(1){
-		printf("\nPlease enter your line:\n");
-		fflush(stdout);
-		fgets(msg,L,stdin);
-		//send message to the server
-		handle_client_message(client_sock,msg);
-		//read what the server has to say
-		do_read(client_sock);
+			if(first_connection==0){
+				printf("\nPlease enter your pseudo:\n");
+				fflush(stdout);
+				fgets(msg,L,stdin);
+				if (strcmp(msg, "/quit\n") == 0){
+					strcpy(buffer, "end of communication");
+					handle_client_message(client_sock,msg);
+					return 0;
+				}
 
-		if (strcmp(msg, "/quit\n") == 0)
-			break;
+				//send message to the server
+				handle_client_message(client_sock,msg);
+				memset (buffer, '\0', L);
+				//read what the server has to say
+				do_read(client_sock);
 
+				first_connection = atoi(buffer);
+			}
+			else if (first_connection==1){
+				printf("\nPlease enter your line:\n");
+				fflush(stdout);
+				fgets(msg,L,stdin);
+				if (strcmp(msg, "/quit\n") == 0){
+					strcpy(buffer, "end of communication");
+					handle_client_message(client_sock,msg);
+					return 0;
+				}
+
+				//send message to the server
+				handle_client_message(client_sock,msg);
+				memset (buffer, '\0', L);
+				//read what the server has to say
+				do_read(client_sock);
+
+			}
+
+
+
+		}
+
+		return 0;
 
 	}
-
-	return 0;
-
-}
 }
