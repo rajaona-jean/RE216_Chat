@@ -144,8 +144,8 @@ void edit_pseudo_from_sock(struct Liste *liste,int client_sock,char* new_pseudo)
 			cur_user->pseudo = new_pseudo;
 			name = cur_user->pseudo;
 			edit = 1;
-			fprintf(stdout,"votre nouveau pseudo est bien %s\n",name);
-			fflush(stdout);
+//			fprintf(stdout,"votre nouveau pseudo est bien %s\n",name);
+//			fflush(stdout);
 		}
 		previous = cur_user;
 		cur_user = cur_user->next;
@@ -153,8 +153,6 @@ void edit_pseudo_from_sock(struct Liste *liste,int client_sock,char* new_pseudo)
 		if(cur_user == NULL)
 			stop=1;
 	}
-	fprintf(stdout,"votre nouveau pseudo: ECHEC !!!!\n");
-	fflush(stdout);
 }
 
 
@@ -176,8 +174,8 @@ short verify_pseudo(struct Liste *liste,char* pseudo){
 	cur_user = previous->next;
 
 	while(find1!=1 && stop!=1){
-		printf(" verify_pseudo : %s | %s | %d\n",cur_user->pseudo, pseudo, strcmp(cur_user->pseudo,pseudo));
-		fflush(stdout);
+//		printf(" verify_pseudo : %s | %s | %d\n",cur_user->pseudo, pseudo, strcmp(cur_user->pseudo,pseudo));
+//		fflush(stdout);
 		if(strcmp(cur_user->pseudo,pseudo)==0){
 			find1 = 1;
 			stop = 1;
@@ -213,7 +211,6 @@ short verify_connect(struct Liste *liste,char* pseudo){
 
 		if(!strcmp(cur_user->pseudo,pseudo)){
 			if(cur_user->connect == 1){
-				printf("vc: %d\n",cur_user->connect);
 				*find1 = 1;
 			}
 		}
@@ -266,7 +263,7 @@ short pseudo_from_sock(struct Liste *liste,int client_sock){
 int set_connect(struct Liste *liste,char* pseudo){
 	struct Users* previous;
 	struct Users* cur_user;
-	int find1 = 0;
+	int* find1 = malloc(sizeof(int));
 	int stop = 0;
 
 
@@ -278,10 +275,10 @@ int set_connect(struct Liste *liste,char* pseudo){
 	previous = liste->first;// c'est le serveur
 	cur_user = previous->next;
 
-	while(find1!=1 && stop!=1){
+	while(*find1!=1 && stop!=1){
 
 		if(!strcmp(cur_user->pseudo,pseudo)){
-			find1 = 1;
+			*find1 = 1;
 			cur_user->connect = 1;
 			//fprintf(stdout,"verify :cur_user->co: %d\n",cur_user->connect);
 		}
@@ -292,7 +289,7 @@ int set_connect(struct Liste *liste,char* pseudo){
 			stop=1;
 	}
 
-	return find1;
+	return *find1;
 
 }
 
@@ -414,7 +411,8 @@ short see_connected_user(struct Liste *liste, int client_sock,int server_sock, i
 			}
 			if(see_user == 1){
 				memset(buffer,0,512);
-				strcpy(buffer,cur_user->pseudo);
+				strcpy(buffer,"       - ");
+				strcat(buffer,cur_user->pseudo);
 				strcat(buffer,"\n");
 				do_write(client_sock,server_sock);
 				memset(buffer,0,512);

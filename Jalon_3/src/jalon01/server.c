@@ -147,9 +147,6 @@ void clean_up_client_socket(int client_sock,int server_sock, int q){
 		printf(" [server]: END OF COMMUNICATION WITH CLIENT %d\n",client_sock);
 		fflush(stdout);
 	}
-	else if ((s!=-1) && (q==1)){
-
-	}
 	else if (s == -1){
 		close(server_sock);error("send");
 	}
@@ -189,6 +186,7 @@ short if_slash(char* msg){
 		for(i=1;i<5;i++){ //size-1 car \n
 			cmd[i-1]=msg[i];
 		}
+
 		if(strcmp(cmd,"nick")==0){
 			printf(" NICK !!!!!\n");
 			fflush(stdout);
@@ -199,6 +197,11 @@ short if_slash(char* msg){
 			fflush(stdout);
 			return 2;
 		}
+		if(strcmp(cmd,"quit")==0){
+				printf(" QUIT !!!!!\n");
+				fflush(stdout);
+				return 3;
+			}
 
 	}
 
@@ -378,13 +381,34 @@ int main(int argc, char** argv){
 								else{ // Le client est deja connecté, on change le pseudo
 									msg = get_nick(buffer);
 									edit_pseudo_from_sock(liste,client_sock,msg);
+									memset(buffer,'\0',512);
+									strcpy(buffer, "Nouveau pseudo: ");
+									strcat(buffer,msg);
 									msg=do_write(client_sock,server_sock);
 								}//fin changement pseudo
 							}// Fin /nick
-							if(sl_check == 2){
+
+							if(sl_check == 2){//Who
+								do_write(client_sock,server_sock);
 								see_connected_user(liste,client_sock,server_sock,1);
 								//we write back to the client
 								msg=do_write(client_sock,server_sock);
+							}
+
+							if(sl_check==3){ //quit
+								for(i=1;i<N;i++){
+									if(fds[i].fd == client_sock)
+										fds[i].fd = 0;
+								}
+								if(pseudo_from_sock(liste,client_sock)==1){
+									down_connect(liste,client_sock);
+									down_client_sock(liste,client_sock);
+								}
+								//memset (msg, 0, sizeof(msg));
+								//clean up client socket
+								clean_up_client_socket(client_sock,server_sock,0);
+
+
 							}
 
 						}// Fin slash
@@ -416,31 +440,31 @@ int main(int argc, char** argv){
 
 						}*/
 
-						} // Fin du dialogue
-					}// Fin d
+					} // Fin du dialogue
+				}// Fin d
 
-				} // end of if, gestion evenement
+			} // end of if, gestion evenement
 
-				if(strcmp(msg,"/quit\n")==0){ // Si on lit /quit
-					for(i=1;i<N;i++){
-						if(fds[i].fd == client_sock)
-							fds[i].fd = 0;
-					}
-					down_connect(liste,client_sock);
-					down_client_sock(liste,client_sock);
-					//memset (msg, 0, sizeof(msg));
-					//clean up client socket
-					clean_up_client_socket(client_sock,server_sock,0);
-
-
-				}
-
-
-			} //end of for
-		}//end of while
+			//				if(strcmp(msg,"/quit\n")==0){ // Si on lit /quit
+			//					for(i=1;i<N;i++){
+			//						if(fds[i].fd == client_sock)
+			//							fds[i].fd = 0;
+			//					}
+			//					down_connect(liste,client_sock);
+			//					down_client_sock(liste,client_sock);
+			//					//memset (msg, 0, sizeof(msg));
+			//					//clean up client socket
+			//					clean_up_client_socket(client_sock,server_sock,0);
+			//
+			//
+			//				}
 
 
+		} //end of for
+	}//end of while
 
-		return 0;
+
+
+	return 0;
 }
 

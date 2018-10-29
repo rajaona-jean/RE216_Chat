@@ -93,8 +93,12 @@ char* do_read(int client_sock){
 	int txt_size;
 	int size_buff = L;
 	txt_size = recv(client_sock,buffer,size_buff,0);
-	if(txt_size!=-1){
+	if(txt_size!=-1 && strcmp(buffer,"1")!=0){
 		printf(" [MESSAGE FROM SERVER]: %s\n",buffer);
+		fflush(stdout);
+	}
+	else if(txt_size!=-1 && strcmp(buffer,"1")==0){
+		printf(" [MESSAGE FROM SERVER]: You are connected\n");
 		fflush(stdout);
 	}
 	else{
@@ -169,7 +173,7 @@ int main(int argc,char** argv){
 				fgets(msg,L,stdin);
 
 				if (strcmp(msg, "/quit\n") == 0){
-					strcpy(buffer, "end of communication");
+					strcpy(buffer, msg);
 					handle_client_message(client_sock,msg);
 					return 0;
 				}
@@ -188,7 +192,7 @@ int main(int argc,char** argv){
 				fgets(msg,L,stdin);
 
 				if (strcmp(msg, "/quit\n") == 0){
-					strcpy(buffer, "end of communication");
+					strcpy(buffer, msg);
 					handle_client_message(client_sock,msg);
 					return 0;
 				}
