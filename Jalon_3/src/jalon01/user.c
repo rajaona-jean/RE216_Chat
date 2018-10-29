@@ -8,6 +8,8 @@ struct Users {
 	int user_sock;
 	char* pseudo;
 	int connect;
+	char* ip_addr;
+	int port;
 	struct Users *next;
 };
 
@@ -20,7 +22,7 @@ struct Liste* init(int server_sock){
 	struct Users *user = malloc(sizeof(struct Users));
 
 	user->user_sock = server_sock;
-	user->pseudo = "server";
+	user->pseudo = "SERVER";
 	user->connect = 1;
 	user->next = NULL;
 	liste->first = user;

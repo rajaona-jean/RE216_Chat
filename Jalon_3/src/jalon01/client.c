@@ -4,6 +4,7 @@
 #include <string.h>
 #include <time.h>
 
+
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <sys/time.h>
@@ -15,6 +16,7 @@
 
 const int L = 512;
 char buffer[512];
+char* pseudo ;
 
 void sigintHandler(int sig_num)
 {
@@ -71,11 +73,12 @@ void do_connect(int client_socket,struct sockaddr_in server_sock){
 	if(err == -1){
 		error("connect");close(client_socket);exit(EXIT_FAILURE);
 	}
+	else{
+		printf(" Connecting to server... done!\n");
+		fflush(stdout);
+	}
 }
 
-//char* readline(char** msg){
-//
-//}
 
 void handle_client_message(int client_socket,char* msg){
 	int size_txt = strlen(msg);
@@ -98,7 +101,7 @@ char* do_read(int client_sock){
 		fflush(stdout);
 	}
 	else if(txt_size!=-1 && strcmp(buffer,"1")==0){
-		printf(" [MESSAGE FROM SERVER]: You are connected\n");
+		printf(" [MESSAGE FROM SERVER]: Welcome on the chat %s\n",pseudo);
 		fflush(stdout);
 	}
 	else{
@@ -128,7 +131,7 @@ int main(int argc,char** argv){
 	struct sockaddr_in server_sock;
 	int first = 0;
 	int first_connection = 0;
-	char* pseudo;
+
 
 	if (argc != 2)
 	{
@@ -171,7 +174,7 @@ int main(int argc,char** argv){
 				printf("\nPlease enter your pseudo:\n");
 				fflush(stdout);
 				fgets(msg,L,stdin);
-
+				pseudo = get_nick_client(msg);
 				if (strcmp(msg, "/quit\n") == 0){
 					strcpy(buffer, msg);
 					handle_client_message(client_sock,msg);

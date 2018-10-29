@@ -307,7 +307,7 @@ int main(int argc, char** argv){
 						client_sock = do_accept(server_sock,&c_sin,0);
 
 						memset(buffer,'\0',512);
-						char* accept="Please enter your pseudo";
+						char* accept="Please logon with /nick <your pseudo>";
 						strcpy(buffer,accept);
 						do_write(client_sock,server_sock);
 						memset(buffer,'\0',512);
@@ -389,6 +389,8 @@ int main(int argc, char** argv){
 							}// Fin /nick
 
 							if(sl_check == 2){//Who
+								memset(buffer,'\0',512);
+								strcpy(buffer,"Connected users:\n");
 								do_write(client_sock,server_sock);
 								see_connected_user(liste,client_sock,server_sock,1);
 								//we write back to the client
