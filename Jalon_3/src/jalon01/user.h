@@ -14,10 +14,10 @@ void fill_users(struct Liste* liste,int nb_user,char user_list[][28]);
 short verify_pseudo(struct Liste *liste,char* pseudo);
 short verify_connect(struct Liste *liste,char* pseudo);
 short pseudo_from_sock(struct Liste *liste,int client_sock);
-int set_connect(struct Liste *liste,char* pseudo);
-void set_client_sock(struct Liste *liste,char* pseudo,int client_sock);
 void edit_pseudo_from_sock(struct Liste *liste,int client_sock,char* new_pseudo);
 void down_client_sock(struct Liste* liste,int client_sock);
 short see_connected_user(struct Liste *liste, int client_sock,int server_sock, int see_user);
 void down_connect(struct Liste *liste,int client_sock);
+void set_info(struct Liste* liste, char* pseudo, int client_sock, struct sockaddr_in c_sin);
+void get_info(struct Liste* liste, char* pseudo, int client_sock,int server_sock);
 #endif /* USER_H_ */

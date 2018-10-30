@@ -1,8 +1,15 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <time.h>
+#include <netinet/in.h>
+#include <arpa/inet.h>
+
+
 #include "user.h"
 #include "server.h"
+
+#define FRA -1; //Fuseaux horaire france
 
 struct Users {
 	int user_sock;
@@ -10,12 +17,14 @@ struct Users {
 	int connect;
 	char* ip_addr;
 	int port;
+	char* time;
 	struct Users *next;
 };
 
 struct Liste{
 	struct Users *first;
 };
+
 
 struct Liste* init(int server_sock){
 	struct Liste *liste = malloc(sizeof(struct Liste));
@@ -24,10 +33,25 @@ struct Liste* init(int server_sock){
 	user->user_sock = server_sock;
 	user->pseudo = "SERVER";
 	user->connect = 1;
+	user->ip_addr = '\0';
+	user->port = 0;
+	user->time = '\0';
 	user->next = NULL;
 	liste->first = user;
 
 	return liste;
+}
+
+char* date(){
+	time_t secondes;
+	struct tm t;
+	char* date = malloc(18*sizeof(char));
+
+	time(&secondes);
+	t=*localtime(&secondes);
+	strftime(date, 18, "%Y/%m/%d@%H:%M ", &t);
+
+	return date;
 }
 
 void add_user(struct Liste *liste,char* pseudo, int client_socket){
@@ -43,6 +67,9 @@ void add_user(struct Liste *liste,char* pseudo, int client_socket){
 	new->user_sock = client_socket;
 	new->pseudo = pseudo;
 	new->connect = 0;
+	new->ip_addr = '\0';
+	new->port = 0;
+	new->time = '\0';
 	new->next = NULL;
 	previous = liste->first ;
 	while(previous->next != NULL)
@@ -146,8 +173,8 @@ void edit_pseudo_from_sock(struct Liste *liste,int client_sock,char* new_pseudo)
 			cur_user->pseudo = new_pseudo;
 			name = cur_user->pseudo;
 			edit = 1;
-//			fprintf(stdout,"votre nouveau pseudo est bien %s\n",name);
-//			fflush(stdout);
+			//			fprintf(stdout,"votre nouveau pseudo est bien %s\n",name);
+			//			fflush(stdout);
 		}
 		previous = cur_user;
 		cur_user = cur_user->next;
@@ -176,8 +203,8 @@ short verify_pseudo(struct Liste *liste,char* pseudo){
 	cur_user = previous->next;
 
 	while(find1!=1 && stop!=1){
-//		printf(" verify_pseudo : %s | %s | %d\n",cur_user->pseudo, pseudo, strcmp(cur_user->pseudo,pseudo));
-//		fflush(stdout);
+		//		printf(" verify_pseudo : %s | %s | %d\n",cur_user->pseudo, pseudo, strcmp(cur_user->pseudo,pseudo));
+		//		fflush(stdout);
 		if(strcmp(cur_user->pseudo,pseudo)==0){
 			find1 = 1;
 			stop = 1;
@@ -262,39 +289,6 @@ short pseudo_from_sock(struct Liste *liste,int client_sock){
 	return *find1;
 }
 
-int set_connect(struct Liste *liste,char* pseudo){
-	struct Users* previous;
-	struct Users* cur_user;
-	int* find1 = malloc(sizeof(int));
-	int stop = 0;
-
-
-	if (liste == NULL){ // si la liste est NULL on s'arrete tout de suite
-		printf("error: Pas d'utilisateurs dans la liste\n");
-		exit(EXIT_FAILURE);
-	}
-
-	previous = liste->first;// c'est le serveur
-	cur_user = previous->next;
-
-	while(*find1!=1 && stop!=1){
-
-		if(!strcmp(cur_user->pseudo,pseudo)){
-			*find1 = 1;
-			cur_user->connect = 1;
-			//fprintf(stdout,"verify :cur_user->co: %d\n",cur_user->connect);
-		}
-		previous = cur_user;
-		cur_user = cur_user->next;
-
-		if(cur_user == NULL)
-			stop=1;
-	}
-
-	return *find1;
-
-}
-
 void down_connect(struct Liste *liste,int client_sock){
 	struct Users* previous;
 	struct Users* cur_user;
@@ -358,11 +352,48 @@ void down_client_sock(struct Liste* liste,int client_sock){
 	fflush(stdout);
 }
 
-void set_client_sock(struct Liste *liste,char* pseudo,int client_sock){
+void set_info(struct Liste* liste, char* pseudo, int client_sock, struct sockaddr_in c_sin){
 	struct Users* previous;
 	struct Users* cur_user;
-	int find1 = 0;
+	int find1 = 0 ;
 	int stop = 0;
+
+
+	if (liste == NULL){ // si la liste est NULL on s'arrete tout de suite
+		printf("error: Pas d'utilisateurs dans la liste\n");
+		exit(EXIT_FAILURE);
+	}
+
+	previous = liste->first;// c'est le serveur
+	cur_user = previous->next;
+
+	while(find1!=1 && stop!=1){
+		if(!strcmp(cur_user->pseudo,pseudo)){
+			find1 = 1;
+			cur_user->connect = 1;
+			cur_user->ip_addr = inet_ntoa(c_sin.sin_addr);
+			cur_user->user_sock = client_sock;
+			cur_user->port = ntohs(c_sin.sin_port);
+			cur_user->time = date();
+
+			printf("set info :cur_user->ip: %s | cur_user->port: %d | date: %s | cur_user->co: %d | cur_user->user_sock: %d\n",cur_user->ip_addr, cur_user->port, cur_user->time, cur_user->connect, cur_user->user_sock);
+			fflush(stdout);
+		}
+		previous = cur_user;
+		cur_user = cur_user->next;
+
+		if(cur_user == NULL)
+			stop=1;
+	}
+
+}
+
+void get_info(struct Liste* liste, char* pseudo, int client_sock,int server_sock){
+	struct Users* previous;
+	struct Users* cur_user;
+	int find1 = 0 ;
+	int stop = 0;
+	char* tmp;
 
 
 	if (liste == NULL){ // si la liste est NULL on s'arrete tout de suite
@@ -377,8 +408,19 @@ void set_client_sock(struct Liste *liste,char* pseudo,int client_sock){
 
 		if(!strcmp(cur_user->pseudo,pseudo)){
 			find1 = 1;
-			cur_user->user_sock = client_sock;
-			//fprintf(stdout,"verify :cur_user->co: %d\n",cur_user->connect);
+			memset(buffer,0,512);
+			strcpy(buffer,pseudo);
+			strcat(buffer, " connected since ");
+			strcat(buffer,cur_user->time);
+			strcat(buffer," with IP adress: ");
+			strcat(buffer,cur_user->ip_addr);
+			strcat(buffer," and port number: ");
+			sprintf(tmp, "%d",cur_user->port);
+			strcat(buffer,tmp);
+			strcat(buffer,"\n");
+			do_write(client_sock,server_sock);
+			memset(buffer,0,512);
+
 		}
 		previous = cur_user;
 		cur_user = cur_user->next;
@@ -386,7 +428,13 @@ void set_client_sock(struct Liste *liste,char* pseudo,int client_sock){
 		if(cur_user == NULL)
 			stop=1;
 	}
-
+	if(find1 == 0){
+		memset(buffer,0,512);
+		strcpy(buffer,pseudo);
+		strcat(buffer," not found\n");
+		do_write(client_sock,server_sock);
+		memset(buffer,0,512);
+	}
 }
 
 void see_user(struct Liste *liste){
@@ -404,12 +452,13 @@ void see_user(struct Liste *liste){
 //list of connected users
 short see_connected_user(struct Liste *liste, int client_sock,int server_sock, int see_user){
 	struct Users* cur_user;
-	short find = 0;
+	short* find = malloc(sizeof(short));
+	*find = 0;
 	cur_user = liste->first;
 	while (cur_user->next != NULL){
 		if(cur_user->connect == 1){
 			if(cur_user->user_sock==client_sock){
-				find = 1;
+				*find = 1;
 			}
 			if(see_user == 1){
 				memset(buffer,0,512);
@@ -422,7 +471,7 @@ short see_connected_user(struct Liste *liste, int client_sock,int server_sock, i
 		}
 		cur_user = cur_user->next;
 	}
-	return find;
+	return *find;
 }
 
 int nb_of_user(){
@@ -496,6 +545,9 @@ void fill_users(struct Liste* liste,int nb_user,char user_list[][28]){
 	}
 
 }
+
+
+
 //int main(int argc, char** argv){
 //
 //	struct Liste* liste;
@@ -514,7 +566,9 @@ void fill_users(struct Liste* liste,int nb_user,char user_list[][28]){
 //	verify_pseudo(liste,"Kevin");
 //
 //
-////	printf(" %s\n",a);
+//	char* a=date();
+//
+//	printf(" %s\n",a);
 //
 //	return 0;
 //

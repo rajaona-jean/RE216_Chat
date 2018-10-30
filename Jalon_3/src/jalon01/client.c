@@ -60,11 +60,11 @@ int do_socket(){
 	return s;
 }
 
-struct sockaddr_in init_server_addr(int port,struct sockaddr_in server_sock){
+struct sockaddr_in init_server_addr(char* ip_addr,int port,struct sockaddr_in server_sock){
 	memset(&server_sock,'\0',sizeof(server_sock));
 	server_sock.sin_family = AF_INET;
 	server_sock.sin_port = htons(port);
-	inet_aton("127.0.0.1",&server_sock.sin_addr);
+	inet_aton(ip_addr,&server_sock.sin_addr);
 	return server_sock;
 }
 
@@ -133,9 +133,9 @@ int main(int argc,char** argv){
 	int first_connection = 0;
 
 
-	if (argc != 2)
+	if (argc != 3)
 	{
-		fprintf(stderr,"usage: RE216_CLIENT port\n argc = %d\n",argc);
+		fprintf(stderr,"usage: RE216_CLIENT ip port\n argc = %d\n",argc);
 		return 1;
 	}
 
@@ -147,7 +147,7 @@ int main(int argc,char** argv){
 	client_sock = do_socket();
 
 	//init
-	server_sock = init_server_addr(atoi(argv[1]),server_sock);
+	server_sock = init_server_addr(argv[1],atoi(argv[2]),server_sock);
 
 
 	//connect to remote socket
