@@ -24,7 +24,8 @@ struct sockaddr_in init_serv_addr(char* ip_addr,int port){
 	sin.sin_family = AF_INET;
 	sin.sin_port = htons(port);
 	//sin.sin_addr.s_addr = htonl(INADDR_ANY);
-	inet_aton(ip_addr,&sin.sin_addr);
+	//inet_aton(ip_addr,&sin.sin_addr);
+	sin.sin_addr.s_addr = inet_addr("127.0.0.1");
 	return sin;
 }
 
@@ -274,6 +275,7 @@ int main(int argc, char** argv){
 	int p;
 	int connect = 0;
 	int user_nb = nb_of_user();
+	user_nb++;
 	short verify_nick=0;
 	short sl_check=0;
 	short pseudo_of_sock = 0;
@@ -284,8 +286,8 @@ int main(int argc, char** argv){
 	char* msg_all;
 	char* msg = malloc(512*sizeof(char));
 	char** user_liste = malloc(user_nb*sizeof(char*));
-	for(i=0; i<28;i++){
-		user_liste[i] = malloc(sizeof(char));
+	for(i=0; i<user_nb;i++){
+		user_liste[i] = malloc(28*sizeof(char));
 	}
 
 

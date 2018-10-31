@@ -154,8 +154,7 @@ int main(int argc,char** argv){
 	do_connect(client_sock,server_sock);
 
 
-	//get user input
-	//buffer = readline(argv[3]);
+
 
 	while(1){
 
@@ -173,6 +172,7 @@ int main(int argc,char** argv){
 			if(first_connection==0){
 				printf("\nPlease enter your pseudo:\n");
 				fflush(stdout);
+				//get user input
 				fgets(msg,L,stdin);
 				pseudo = get_nick_client(msg);
 				if (strcmp(msg, "/quit\n") == 0){

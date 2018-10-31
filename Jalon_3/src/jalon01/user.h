@@ -20,4 +20,5 @@ short see_connected_user(struct Liste *liste, int client_sock,int server_sock, i
 void down_connect(struct Liste *liste,int client_sock);
 void set_info(struct Liste* liste, char* pseudo, int client_sock, struct sockaddr_in c_sin);
 void get_info(struct Liste* liste, char* pseudo, int client_sock,int server_sock);
+
 #endif /* USER_H_ */

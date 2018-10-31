@@ -477,14 +477,12 @@ short see_connected_user(struct Liste *liste, int client_sock,int server_sock, i
 int nb_of_user(){
 	FILE* fich;
 	int nb_mot = -1;
-	char* buffer = malloc(sizeof(char));
+	char* l = malloc(sizeof(char));
 	int fin = 0;
-	int ok;
 	fich = fopen("./../src/jalon01/users.txt","r");
 	while(fin == 0){
-		fread(buffer,1,1,fich);
-		ok = strcmp(buffer,"\n");
-		if(ok == 0)
+		fread(l,1,1,fich);
+		if(l[0] == '\n')
 			nb_mot++;
 		fin = feof(fich);
 	}
@@ -496,9 +494,9 @@ int nb_of_user(){
 void init_users(struct Liste* liste,int nb_mot,char** user_liste){
 	FILE* fich;
 	//int nb_mot = -1;
-	char* buffer = malloc(sizeof(char));
+	char* l = malloc(sizeof(char));
 	int fin = 0;
-	int ok;
+	int ok = 1;
 	fich = fopen("./../src/jalon01/users.txt","r");
 	if(fich==NULL){
 		printf("oups");
@@ -508,22 +506,26 @@ void init_users(struct Liste* liste,int nb_mot,char** user_liste){
 	int j=0; //colonne
 	fin = 0;
 
-	char mots[nb_mot][28];
-	memset(&mots,'\0',sizeof(mots)+1);
+	//char mots[nb_mot][28];
+	char** mots = malloc(nb_mot*sizeof(char*));
+	for(i=0; i<nb_mot;i++){
+		mots[i] = malloc(28*sizeof(char));
+	}
 
 
 	fich = fopen("./../src/jalon01/users.txt","r");
-	while(fin == 0){
+	i=0;
+	while(fin == 0 && i!=nb_mot){
 
-
-		fread(buffer,1,1,fich);
-		ok = strcmp(buffer,"\n");
-		if(ok != 0)
-			strcat(mots[i],buffer);
-		if(ok == 0){
-			strcat(mots[i],"\0");
+		fread(l,1,1,fich);
+		if(l[0] == '\n'){
+			mots[i][j]='\0';
 			i++;
-
+			j=0;
+		}
+		else{
+			mots[i][j]=l[0];
+			j++;
 		}
 
 		fin = feof(fich);
