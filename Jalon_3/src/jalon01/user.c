@@ -33,9 +33,9 @@ struct Liste* init(int server_sock){
 	user->user_sock = server_sock;
 	user->pseudo = "SERVER";
 	user->connect = 1;
-	user->ip_addr = '\0';
+	user->ip_addr = NULL;
 	user->port = 0;
-	user->time = '\0';
+	user->time = NULL;
 	user->next = NULL;
 	liste->first = user;
 
@@ -67,9 +67,9 @@ void add_user(struct Liste *liste,char* pseudo, int client_socket){
 	new->user_sock = client_socket;
 	new->pseudo = pseudo;
 	new->connect = 0;
-	new->ip_addr = '\0';
+	new->ip_addr = NULL;
 	new->port = 0;
-	new->time = '\0';
+	new->time = NULL;
 	new->next = NULL;
 	previous = liste->first ;
 	while(previous->next != NULL)
@@ -493,7 +493,7 @@ int nb_of_user(){
 	return nb_mot;
 }
 
-void init_users(struct Liste* liste,int nb_mot,char user_liste[][28]){
+void init_users(struct Liste* liste,int nb_mot,char** user_liste){
 	FILE* fich;
 	//int nb_mot = -1;
 	char* buffer = malloc(sizeof(char));
@@ -537,7 +537,7 @@ void init_users(struct Liste* liste,int nb_mot,char user_liste[][28]){
 }
 
 
-void fill_users(struct Liste* liste,int nb_user,char user_list[][28]){
+void fill_users(struct Liste* liste,int nb_user,char** user_list){
 
 	int i;
 	for(i=0;i<nb_user;i++){

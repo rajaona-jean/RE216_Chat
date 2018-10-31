@@ -68,7 +68,7 @@ int do_socket(){
 
 
 int do_bind(int server_sock, struct sockaddr_in sin){
-	int b = bind(server_sock,(struct sockaddr*)&sin, sizeof(sin));
+	int b = bind(server_sock,(struct sockaddr*)&sin, sizeof(struct sockaddr_in));
 	if (b == 0){
 		printf(" [serveur]: BIND: OK\n");
 		fflush(stdout);
@@ -101,7 +101,9 @@ int do_accept(int server_sock,struct sockaddr_in* c_sin,int q){
 	//	socklen_t* c_sin_size =(socklen_t*) sizeof(&c_sin);
 	//	printf("%d",c_sin_size);
 	//	fflush(stdout);
-	int c_sin_size = sizeof(c_sin);
+	int c_sin_size = sizeof(struct sockaddr_in);
+	printf("do_accept: %d ", c_sin_size);
+	fflush(stdout);
 	int client_sock = accept(server_sock,(struct sockaddr*)&c_sin,&c_sin_size);
 	if(client_sock == -1){
 		close(server_sock); error("accept");
@@ -174,49 +176,63 @@ char* get_nick(char * msg, short q){
 	for(i=0; i<size-1; i++)
 		nick[i]='\0';
 
-	if( q == 1){
+	if( q == 1){//nick pseudo
 		for(i=6;i<size-1;i++){ //size-1 car \n
 			nick[i-6]=msg[i];
 		}
 	}
-	if( q == 4){
+	if( q == 4){//whois pseudo
 		for(i=7;i<size-1;i++){ //size-1 car \n
 			nick[i-7]=msg[i];
+		}
+	}
+	if( q == 5){//msgall msg
+		for(i=8;i<size-1;i++){ //size-1 car \n
+			nick[i-8]=msg[i];
 		}
 	}
 	return nick;
 }
 
 //check if the message starts with "/nick" to edit the nickname
-short if_slash(char* msg){
-	int size = strlen(msg);
-	char* cmd = malloc(6*sizeof(char));
+short if_slash(char* msg1){
+	int size = strlen(msg1);
+	char msg[size];
+	strcpy(msg,msg1);
+	char* cmd = malloc(7*sizeof(char));
 	int i;
+	int ok=0;
 	for(i=0;i<6;i++){ //size-1 car \n
 		cmd[i]='\0';
+	}
+	for(i=0;i<7;i++){
+		if(msg[i]==' ' || msg[i]=='\n' || ok==1){
+			msg[i]='\0';
+			ok = 1;
+		}
 	}
 	printf(" if_slash : %s\n",msg);
 	fflush(stdout);
 	if(msg[0]=='/'){
 		printf(" SLASH !!!!!\n");
 		fflush(stdout);
-		for(i=1;i<6;i++){ //size-1 car \n
+		for(i=1;i<7;i++){ //size-1 car \n
 			cmd[i-1]=msg[i];
 		}
 
-		if(strcmp(cmd,"nick ")==0){
+		if(strcmp(cmd,"nick")==0){
 			printf(" NICK !!!!!\n");
 			fflush(stdout);
 			return 1;
 		}
-		if(strcmp(cmd,"who\n")==0){
+		if(strcmp(cmd,"who")==0){
 			printf(" WHO !!!!!\n");
 			fflush(stdout);
 			return 2;
 		}
 		printf(" strcmp: %d\n",strcmp(cmd,"quit\n"));
 		fflush(stdout);
-		if(strcmp(cmd,"quit\n")==0){
+		if(strcmp(cmd,"quit")==0){
 			printf(" QUIT !!!!!\n");
 			fflush(stdout);
 			return 3;
@@ -225,6 +241,11 @@ short if_slash(char* msg){
 			printf(" WHOIS !!!!!\n");
 			fflush(stdout);
 			return 4;
+		}
+		if(strcmp(cmd,"msgall")==0){
+			printf(" MSGALL !!!!!\n");
+			fflush(stdout);
+			return 5;
 		}
 
 	}
@@ -241,26 +262,33 @@ int main(int argc, char** argv){
 	int server_sock;
 	int client_sock;
 	struct pollfd fds[N];
-	struct Liste* liste = malloc(sizeof(liste));
+	struct Liste* liste = malloc(sizeof(struct Liste*));
 
 	struct sockaddr_in sin = init_serv_addr(argv[1],atoi(argv[2])); //init the serv_add structure
 	struct sockaddr_in c_sin;
 	int k = 0;
-	char* msg = malloc(512*sizeof(char));
+
 	int i;
 	int j=0;
 	int ok = 0;
 	int p;
 	int connect = 0;
+	int user_nb = nb_of_user();
 	short verify_nick=0;
+	short sl_check=0;
+	short pseudo_of_sock = 0;
 
 
 	char* pseudo;
 	char* oth_user;
-	int user_nb = nb_of_user();
-	char user_liste[user_nb][28];
-	short sl_check=0;
-	short pseudo_of_sock = 0;
+	char* msg_all;
+	char* msg = malloc(512*sizeof(char));
+	char** user_liste = malloc(user_nb*sizeof(char*));
+	for(i=0; i<28;i++){
+		user_liste[i] = malloc(sizeof(char));
+	}
+
+
 
 	liste=init(3);
 	init_users(liste,user_nb,user_liste);
@@ -424,6 +452,35 @@ int main(int argc, char** argv){
 							if(sl_check==4){//whois
 								oth_user = get_nick(buffer,sl_check);
 								get_info(liste, oth_user, client_sock, server_sock);
+							}
+							if(sl_check==5){//msgall
+								ok=0;
+								msg_all = get_nick(buffer,sl_check);
+								memset(buffer,'\0',512);
+								sprintf(buffer," [%s]: ", pseudo);
+								strcat(buffer,msg_all);
+								strcat(buffer,"\n");
+								for(i=0; i<N;i++){//on envoie à tous le monde
+									if(fds[i].fd != client_sock && fds[i].fd != 0){// on verifie qu'on envoie pas à l'expéditeur
+										printf(" msgall: %d\n", fds[i].fd);
+										fflush(stdout);
+										do_write(fds[i].fd,server_sock);
+										ok=1;
+										memset(buffer,'\0',512);
+									}
+									if(ok==0){
+										memset(buffer,'\0',512);
+										strcpy(buffer, "[SERVER]: No one else is connected");
+										do_write(client_sock,server_sock);
+										memset(buffer,'\0',512);
+									}
+									if(ok==1){
+										memset(buffer,'\0',512);
+										strcpy(buffer, "[SERVER]: Message send");
+										do_write(client_sock,server_sock);
+										memset(buffer,'\0',512);
+									}
+								}
 							}
 
 						}// Fin slash

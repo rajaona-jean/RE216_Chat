@@ -61,7 +61,7 @@ int do_socket(){
 }
 
 struct sockaddr_in init_server_addr(char* ip_addr,int port,struct sockaddr_in server_sock){
-	memset(&server_sock,'\0',sizeof(server_sock));
+	memset(&server_sock,'\0',sizeof(struct sockaddr_in));
 	server_sock.sin_family = AF_INET;
 	server_sock.sin_port = htons(port);
 	inet_aton(ip_addr,&server_sock.sin_addr);
@@ -69,7 +69,7 @@ struct sockaddr_in init_server_addr(char* ip_addr,int port,struct sockaddr_in se
 }
 
 void do_connect(int client_socket,struct sockaddr_in server_sock){
-	int err = connect(client_socket,(struct sockaddr *)&server_sock,sizeof(server_sock));
+	int err = connect(client_socket,(struct sockaddr *)&server_sock,sizeof(struct sockaddr_in));
 	if(err == -1){
 		error("connect");close(client_socket);exit(EXIT_FAILURE);
 	}
