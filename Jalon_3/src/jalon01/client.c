@@ -15,8 +15,8 @@
 #include <signal.h>
 
 const int L = 512;
-char buffer[512];
-char* pseudo ;
+char* buffer;
+char* pseudo;
 
 void sigintHandler(int sig_num)
 {
@@ -93,14 +93,14 @@ void handle_client_message(int client_socket,char* msg){
 }
 
 char* do_read(int client_sock){
-	int txt_size;
+	int txt_size ;
 	int size_buff = L;
 	txt_size = recv(client_sock,buffer,size_buff,0);
-	if(txt_size!=-1 && strcmp(buffer,"1")!=0 ){
+	if((txt_size!=-1) && (strcmp(buffer,"1")!=0) ){
 		printf(" [MESSAGE FROM SERVER]: %s\n",buffer);
 		fflush(stdout);
 	}
-	else if(txt_size!=-1 && strcmp(buffer,"1")==0){
+	else if((txt_size!=-1) && (strcmp(buffer,"1")==0)){
 		printf(" [MESSAGE FROM SERVER]: Welcome on the chat %s\n",pseudo);
 		fflush(stdout);
 	}
@@ -114,32 +114,39 @@ char* do_read_who(int client_sock, int q){
 	int txt_size;
 	int size_buff = L;
 	txt_size = recv(client_sock,buffer,size_buff,0);
+	char * msg = malloc(L*sizeof(char));
+	strcpy(msg,buffer);
 	if(txt_size!=-1 && q==1 ){
-		printf(" [MESSAGE FROM SERVER]: %s",buffer);
+		if(msg[strlen(msg)-1] == '1')
+			msg[strlen(msg)-1] = '\0';
+		printf(" [MESSAGE FROM SERVER]: %s",msg);
 		fflush(stdout);
 	}
-	else if(txt_size!=-1 && strcmp(buffer,"1")==1){
-
+	else if(txt_size!=-1 && msg[strlen(buffer)-1] == '1'){
+		msg[strlen(msg)-1] = '\0';
+		printf(" %s",msg);
+		fflush(stdout);
 	}
 	else if(txt_size!=-1 && q==0){
-		printf(" %s",buffer);
+		printf(" %s",msg);
 		fflush(stdout);
 	}
 
 	else{
 		error("recv");close(client_sock); exit(EXIT_FAILURE);
 	}
-	return buffer;
+	return msg;
 }
 
 char* get_nick_client(char * msg){
 	int size = strlen(msg);
 	char* nick = malloc(30*sizeof(char));
 	int i;
-	int fin;
+	for(i=0;i<30;i++){
+		nick[i]='\0';
+	}
 	for(i=6;i<size-1;i++){ //size-1 car \n
 		nick[i-6]=msg[i];
-		fin = i;
 	}
 	return nick;
 }
@@ -155,7 +162,9 @@ int main(int argc,char** argv){
 	struct sockaddr_in server_sock;
 	int first = 0;
 	int first_connection = 0;
-
+	int i;
+	buffer = malloc(L*sizeof(char));
+	pseudo = malloc(30*sizeof(char));
 
 	if (argc != 3)
 	{
@@ -193,46 +202,28 @@ int main(int argc,char** argv){
 		memset (buffer, '\0', L);
 		signal(SIGINT, sigintHandler);
 		while(1){
+
 			if(first_connection==0){
 				printf("\nPlease enter your pseudo:\n");
 				fflush(stdout);
 				//get user input
 				fgets(msg,L,stdin);
 				pseudo = get_nick_client(msg);
-				if (strcmp(msg, "/quit\n") == 0){
-					strcpy(buffer, msg);
-					handle_client_message(client_sock,msg);
-					return 0;
-				}
-
-				//send message to the server
-				handle_client_message(client_sock,msg);
-				memset (buffer, '\0', L);
-				//read what the server has to say
-				do_read(client_sock);
-
-				first_connection = atoi(buffer);
-			}
-			else if (first_connection==1){
-				printf("\nPlease enter your line:\n");
-				fflush(stdout);
-				fgets(msg,L,stdin);
-
-				if (strcmp(msg, "/quit\n") == 0){
-					strcpy(buffer, msg);
-					handle_client_message(client_sock,msg);
-					return 0;
-				}
-
-				if (strcmp(msg, "/who\n") == 0){
-					strcpy(buffer, msg);
-					handle_client_message(client_sock,msg);
-					memset (buffer, '\0', L);
-					do_read_who(client_sock,1);
-					while (ok_from_serv != 1 ){
+				if(strcmp(msg, "/quit\n") == 0 || strcmp(msg, "/who\n") == 0){
+					if (strcmp(msg, "/quit\n") == 0){
+						strcpy(buffer, msg);
+						handle_client_message(client_sock,msg);
+						return 0;
+					}
+					if (strcmp(msg, "/who\n") == 0){
+						strcpy(buffer, msg);
+						handle_client_message(client_sock,msg);
 						memset (buffer, '\0', L);
-						do_read_who(client_sock,0);
-						ok_from_serv = atoi(buffer);
+						do_read_who(client_sock,1);
+						while (buffer[strlen(buffer)-1] != '1'){
+							memset (buffer, '\0', L);
+							do_read_who(client_sock,0);
+						}
 					}
 				}
 				else{
@@ -242,14 +233,47 @@ int main(int argc,char** argv){
 					//read what the server has to say
 					do_read(client_sock);
 				}
-
+				first_connection = atoi(buffer);
 			}
+			else if (first_connection==1){
+				printf("\nPlease enter your line:\n");
+				fflush(stdout);
+				fgets(msg,L,stdin);
 
+				if(strcmp(msg, "/quit\n") == 0 || strcmp(msg, "/who\n") == 0){
+					if (strcmp(msg, "/quit\n") == 0){
+						strcpy(buffer, msg);
+						handle_client_message(client_sock,msg);
+						return 0;
+					}
 
+					if (strcmp(msg, "/who\n") == 0){
+						strcpy(buffer, msg);
+						handle_client_message(client_sock,msg);
+						memset (buffer, '\0', L);
+						do_read_who(client_sock,1);
+						while (buffer[strlen(buffer)-1] != '1'){
+							memset (buffer, '\0', L);
+							do_read_who(client_sock,0);
+						}
 
+					}
+				}
+				else{
+					//send message to the server
+					handle_client_message(client_sock,msg);
+					memset (buffer, '\0', L);
+					//read what the server has to say
+					do_read(client_sock);
+				}
+			}
 		}
 
-		return 0;
+
 
 	}
+
+	return 0;
+
 }
+

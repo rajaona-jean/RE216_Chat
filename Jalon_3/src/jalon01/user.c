@@ -393,7 +393,7 @@ void get_info(struct Liste* liste, char* pseudo, int client_sock,int server_sock
 	struct Users* cur_user;
 	int find1 = 0 ;
 	int stop = 0;
-	char* tmp;
+	char* tmp = malloc(10*sizeof(char));
 
 
 	if (liste == NULL){ // si la liste est NULL on s'arrete tout de suite

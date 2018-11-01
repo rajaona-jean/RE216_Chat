@@ -198,7 +198,7 @@ char* get_nick(char * msg, short q){
 //check if the message starts with "/nick" to edit the nickname
 short if_slash(char* msg1){
 	int size = strlen(msg1);
-	char* msg = malloc((size+1)*sizeof(char));
+	char* msg = malloc(512*sizeof(char));
 	strcpy(msg,msg1);
 	char* cmd = malloc(7*sizeof(char));
 	int i=0;
@@ -449,9 +449,12 @@ int main(int argc, char** argv){
 								see_connected_user(liste,client_sock,server_sock,1);
 								memset(buffer,'\0',512);
 								strcpy(buffer,"1");
-								while(atoi(buffer)!=1){;}
+
+								while(buffer[strlen(buffer)-1] != '1'){;}
 								//we write back to the client
 								msg=do_write(client_sock,server_sock);
+								printf("write\n");
+								fflush(stdout);
 							}
 
 							if(sl_check==3){ //quit
@@ -504,7 +507,7 @@ int main(int argc, char** argv){
 							}
 
 						}// Fin slash
-						else{
+						else if(sl_check ==0){
 							msg=do_write(client_sock,server_sock);
 							memset(buffer,'\0',512);
 						}
