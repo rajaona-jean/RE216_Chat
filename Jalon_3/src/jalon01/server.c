@@ -25,7 +25,7 @@ struct sockaddr_in init_serv_addr(char* ip_addr,int port){
 	sin.sin_port = htons(port);
 	//sin.sin_addr.s_addr = htonl(INADDR_ANY);
 	//inet_aton(ip_addr,&sin.sin_addr);
-	sin.sin_addr.s_addr = inet_addr("127.0.0.1");
+	sin.sin_addr.s_addr = inet_addr(ip_addr);
 	return sin;
 }
 
@@ -198,27 +198,42 @@ char* get_nick(char * msg, short q){
 //check if the message starts with "/nick" to edit the nickname
 short if_slash(char* msg1){
 	int size = strlen(msg1);
-	char msg[size];
+	char* msg = malloc((size+1)*sizeof(char));
 	strcpy(msg,msg1);
 	char* cmd = malloc(7*sizeof(char));
-	int i;
+	int i=0;
 	int ok=0;
 	for(i=0;i<6;i++){ //size-1 car \n
 		cmd[i]='\0';
 	}
-	for(i=0;i<7;i++){
-		if(msg[i]==' ' || msg[i]=='\n' || ok==1){
+	i=0;
+	while(ok==0){
+		if(msg[i]==' ' || msg[i]=='\n'){
 			msg[i]='\0';
 			ok = 1;
 		}
+		i++;
 	}
+
+
+
 	printf(" if_slash : %s\n",msg);
 	fflush(stdout);
 	if(msg[0]=='/'){
 		printf(" SLASH !!!!!\n");
 		fflush(stdout);
-		for(i=1;i<7;i++){ //size-1 car \n
-			cmd[i-1]=msg[i];
+
+		i=1;
+		ok=0;
+		while(ok==0){
+			if(msg[i]==' ' || msg[i]=='\n'|| msg[i]=='\0'){
+				cmd[i]='\0';
+				ok = 1;
+			}
+			else{
+				cmd[i-1]=msg[i];
+			}
+			i++;
 		}
 
 		if(strcmp(cmd,"nick")==0){
@@ -267,6 +282,7 @@ int main(int argc, char** argv){
 
 	struct sockaddr_in sin = init_serv_addr(argv[1],atoi(argv[2])); //init the serv_add structure
 	struct sockaddr_in c_sin;
+	memset(&c_sin, 0, sizeof(c_sin));
 	int k = 0;
 
 	int i;
@@ -275,7 +291,6 @@ int main(int argc, char** argv){
 	int p;
 	int connect = 0;
 	int user_nb = nb_of_user();
-	user_nb++;
 	short verify_nick=0;
 	short sl_check=0;
 	short pseudo_of_sock = 0;
@@ -376,12 +391,12 @@ int main(int argc, char** argv){
 
 
 					if(i!=0){ // On parle avec le client
-
+						memset(buffer,'\0',512);
 						client_sock = fds[i].fd ;
 						pseudo_of_sock = pseudo_from_sock(liste,client_sock);
 						do_read(client_sock,server_sock,&sin,1);
 						sl_check = if_slash(buffer);
-						printf(" buffer : %s\n",msg);
+						printf(" buffer : %s\n",buffer);
 						fflush(stdout);
 						if(sl_check!=0){
 							if(sl_check == 1){// On verifie /nick
@@ -432,6 +447,9 @@ int main(int argc, char** argv){
 								strcpy(buffer,"Connected users:\n");
 								do_write(client_sock,server_sock);
 								see_connected_user(liste,client_sock,server_sock,1);
+								memset(buffer,'\0',512);
+								strcpy(buffer,"1");
+								while(atoi(buffer)!=1){;}
 								//we write back to the client
 								msg=do_write(client_sock,server_sock);
 							}

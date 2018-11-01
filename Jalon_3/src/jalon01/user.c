@@ -461,16 +461,15 @@ short see_connected_user(struct Liste *liste, int client_sock,int server_sock, i
 				*find = 1;
 			}
 			if(see_user == 1){
-				memset(buffer,0,512);
-				strcpy(buffer,"       - ");
-				strcat(buffer,cur_user->pseudo);
-				strcat(buffer,"\n");
+				memset(buffer,'\0',512);
+				sprintf(buffer, "            - %s\n",cur_user->pseudo);
 				do_write(client_sock,server_sock);
-				memset(buffer,0,512);
 			}
 		}
 		cur_user = cur_user->next;
 	}
+
+
 	return *find;
 }
 

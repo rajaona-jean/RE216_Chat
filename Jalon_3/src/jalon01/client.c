@@ -96,7 +96,7 @@ char* do_read(int client_sock){
 	int txt_size;
 	int size_buff = L;
 	txt_size = recv(client_sock,buffer,size_buff,0);
-	if(txt_size!=-1 && strcmp(buffer,"1")!=0){
+	if(txt_size!=-1 && strcmp(buffer,"1")!=0 ){
 		printf(" [MESSAGE FROM SERVER]: %s\n",buffer);
 		fflush(stdout);
 	}
@@ -104,6 +104,28 @@ char* do_read(int client_sock){
 		printf(" [MESSAGE FROM SERVER]: Welcome on the chat %s\n",pseudo);
 		fflush(stdout);
 	}
+	else{
+		error("recv");close(client_sock); exit(EXIT_FAILURE);
+	}
+	return buffer;
+}
+
+char* do_read_who(int client_sock, int q){
+	int txt_size;
+	int size_buff = L;
+	txt_size = recv(client_sock,buffer,size_buff,0);
+	if(txt_size!=-1 && q==1 ){
+		printf(" [MESSAGE FROM SERVER]: %s",buffer);
+		fflush(stdout);
+	}
+	else if(txt_size!=-1 && strcmp(buffer,"1")==1){
+
+	}
+	else if(txt_size!=-1 && q==0){
+		printf(" %s",buffer);
+		fflush(stdout);
+	}
+
 	else{
 		error("recv");close(client_sock); exit(EXIT_FAILURE);
 	}
@@ -122,9 +144,11 @@ char* get_nick_client(char * msg){
 	return nick;
 }
 
+
 int main(int argc,char** argv){
 	int error;
 	int client_sock;
+	short ok_from_serv=0;
 	char* msg = malloc(L*sizeof(char));
 	struct addrinfo hints;
 	struct addrinfo* infoptr;
@@ -200,11 +224,24 @@ int main(int argc,char** argv){
 					return 0;
 				}
 
-				//send message to the server
-				handle_client_message(client_sock,msg);
-				memset (buffer, '\0', L);
-				//read what the server has to say
-				do_read(client_sock);
+				if (strcmp(msg, "/who\n") == 0){
+					strcpy(buffer, msg);
+					handle_client_message(client_sock,msg);
+					memset (buffer, '\0', L);
+					do_read_who(client_sock,1);
+					while (ok_from_serv != 1 ){
+						memset (buffer, '\0', L);
+						do_read_who(client_sock,0);
+						ok_from_serv = atoi(buffer);
+					}
+				}
+				else{
+					//send message to the server
+					handle_client_message(client_sock,msg);
+					memset (buffer, '\0', L);
+					//read what the server has to say
+					do_read(client_sock);
+				}
 
 			}
 
