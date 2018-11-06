@@ -3,7 +3,8 @@
 #include <stdio.h>
 #include <string.h>
 #include <time.h>
-
+#include <pthread.h>
+#include <poll.h>
 
 #include <sys/types.h>
 #include <sys/socket.h>
@@ -14,9 +15,15 @@
 #include <arpa/inet.h>
 #include <signal.h>
 
+#define MAX_USER 4
+
 const int L = 512;
+
+
 char* buffer;
 char* pseudo;
+int M= 2; //on compte le serveur
+
 
 void sigintHandler(int sig_num)
 {
@@ -25,6 +32,35 @@ void sigintHandler(int sig_num)
 	fflush(stdout);
 }
 
+/*struct msgrecu{
+//char *msg;
+int sock ;
+//int lenght ;
+};
+
+
+struct msgrecu *new_message(int sock)
+{
+struct msgrecu *new= malloc(sizeof(new));
+new->sock = sock;
+//new->msg = malloc(sizeof(char)*25);
+//new->lenght  = 255;
+return new;
+}
+
+//fonction pour le thread
+void* recevoir(struct msgrecu *msge){
+int a ;
+for(;;)
+{
+a = recv(msge->sock,buffer,L,0);
+if( a > 0){
+printf(" [MESSAGE FROM SERVER]: %s\n",buffer);
+fflush(stdout);
+memset(buffer,0,L);
+}
+}
+}*/
 
 void error(const char *msg)
 {
@@ -33,16 +69,16 @@ void error(const char *msg)
 }
 
 /*void get_addr_info(struct addrinfo hints,struct addrinfo *infoptr){
-	int a = getaddrinfo("127.0.0.1","80",&hints,&infoptr);
-	if(a == 0){
-		printf(" client: get addr info: OK\n");
-		fflush(stdout);
-	}
-	else{
-    gai_strerror(errno);
-		printf(" client: get addr info: ERREUR\n");
-		fflush(stdout);
-	}
+int a = getaddrinfo("127.0.0.1","80",&hints,&infoptr);
+if(a == 0){
+printf(" client: get addr info: OK\n");
+fflush(stdout);
+}
+else{
+gai_strerror(errno);
+printf(" client: get addr info: ERREUR\n");
+fflush(stdout);
+}
 }*/
 
 
@@ -64,7 +100,8 @@ struct sockaddr_in init_server_addr(char* ip_addr,int port,struct sockaddr_in se
 	memset(&server_sock,'\0',sizeof(struct sockaddr_in));
 	server_sock.sin_family = AF_INET;
 	server_sock.sin_port = htons(port);
-	inet_aton(ip_addr,&server_sock.sin_addr);
+	server_sock.sin_addr.s_addr = inet_addr(ip_addr);
+	//inet_aton(ip_addr,&server_sock.sin_addr);
 	return server_sock;
 }
 
@@ -104,9 +141,13 @@ char* do_read(int client_sock){
 		printf(" [MESSAGE FROM SERVER]: Welcome on the chat %s\n",pseudo);
 		fflush(stdout);
 	}
-	else{
+	else {
+		/*printf(" [MESSAGE FROM SERVER]: %s\n",buffer);
+		fflush(stdout);
+		memset(buffer, 0, strlen(buffer));*/
 		error("recv");close(client_sock); exit(EXIT_FAILURE);
 	}
+
 	return buffer;
 }
 
@@ -118,7 +159,7 @@ char* do_read_who(int client_sock, int q){
 	strcpy(msg,buffer);
 	if(txt_size!=-1 && q==1 ){
 		if(msg[strlen(msg)-1] == '1')
-			msg[strlen(msg)-1] = '\0';
+		msg[strlen(msg)-1] = '\0';
 		printf(" [MESSAGE FROM SERVER]: %s",msg);
 		fflush(stdout);
 	}
@@ -151,20 +192,32 @@ char* get_nick_client(char * msg){
 	return nick;
 }
 
-
+/*void *ecoute(int client_sock,char* msg){
+int taille = strlen(msg);
+int s =  recv(client_sock,msg,taille,0);
+if(s != -1){
+printf(" [MESSAGE FROM SERVER]: %s\n",msg);
+fflush(stdout);
+}
+}
+*/
 int main(int argc,char** argv){
 	int error;
 	int client_sock;
-	short ok_from_serv=0;
-	char* msg = malloc(L*sizeof(char));
-	struct addrinfo hints;
-	struct addrinfo* infoptr;
-	struct sockaddr_in server_sock;
 	int first = 0;
 	int first_connection = 0;
 	int i;
+	short ok_from_serv=0;
+	char* msg = malloc(L*sizeof(char));
+
+	struct addrinfo hints;
+	struct addrinfo* infoptr;
+	struct sockaddr_in server_sock;
+
 	buffer = malloc(L*sizeof(char));
-	pseudo = malloc(30*sizeof(char));
+
+	struct pollfd fdc[M];
+
 
 	if (argc != 3)
 	{
@@ -172,37 +225,47 @@ int main(int argc,char** argv){
 		return 1;
 	}
 
-
-	//get address info from the server, useless for jalon 1
-	//get_addr_info(hints,infoptr);
-
 	//get the socket
 	client_sock = do_socket();
-
 	//init
 	server_sock = init_server_addr(argv[1],atoi(argv[2]),server_sock);
-
-
 	//connect to remote socket
 	do_connect(client_sock,server_sock);
+
+
+	//pthread_t t;
+
+	//Initis the pollfd structure
+
+	fdc[0].fd = client_sock;
+	fdc[0].events = POLLIN;
+	fdc[1].fd = STDIN_FILENO;
+	fdc[1].events = POLLIN;
+
+
 
 
 
 
 	while(1){
 
+
 		if (first==0){
 			msg=do_read(client_sock);
 
 			if (strcmp(msg, "Server cannot accept incoming connections anymore. Try again later.") == 0)
-				break;
+			break;
 
 			first=1;
 		}
 		memset (buffer, '\0', L);
 		signal(SIGINT, sigintHandler);
-		while(1){
+		//pthread_create(&t,NULL,recevoir,(void*)mess);
+		//do_read(client_sock);
 
+		while(1){
+			//int s = recv(client_sock,buffer,L,0);
+			//if(s == -1){
 			if(first_connection==0){
 				printf("\nPlease enter your pseudo:\n");
 				fflush(stdout);
@@ -225,6 +288,7 @@ int main(int argc,char** argv){
 							do_read_who(client_sock,0);
 						}
 					}
+
 				}
 				else{
 					//send message to the server
@@ -236,10 +300,29 @@ int main(int argc,char** argv){
 				first_connection = atoi(buffer);
 			}
 			else if (first_connection==1){
-				printf("\nPlease enter your line:\n");
-				fflush(stdout);
-				fgets(msg,L,stdin);
+				while(1){
+					printf("\nPlease enter your line:\n");
+					fflush(stdout);
+					int p = poll(fdc,M,-1);
 
+						if(fdc[1].revents == POLLIN){
+
+
+													fgets(msg,L,stdin);
+
+						/*printf("msg e fgets %s", msg);
+						if(e== NULL){
+						printf("\nPlease enter your message:\n");
+						fflush(stdout);
+						fgets(msg,L,stdin);
+					}*/
+
+					/*if(r == NULL){
+
+					do_read(client_sock);
+					printf("le fgets est null");
+					fflush(stdout);
+				}*/
 				if(strcmp(msg, "/quit\n") == 0 || strcmp(msg, "/who\n") == 0){
 					if (strcmp(msg, "/quit\n") == 0){
 						strcpy(buffer, msg);
@@ -260,20 +343,34 @@ int main(int argc,char** argv){
 					}
 				}
 				else{
+
 					//send message to the server
 					handle_client_message(client_sock,msg);
 					memset (buffer, '\0', L);
 					//read what the server has to say
 					do_read(client_sock);
-				}
+
+
+
+
+				}// fin du while(1)
+			}//fin du else if first_conn ==1
+			if(fdc[0].revents == POLLIN){
+				memset (buffer, '\0', L);
+				//read what the server has to say
+				do_read(client_sock);
+
 			}
 		}
-
-
-
+		//pthread_exit(0);
 	}
+}
+} //fin du while(1)
 
-	return 0;
+
+
+//}
+
+return 0;
 
 }
-

@@ -4,6 +4,8 @@
 #include <time.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
+#include <pthread.h>
+
 
 
 #include "user.h"
@@ -287,6 +289,79 @@ short pseudo_from_sock(struct Liste *liste,int client_sock){
 	}
 
 	return *find1;
+}
+
+char* get_pseudo_from_sock(struct Liste *liste,int client_sock){
+	struct Users* previous;
+	struct Users* cur_user;
+	short* find1 = malloc(sizeof(short));
+	int stop = 0;
+	*find1 = 0;
+	char* pseudo= malloc(20*sizeof(char));
+
+
+	if (liste == NULL){ // si la liste est NULL on s'arrete tout de suite
+		printf("error: Pas d'utilisateurs dans la liste\n");
+		exit(EXIT_FAILURE);
+	}
+
+	previous = liste->first;// c'est le serveur
+	cur_user = previous->next;
+
+	while(*find1!=1 && stop!=1){
+
+		if(cur_user->user_sock == client_sock){
+			if(cur_user->pseudo != NULL){
+				*find1 = 1;
+				pseudo = cur_user->pseudo;
+			}
+		}
+		previous = cur_user;
+		cur_user = cur_user->next;
+
+		if(cur_user == NULL)
+			stop=1;
+	}
+
+	return pseudo;
+}
+
+
+
+int client_sock_from_pseudo(struct Liste *liste,char* pseudo){
+	struct Users* previous;
+	struct Users* cur_user;
+	int find = 0;
+	int stop = 0;
+	int sock_dest = 0;
+
+	if (liste == NULL){ // si la liste est NULL on s'arrete tout de suite
+		printf("error: Pas d'utilisateurs dans la liste\n");
+		return 1;
+	}
+
+	previous = liste->first;// c'est le serveur
+	cur_user = previous->next;
+
+	while(find!=1 && stop!=1){
+
+		if(!strcmp(cur_user->pseudo,pseudo)){
+			if(cur_user->user_sock != 0){
+				find = 1;
+				sock_dest = cur_user->user_sock;
+				printf("sock trouvée\n");
+				fflush(stdout);
+			}
+		}
+
+		previous = cur_user;
+		cur_user = cur_user->next;
+
+		if(cur_user == NULL)
+			stop=1;
+	}
+
+return sock_dest;
 }
 
 void down_connect(struct Liste *liste,int client_sock){

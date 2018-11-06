@@ -14,6 +14,14 @@ void fill_users(struct Liste* liste,int nb_user,char** user_list);
 short verify_pseudo(struct Liste *liste,char* pseudo);
 short verify_connect(struct Liste *liste,char* pseudo);
 short pseudo_from_sock(struct Liste *liste,int client_sock);
+
+//get pseudo from socket
+char* get_pseudo_from_sock(struct Liste *liste,int client_sock);//Rita
+
+
+//get client_sock from user_sock
+int client_sock_from_pseudo(struct Liste *liste,char* pseudo);//Rita
+
 void edit_pseudo_from_sock(struct Liste *liste,int client_sock,char* new_pseudo);
 void down_client_sock(struct Liste* liste,int client_sock);
 short see_connected_user(struct Liste *liste, int client_sock,int server_sock, int see_user);

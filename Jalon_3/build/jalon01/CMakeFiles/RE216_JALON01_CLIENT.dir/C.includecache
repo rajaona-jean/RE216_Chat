@@ -1,4 +1,4 @@
-#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+#IncludeRegexLine: ^[ 	]*#[ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
 
 #IncludeRegexScan: ^.*$
 
@@ -6,7 +6,7 @@
 
 #IncludeRegexTransform: 
 
-/home/rajaona/Documents/C/Projet/RE216_Chat/Jalon_3/src/jalon01/client.c
+/net/t/romari/Desktop/RE216_Chat/Jalon_3/src/jalon01/client.c
 stdlib.h
 -
 unistd.h
@@ -16,6 +16,10 @@ stdio.h
 string.h
 -
 time.h
+-
+pthread.h
+-
+poll.h
 -
 sys/types.h
 -
