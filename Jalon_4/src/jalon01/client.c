@@ -440,11 +440,25 @@ int main(int argc,char** argv){
 									printf("\nPlease enter your line:\n");
 									printf("%s[%s]> ",pseudo,canal_name);
 									fflush(stdout);
-									fgets(msg,L,stdin);
-									handle_client_message(client_sock,msg);
-									memset (buffer, '\0', L);
-									//read what the server has to say
-									do_read(client_sock);
+									p = poll(fdc,M,-1);
+
+									if(fdc[1].revents == POLLIN){
+										fgets(msg,L,stdin);
+										handle_client_message(client_sock,msg);
+										memset (buffer, '\0', L);
+										//read what the server has to say
+										do_read(client_sock);
+										*sl_check=if_slash_client(buffer);
+										if(*sl_check==3){ //quit
+											strcpy(buffer, msg);
+											handle_client_message(client_sock,msg);
+											return 0;
+										}
+									}
+									else if(fdc[0].revents == POLLIN){
+										memset (buffer, '\0', L);
+										do_read(client_sock);
+									}
 								}
 
 							}

@@ -648,91 +648,90 @@ int main(int argc, char** argv){
 										else if(message_msg[k] == ' '){ //message à envoyer
 											stop =1;
 										}
-										else if(stop ==1){
-											message[k-c-1] = message_msg[k];
-										}
-
 									}
-									int sock_dest = client_sock_from_pseudo(liste,oth_pseudo);
-									printf("sock du destinataire [%d]\n", sock_dest);
-									fflush(stdout);
-									printf("pseudo du destinataire [%s]\n", oth_pseudo);
-									fflush(stdout);
-									printf("message a envoyer [%s]\n", message);
-									fflush(stdout);
-
-									//envoi du message au destinataire
-									memset(buffer,'\0',512);
-									sprintf(buffer," [%s]: ", sender);
-									strcat(buffer,message);
-									strcat(buffer,"\n");
-									do_write(sock_dest,server_sock);
-
-									//envoi de confirmation au destinateur
-									memset(buffer,'\0',512);
-									strcpy(buffer, "[SERVER]: Message sent to user ");
-									strcat(buffer, oth_pseudo);
-									do_write(client_sock,server_sock);
-									memset(buffer,'\0',512);
-								}
-
-								if(sl_check==7){//create
-									msg = get_nick(buffer,sl_check);
-									pseudo = get_pseudo_from_sock(liste,client_sock);
-									add_canal(c_liste,pseudo,msg,20);
-									join_canal(c_liste,pseudo,msg);
-									set_canal_name(liste,pseudo,msg);
-									memset(buffer,'\0',512);
-									sprintf(buffer," Cannal: %s created",msg);
-									do_write(client_sock,server_sock);
-								}
-								if(sl_check==8){//join
-									ok = 0;
-									msg = get_nick(buffer,sl_check);
-									pseudo = get_pseudo_from_sock(liste,client_sock);
-									ok=join_canal(c_liste,pseudo,msg);
-									if (ok==1){
-										set_canal_name(liste,pseudo,msg);
-										memset(buffer,'\0',512);
-										sprintf(buffer," Cannal: '%s' joined",msg);
-										do_write(client_sock,server_sock);
+									else if(stop ==1){
+										message[k-c-1] = message_msg[k];
 									}
-									else{
-										memset(buffer,'\0',512);
-										sprintf(buffer," No Cannal: '%s' found, sorry.",msg);
-										do_write(client_sock,server_sock);
-									}
-								}
 
-							}
-						}// Fin slash
-						else if(sl_check ==0){
-							if(pseudo_known(liste,client_sock)==1){
-								canal_name=get_canal_name_from_sock(liste,client_sock);
-								if(!strcmp(canal_name,"global")){
-									msg=do_write(client_sock,server_sock);
-									memset(buffer,'\0',512);
 								}
-								else{// speak to the canal
-									speak_with_canal(liste,c_liste,canal_name,server_sock);
-								}
-							}
-							else{
+								int sock_dest = client_sock_from_pseudo(liste,oth_pseudo);
+								printf("sock du destinataire [%d]\n", sock_dest);
+								fflush(stdout);
+								printf("pseudo du destinataire [%s]\n", oth_pseudo);
+								fflush(stdout);
+								printf("message a envoyer [%s]\n", message);
+								fflush(stdout);
+
+								//envoi du message au destinataire
+								memset(buffer,'\0',512);
+								sprintf(buffer," [%s]: ", sender);
+								strcat(buffer,message);
+								strcat(buffer,"\n");
+								do_write(sock_dest,server_sock);
+
+								//envoi de confirmation au destinateur
+								memset(buffer,'\0',512);
+								strcpy(buffer, "[SERVER]: Message sent to user ");
+								strcat(buffer, oth_pseudo);
 								do_write(client_sock,server_sock);
 								memset(buffer,'\0',512);
 							}
+
+							if(sl_check==7){//create
+								msg = get_nick(buffer,sl_check);
+								pseudo = get_pseudo_from_sock(liste,client_sock);
+								add_canal(c_liste,pseudo,msg,20);
+								join_canal(c_liste,pseudo,msg);
+								set_canal_name(liste,pseudo,msg);
+								memset(buffer,'\0',512);
+								sprintf(buffer," Cannal: %s created",msg);
+								do_write(client_sock,server_sock);
+							}
+							if(sl_check==8){//join
+								ok = 0;
+								msg = get_nick(buffer,sl_check);
+								pseudo = get_pseudo_from_sock(liste,client_sock);
+								ok=join_canal(c_liste,pseudo,msg);
+								if (ok==1){
+									set_canal_name(liste,pseudo,msg);
+									memset(buffer,'\0',512);
+									sprintf(buffer," Cannal: '%s' joined",msg);
+									do_write(client_sock,server_sock);
+								}
+								else{
+									memset(buffer,'\0',512);
+									sprintf(buffer," No Cannal: '%s' found, sorry.",msg);
+									do_write(client_sock,server_sock);
+								}
+							}
+					}// Fin slash
+					else if(sl_check ==0){
+						if(pseudo_known(liste,client_sock)==1){
+							canal_name=get_canal_name_from_sock(liste,client_sock);
+							if(!strcmp(canal_name,"global")){
+								msg=do_write(client_sock,server_sock);
+								memset(buffer,'\0',512);
+							}
+							else{// speak to the canal
+								speak_with_canal(liste,c_liste,canal_name,server_sock);
+							}
 						}
+						else{
+							do_write(client_sock,server_sock);
+							memset(buffer,'\0',512);
+						}
+					}
 
-					} // Fin du dialogue
-				}// Fin d
+				} // Fin du dialogue
+			}// Fin d
 
-			} // end of if, gestion evenement
-
-
-		} //end of for
-	}//end of while
+		} // end of if, gestion evenement
 
 
+	} //end of for
+}//end of while
 
-	return 0;
+
+
+return 0;
 }
