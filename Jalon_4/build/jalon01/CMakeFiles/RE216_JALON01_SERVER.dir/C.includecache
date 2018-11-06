@@ -1,0 +1,34 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/rajaona/Documents/C/Projet/RE216_Chat/Jalon_4/src/jalon01/canal.h
+
+/home/rajaona/Documents/C/Projet/RE216_Chat/Jalon_4/src/jalon01/server.h
+
+/home/rajaona/Documents/C/Projet/RE216_Chat/Jalon_4/src/jalon01/user.c
+stdio.h
+-
+stdlib.h
+-
+string.h
+-
+time.h
+-
+netinet/in.h
+-
+arpa/inet.h
+-
+canal.h
+/home/rajaona/Documents/C/Projet/RE216_Chat/Jalon_4/src/jalon01/canal.h
+user.h
+/home/rajaona/Documents/C/Projet/RE216_Chat/Jalon_4/src/jalon01/user.h
+server.h
+/home/rajaona/Documents/C/Projet/RE216_Chat/Jalon_4/src/jalon01/server.h
+
+/home/rajaona/Documents/C/Projet/RE216_Chat/Jalon_4/src/jalon01/user.h
+
