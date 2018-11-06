@@ -48,10 +48,10 @@ RM = /usr/local/bin/cmake -E remove -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/rajaona/Documents/C/Projet/RE216_Chat/Jalon_4/src
+CMAKE_SOURCE_DIR = /home/rajaona/Documents/C/Projet/RE216_Chat/Jalon_3/src
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/rajaona/Documents/C/Projet/RE216_Chat/Jalon_4/build
+CMAKE_BINARY_DIR = /home/rajaona/Documents/C/Projet/RE216_Chat/Jalon_3/build
 
 #=============================================================================
 # Targets provided globally by CMake.
@@ -80,14 +80,14 @@ edit_cache/fast: edit_cache
 
 # The main all target
 all: cmake_check_build_system
-	cd /home/rajaona/Documents/C/Projet/RE216_Chat/Jalon_4/build && $(CMAKE_COMMAND) -E cmake_progress_start /home/rajaona/Documents/C/Projet/RE216_Chat/Jalon_4/build/CMakeFiles /home/rajaona/Documents/C/Projet/RE216_Chat/Jalon_4/build/jalon01/CMakeFiles/progress.marks
-	cd /home/rajaona/Documents/C/Projet/RE216_Chat/Jalon_4/build && $(MAKE) -f CMakeFiles/Makefile2 jalon01/all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/rajaona/Documents/C/Projet/RE216_Chat/Jalon_4/build/CMakeFiles 0
+	cd /home/rajaona/Documents/C/Projet/RE216_Chat/Jalon_3/build && $(CMAKE_COMMAND) -E cmake_progress_start /home/rajaona/Documents/C/Projet/RE216_Chat/Jalon_3/build/CMakeFiles /home/rajaona/Documents/C/Projet/RE216_Chat/Jalon_3/build/jalon01/CMakeFiles/progress.marks
+	cd /home/rajaona/Documents/C/Projet/RE216_Chat/Jalon_3/build && $(MAKE) -f CMakeFiles/Makefile2 jalon01/all
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/rajaona/Documents/C/Projet/RE216_Chat/Jalon_3/build/CMakeFiles 0
 .PHONY : all
 
 # The main clean target
 clean:
-	cd /home/rajaona/Documents/C/Projet/RE216_Chat/Jalon_4/build && $(MAKE) -f CMakeFiles/Makefile2 jalon01/clean
+	cd /home/rajaona/Documents/C/Projet/RE216_Chat/Jalon_3/build && $(MAKE) -f CMakeFiles/Makefile2 jalon01/clean
 .PHONY : clean
 
 # The main clean target
@@ -97,22 +97,22 @@ clean/fast: clean
 
 # Prepare targets for installation.
 preinstall: all
-	cd /home/rajaona/Documents/C/Projet/RE216_Chat/Jalon_4/build && $(MAKE) -f CMakeFiles/Makefile2 jalon01/preinstall
+	cd /home/rajaona/Documents/C/Projet/RE216_Chat/Jalon_3/build && $(MAKE) -f CMakeFiles/Makefile2 jalon01/preinstall
 .PHONY : preinstall
 
 # Prepare targets for installation.
 preinstall/fast:
-	cd /home/rajaona/Documents/C/Projet/RE216_Chat/Jalon_4/build && $(MAKE) -f CMakeFiles/Makefile2 jalon01/preinstall
+	cd /home/rajaona/Documents/C/Projet/RE216_Chat/Jalon_3/build && $(MAKE) -f CMakeFiles/Makefile2 jalon01/preinstall
 .PHONY : preinstall/fast
 
 # clear depends
 depend:
-	cd /home/rajaona/Documents/C/Projet/RE216_Chat/Jalon_4/build && $(CMAKE_COMMAND) -H$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 1
+	cd /home/rajaona/Documents/C/Projet/RE216_Chat/Jalon_3/build && $(CMAKE_COMMAND) -H$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 1
 .PHONY : depend
 
 # Convenience name for target.
 jalon01/CMakeFiles/RE216_JALON01_SERVER.dir/rule:
-	cd /home/rajaona/Documents/C/Projet/RE216_Chat/Jalon_4/build && $(MAKE) -f CMakeFiles/Makefile2 jalon01/CMakeFiles/RE216_JALON01_SERVER.dir/rule
+	cd /home/rajaona/Documents/C/Projet/RE216_Chat/Jalon_3/build && $(MAKE) -f CMakeFiles/Makefile2 jalon01/CMakeFiles/RE216_JALON01_SERVER.dir/rule
 .PHONY : jalon01/CMakeFiles/RE216_JALON01_SERVER.dir/rule
 
 # Convenience name for target.
@@ -122,12 +122,12 @@ RE216_JALON01_SERVER: jalon01/CMakeFiles/RE216_JALON01_SERVER.dir/rule
 
 # fast build rule for target.
 RE216_JALON01_SERVER/fast:
-	cd /home/rajaona/Documents/C/Projet/RE216_Chat/Jalon_4/build && $(MAKE) -f jalon01/CMakeFiles/RE216_JALON01_SERVER.dir/build.make jalon01/CMakeFiles/RE216_JALON01_SERVER.dir/build
+	cd /home/rajaona/Documents/C/Projet/RE216_Chat/Jalon_3/build && $(MAKE) -f jalon01/CMakeFiles/RE216_JALON01_SERVER.dir/build.make jalon01/CMakeFiles/RE216_JALON01_SERVER.dir/build
 .PHONY : RE216_JALON01_SERVER/fast
 
 # Convenience name for target.
 jalon01/CMakeFiles/RE216_JALON01_CLIENT.dir/rule:
-	cd /home/rajaona/Documents/C/Projet/RE216_Chat/Jalon_4/build && $(MAKE) -f CMakeFiles/Makefile2 jalon01/CMakeFiles/RE216_JALON01_CLIENT.dir/rule
+	cd /home/rajaona/Documents/C/Projet/RE216_Chat/Jalon_3/build && $(MAKE) -f CMakeFiles/Makefile2 jalon01/CMakeFiles/RE216_JALON01_CLIENT.dir/rule
 .PHONY : jalon01/CMakeFiles/RE216_JALON01_CLIENT.dir/rule
 
 # Convenience name for target.
@@ -137,7 +137,7 @@ RE216_JALON01_CLIENT: jalon01/CMakeFiles/RE216_JALON01_CLIENT.dir/rule
 
 # fast build rule for target.
 RE216_JALON01_CLIENT/fast:
-	cd /home/rajaona/Documents/C/Projet/RE216_Chat/Jalon_4/build && $(MAKE) -f jalon01/CMakeFiles/RE216_JALON01_CLIENT.dir/build.make jalon01/CMakeFiles/RE216_JALON01_CLIENT.dir/build
+	cd /home/rajaona/Documents/C/Projet/RE216_Chat/Jalon_3/build && $(MAKE) -f jalon01/CMakeFiles/RE216_JALON01_CLIENT.dir/build.make jalon01/CMakeFiles/RE216_JALON01_CLIENT.dir/build
 .PHONY : RE216_JALON01_CLIENT/fast
 
 canal.o: canal.c.o
@@ -146,7 +146,7 @@ canal.o: canal.c.o
 
 # target to build an object file
 canal.c.o:
-	cd /home/rajaona/Documents/C/Projet/RE216_Chat/Jalon_4/build && $(MAKE) -f jalon01/CMakeFiles/RE216_JALON01_SERVER.dir/build.make jalon01/CMakeFiles/RE216_JALON01_SERVER.dir/canal.c.o
+	cd /home/rajaona/Documents/C/Projet/RE216_Chat/Jalon_3/build && $(MAKE) -f jalon01/CMakeFiles/RE216_JALON01_SERVER.dir/build.make jalon01/CMakeFiles/RE216_JALON01_SERVER.dir/canal.c.o
 .PHONY : canal.c.o
 
 canal.i: canal.c.i
@@ -155,7 +155,7 @@ canal.i: canal.c.i
 
 # target to preprocess a source file
 canal.c.i:
-	cd /home/rajaona/Documents/C/Projet/RE216_Chat/Jalon_4/build && $(MAKE) -f jalon01/CMakeFiles/RE216_JALON01_SERVER.dir/build.make jalon01/CMakeFiles/RE216_JALON01_SERVER.dir/canal.c.i
+	cd /home/rajaona/Documents/C/Projet/RE216_Chat/Jalon_3/build && $(MAKE) -f jalon01/CMakeFiles/RE216_JALON01_SERVER.dir/build.make jalon01/CMakeFiles/RE216_JALON01_SERVER.dir/canal.c.i
 .PHONY : canal.c.i
 
 canal.s: canal.c.s
@@ -164,7 +164,7 @@ canal.s: canal.c.s
 
 # target to generate assembly for a file
 canal.c.s:
-	cd /home/rajaona/Documents/C/Projet/RE216_Chat/Jalon_4/build && $(MAKE) -f jalon01/CMakeFiles/RE216_JALON01_SERVER.dir/build.make jalon01/CMakeFiles/RE216_JALON01_SERVER.dir/canal.c.s
+	cd /home/rajaona/Documents/C/Projet/RE216_Chat/Jalon_3/build && $(MAKE) -f jalon01/CMakeFiles/RE216_JALON01_SERVER.dir/build.make jalon01/CMakeFiles/RE216_JALON01_SERVER.dir/canal.c.s
 .PHONY : canal.c.s
 
 client.o: client.c.o
@@ -173,7 +173,7 @@ client.o: client.c.o
 
 # target to build an object file
 client.c.o:
-	cd /home/rajaona/Documents/C/Projet/RE216_Chat/Jalon_4/build && $(MAKE) -f jalon01/CMakeFiles/RE216_JALON01_CLIENT.dir/build.make jalon01/CMakeFiles/RE216_JALON01_CLIENT.dir/client.c.o
+	cd /home/rajaona/Documents/C/Projet/RE216_Chat/Jalon_3/build && $(MAKE) -f jalon01/CMakeFiles/RE216_JALON01_CLIENT.dir/build.make jalon01/CMakeFiles/RE216_JALON01_CLIENT.dir/client.c.o
 .PHONY : client.c.o
 
 client.i: client.c.i
@@ -182,7 +182,7 @@ client.i: client.c.i
 
 # target to preprocess a source file
 client.c.i:
-	cd /home/rajaona/Documents/C/Projet/RE216_Chat/Jalon_4/build && $(MAKE) -f jalon01/CMakeFiles/RE216_JALON01_CLIENT.dir/build.make jalon01/CMakeFiles/RE216_JALON01_CLIENT.dir/client.c.i
+	cd /home/rajaona/Documents/C/Projet/RE216_Chat/Jalon_3/build && $(MAKE) -f jalon01/CMakeFiles/RE216_JALON01_CLIENT.dir/build.make jalon01/CMakeFiles/RE216_JALON01_CLIENT.dir/client.c.i
 .PHONY : client.c.i
 
 client.s: client.c.s
@@ -191,7 +191,7 @@ client.s: client.c.s
 
 # target to generate assembly for a file
 client.c.s:
-	cd /home/rajaona/Documents/C/Projet/RE216_Chat/Jalon_4/build && $(MAKE) -f jalon01/CMakeFiles/RE216_JALON01_CLIENT.dir/build.make jalon01/CMakeFiles/RE216_JALON01_CLIENT.dir/client.c.s
+	cd /home/rajaona/Documents/C/Projet/RE216_Chat/Jalon_3/build && $(MAKE) -f jalon01/CMakeFiles/RE216_JALON01_CLIENT.dir/build.make jalon01/CMakeFiles/RE216_JALON01_CLIENT.dir/client.c.s
 .PHONY : client.c.s
 
 server.o: server.c.o
@@ -200,7 +200,7 @@ server.o: server.c.o
 
 # target to build an object file
 server.c.o:
-	cd /home/rajaona/Documents/C/Projet/RE216_Chat/Jalon_4/build && $(MAKE) -f jalon01/CMakeFiles/RE216_JALON01_SERVER.dir/build.make jalon01/CMakeFiles/RE216_JALON01_SERVER.dir/server.c.o
+	cd /home/rajaona/Documents/C/Projet/RE216_Chat/Jalon_3/build && $(MAKE) -f jalon01/CMakeFiles/RE216_JALON01_SERVER.dir/build.make jalon01/CMakeFiles/RE216_JALON01_SERVER.dir/server.c.o
 .PHONY : server.c.o
 
 server.i: server.c.i
@@ -209,7 +209,7 @@ server.i: server.c.i
 
 # target to preprocess a source file
 server.c.i:
-	cd /home/rajaona/Documents/C/Projet/RE216_Chat/Jalon_4/build && $(MAKE) -f jalon01/CMakeFiles/RE216_JALON01_SERVER.dir/build.make jalon01/CMakeFiles/RE216_JALON01_SERVER.dir/server.c.i
+	cd /home/rajaona/Documents/C/Projet/RE216_Chat/Jalon_3/build && $(MAKE) -f jalon01/CMakeFiles/RE216_JALON01_SERVER.dir/build.make jalon01/CMakeFiles/RE216_JALON01_SERVER.dir/server.c.i
 .PHONY : server.c.i
 
 server.s: server.c.s
@@ -218,7 +218,7 @@ server.s: server.c.s
 
 # target to generate assembly for a file
 server.c.s:
-	cd /home/rajaona/Documents/C/Projet/RE216_Chat/Jalon_4/build && $(MAKE) -f jalon01/CMakeFiles/RE216_JALON01_SERVER.dir/build.make jalon01/CMakeFiles/RE216_JALON01_SERVER.dir/server.c.s
+	cd /home/rajaona/Documents/C/Projet/RE216_Chat/Jalon_3/build && $(MAKE) -f jalon01/CMakeFiles/RE216_JALON01_SERVER.dir/build.make jalon01/CMakeFiles/RE216_JALON01_SERVER.dir/server.c.s
 .PHONY : server.c.s
 
 user.o: user.c.o
@@ -227,7 +227,7 @@ user.o: user.c.o
 
 # target to build an object file
 user.c.o:
-	cd /home/rajaona/Documents/C/Projet/RE216_Chat/Jalon_4/build && $(MAKE) -f jalon01/CMakeFiles/RE216_JALON01_SERVER.dir/build.make jalon01/CMakeFiles/RE216_JALON01_SERVER.dir/user.c.o
+	cd /home/rajaona/Documents/C/Projet/RE216_Chat/Jalon_3/build && $(MAKE) -f jalon01/CMakeFiles/RE216_JALON01_SERVER.dir/build.make jalon01/CMakeFiles/RE216_JALON01_SERVER.dir/user.c.o
 .PHONY : user.c.o
 
 user.i: user.c.i
@@ -236,7 +236,7 @@ user.i: user.c.i
 
 # target to preprocess a source file
 user.c.i:
-	cd /home/rajaona/Documents/C/Projet/RE216_Chat/Jalon_4/build && $(MAKE) -f jalon01/CMakeFiles/RE216_JALON01_SERVER.dir/build.make jalon01/CMakeFiles/RE216_JALON01_SERVER.dir/user.c.i
+	cd /home/rajaona/Documents/C/Projet/RE216_Chat/Jalon_3/build && $(MAKE) -f jalon01/CMakeFiles/RE216_JALON01_SERVER.dir/build.make jalon01/CMakeFiles/RE216_JALON01_SERVER.dir/user.c.i
 .PHONY : user.c.i
 
 user.s: user.c.s
@@ -245,7 +245,7 @@ user.s: user.c.s
 
 # target to generate assembly for a file
 user.c.s:
-	cd /home/rajaona/Documents/C/Projet/RE216_Chat/Jalon_4/build && $(MAKE) -f jalon01/CMakeFiles/RE216_JALON01_SERVER.dir/build.make jalon01/CMakeFiles/RE216_JALON01_SERVER.dir/user.c.s
+	cd /home/rajaona/Documents/C/Projet/RE216_Chat/Jalon_3/build && $(MAKE) -f jalon01/CMakeFiles/RE216_JALON01_SERVER.dir/build.make jalon01/CMakeFiles/RE216_JALON01_SERVER.dir/user.c.s
 .PHONY : user.c.s
 
 # Help Target
@@ -281,6 +281,6 @@ help:
 # No rule that depends on this can have commands that come from listfiles
 # because they might be regenerated.
 cmake_check_build_system:
-	cd /home/rajaona/Documents/C/Projet/RE216_Chat/Jalon_4/build && $(CMAKE_COMMAND) -H$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 0
+	cd /home/rajaona/Documents/C/Projet/RE216_Chat/Jalon_3/build && $(CMAKE_COMMAND) -H$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 0
 .PHONY : cmake_check_build_system
 

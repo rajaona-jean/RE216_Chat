@@ -46,7 +46,7 @@
 				</dictionary>
 				<dictionary>
 					<key>org.eclipse.cdt.make.core.buildLocation</key>
-					<value>/home/rajaona/Documents/C/Projet/RE216_Chat/Jalon_4/build</value>
+					<value>/home/rajaona/Documents/C/Projet/RE216_Chat/Jalon_3/build</value>
 				</dictionary>
 				<dictionary>
 					<key>org.eclipse.cdt.make.core.useDefaultBuildCmd</key>
@@ -82,7 +82,7 @@
 				</dictionary>
 				<dictionary>
 					<key>org.eclipse.cdt.make.core.build.location</key>
-					<value>/home/rajaona/Documents/C/Projet/RE216_Chat/Jalon_4/build</value>
+					<value>/home/rajaona/Documents/C/Projet/RE216_Chat/Jalon_3/build</value>
 				</dictionary>
 				<dictionary>
 					<key>org.eclipse.cdt.make.core.autoBuildTarget</key>
@@ -109,7 +109,7 @@
 		<link>
 			<name>[Source directory]</name>
 			<type>2</type>
-			<location>/home/rajaona/Documents/C/Projet/RE216_Chat/Jalon_4/src</location>
+			<location>/home/rajaona/Documents/C/Projet/RE216_Chat/Jalon_3/src</location>
 		</link>
 		<link>
 			<name>[Subprojects]</name>
@@ -119,12 +119,12 @@
 		<link>
 			<name>[Subprojects]/RE216</name>
 			<type>2</type>
-			<location>/home/rajaona/Documents/C/Projet/RE216_Chat/Jalon_4/src</location>
+			<location>/home/rajaona/Documents/C/Projet/RE216_Chat/Jalon_3/src</location>
 		</link>
 		<link>
 			<name>[Subprojects]/RE216_JALON01</name>
 			<type>2</type>
-			<location>/home/rajaona/Documents/C/Projet/RE216_Chat/Jalon_4/src/jalon01</location>
+			<location>/home/rajaona/Documents/C/Projet/RE216_Chat/Jalon_3/src/jalon01</location>
 		</link>
 		<link>
 			<name>[Targets]</name>
@@ -149,17 +149,17 @@
 		<link>
 			<name>[Targets]/[exe] RE216_JALON01_SERVER/Source Files/canal.c</name>
 			<type>1</type>
-			<location>/home/rajaona/Documents/C/Projet/RE216_Chat/Jalon_4/src/jalon01/canal.c</location>
+			<location>/home/rajaona/Documents/C/Projet/RE216_Chat/Jalon_3/src/jalon01/canal.c</location>
 		</link>
 		<link>
 			<name>[Targets]/[exe] RE216_JALON01_SERVER/Source Files/user.c</name>
 			<type>1</type>
-			<location>/home/rajaona/Documents/C/Projet/RE216_Chat/Jalon_4/src/jalon01/user.c</location>
+			<location>/home/rajaona/Documents/C/Projet/RE216_Chat/Jalon_3/src/jalon01/user.c</location>
 		</link>
 		<link>
 			<name>[Targets]/[exe] RE216_JALON01_SERVER/Source Files/server.c</name>
 			<type>1</type>
-			<location>/home/rajaona/Documents/C/Projet/RE216_Chat/Jalon_4/src/jalon01/server.c</location>
+			<location>/home/rajaona/Documents/C/Projet/RE216_Chat/Jalon_3/src/jalon01/server.c</location>
 		</link>
 		<link>
 			<name>[Targets]/[exe] RE216_JALON01_SERVER/Header Files</name>
@@ -204,7 +204,7 @@
 		<link>
 			<name>[Targets]/[exe] RE216_JALON01_CLIENT/Source Files/client.c</name>
 			<type>1</type>
-			<location>/home/rajaona/Documents/C/Projet/RE216_Chat/Jalon_4/src/jalon01/client.c</location>
+			<location>/home/rajaona/Documents/C/Projet/RE216_Chat/Jalon_3/src/jalon01/client.c</location>
 		</link>
 		<link>
 			<name>[Targets]/[exe] RE216_JALON01_CLIENT/Header Files</name>
