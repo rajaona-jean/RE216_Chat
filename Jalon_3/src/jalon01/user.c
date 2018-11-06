@@ -5,11 +5,10 @@
 #include <netinet/in.h>
 #include <arpa/inet.h>
 
-
+#include "canal.h"
 #include "user.h"
 #include "server.h"
 
-#define FRA -1; //Fuseaux horaire france
 
 struct Users {
 	int user_sock;
@@ -18,6 +17,7 @@ struct Users {
 	char* ip_addr;
 	int port;
 	char* time;
+	char* canal_name;
 	struct Users *next;
 };
 
@@ -25,6 +25,9 @@ struct Liste{
 	struct Users *first;
 };
 
+struct Users* First_user(struct Liste* liste){
+	return liste->first;
+}
 
 struct Liste* init(int server_sock){
 	struct Liste *liste = malloc(sizeof(struct Liste));
@@ -36,6 +39,7 @@ struct Liste* init(int server_sock){
 	user->ip_addr = NULL;
 	user->port = 0;
 	user->time = NULL;
+	user->canal_name="global";
 	user->next = NULL;
 	liste->first = user;
 
@@ -69,6 +73,7 @@ void add_user(struct Liste *liste,char* pseudo, int client_socket){
 	new->connect = 0;
 	new->ip_addr = NULL;
 	new->port = 0;
+	new->canal_name="global";
 	new->time = NULL;
 	new->next = NULL;
 	previous = liste->first ;
@@ -184,6 +189,68 @@ void edit_pseudo_from_sock(struct Liste *liste,int client_sock,char* new_pseudo)
 	}
 }
 
+void set_canal_name(struct Liste *liste,char* pseudo,char* canal_name){
+	struct Users* previous;
+	struct Users* cur_user;
+	int edit = 0;
+	int stop = 0;
+	char* name;
+
+	if (liste == NULL){ // si la liste est NULL on s'arrete tout de suite
+		printf("error: Pas d'utilisateurs dans la liste\n");
+		exit(EXIT_FAILURE);
+	}
+
+	previous = liste->first;// c'est le serveur
+	cur_user = previous->next;
+
+	while(edit!=1 && stop!=1){
+
+		if(!strcmp(cur_user->pseudo,pseudo)){
+			cur_user->canal_name = canal_name;
+			name = cur_user->pseudo;
+			edit = 1;
+			//fprintf(stdout,"Vous avez rejoint le canal: %s",canal_name);
+		}
+		previous = cur_user;
+		cur_user = cur_user->next;
+
+		if(cur_user == NULL)
+			stop=1;
+	}
+
+}
+
+char* get_canal_name_from_sock(struct Liste *liste,int client_sock){
+	struct Users* previous;
+	struct Users* cur_user;
+	int edit = 0;
+	int stop = 0;
+	char* canal_name;
+
+	if (liste == NULL){ // si la liste est NULL on s'arrete tout de suite
+		printf("error: Pas d'utilisateurs dans la liste\n");
+		exit(EXIT_FAILURE);
+	}
+
+	previous = liste->first;// c'est le serveur
+	cur_user = previous->next;
+
+	while(edit!=1 && stop!=1){
+
+		if(cur_user->user_sock==client_sock){
+			canal_name = cur_user->canal_name;
+			edit = 1;
+		}
+		previous = cur_user;
+		cur_user = cur_user->next;
+
+		if(cur_user == NULL)
+			stop=1;
+	}
+
+	return canal_name;
+}
 
 //check is pseudo exists
 short verify_pseudo(struct Liste *liste,char* pseudo){
@@ -255,7 +322,7 @@ short verify_connect(struct Liste *liste,char* pseudo){
 }
 
 //check if a client_sock is affected to a pseudo
-short pseudo_from_sock(struct Liste *liste,int client_sock){
+short pseudo_known(struct Liste *liste,int client_sock){
 	struct Users* previous;
 	struct Users* cur_user;
 	short* find1 = malloc(sizeof(short));
@@ -287,6 +354,42 @@ short pseudo_from_sock(struct Liste *liste,int client_sock){
 	}
 
 	return *find1;
+}
+
+char* pseudo_from_sock(struct Liste *liste,int client_sock){
+	struct Users* previous;
+	struct Users* cur_user;
+	short* find1 = malloc(sizeof(short));
+	char* pseudo = malloc(28*sizeof(char));
+	int stop = 0;
+	*find1 = 0;
+	//char* name=NULL;
+
+
+	if (liste == NULL){ // si la liste est NULL on s'arrete tout de suite
+		printf("error: Pas d'utilisateurs dans la liste\n");
+		exit(EXIT_FAILURE);
+	}
+
+	previous = liste->first;// c'est le serveur
+	cur_user = previous->next;
+
+	while(*find1!=1 && stop!=1){
+
+		if(cur_user->user_sock == client_sock){
+			if(cur_user->pseudo != NULL){
+				*find1 = 1;
+				strcpy(pseudo,cur_user->pseudo);
+			}
+		}
+		previous = cur_user;
+		cur_user = cur_user->next;
+
+		if(cur_user == NULL)
+			stop=1;
+	}
+
+	return pseudo;
 }
 
 void down_connect(struct Liste *liste,int client_sock){
@@ -547,7 +650,37 @@ void fill_users(struct Liste* liste,int nb_user,char** user_list){
 
 }
 
+int sock_from_pseudo(struct Liste* liste,char* pseudo){
+	struct Users* previous;
+	struct Users* cur_user;
+	int find1 = 0 ;
+	int stop = 0;
+	int client_sock=0;
 
+	if (liste == NULL){ // si la liste est NULL on s'arrete tout de suite
+		printf("error: Pas d'utilisateurs dans la liste\n");
+		exit(EXIT_FAILURE);
+	}
+
+	previous = liste->first;// c'est le serveur
+	cur_user = previous->next;
+
+	while(find1!=1 && stop!=1){
+		if(!strcmp(cur_user->pseudo,pseudo)){
+			find1 = 1;
+
+			client_sock=cur_user->user_sock;
+			//			printf("set info :cur_user->ip: %s | cur_user->port: %d | date: %s | cur_user->co: %d | cur_user->user_sock: %d\n",cur_user->ip_addr, cur_user->port, cur_user->time, cur_user->connect, cur_user->user_sock);
+			//			fflush(stdout);
+		}
+		previous = cur_user;
+		cur_user = cur_user->next;
+
+		if(cur_user == NULL)
+			stop=1;
+	}
+	return client_sock;
+}
 
 //int main(int argc, char** argv){
 //

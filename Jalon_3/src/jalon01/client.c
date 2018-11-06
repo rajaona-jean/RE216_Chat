@@ -138,31 +138,125 @@ char* do_read_who(int client_sock, int q){
 	return msg;
 }
 
-char* get_nick_client(char * msg){
+//get the nickname  from the  message
+char* get_nick_client(char * msg, short q){
+	strcat(msg,"\0");
 	int size = strlen(msg);
-	char* nick = malloc(30*sizeof(char));
+	char* nick = malloc((size-1)*sizeof(char));
+
 	int i;
-	for(i=0;i<30;i++){
+	for(i=0; i<size-1; i++)
 		nick[i]='\0';
+
+	if( q == 1 || q==8){//nick pseudo ou join
+		for(i=6;i<size-1;i++){ //size-1 car \n
+			nick[i-6]=msg[i];
+		}
 	}
-	for(i=6;i<size-1;i++){ //size-1 car \n
-		nick[i-6]=msg[i];
+	if( q == 4){//whois pseudo
+		for(i=7;i<size-1;i++){ //size-1 car \n
+			nick[i-7]=msg[i];
+		}
+	}
+	if( q == 5 || q==7){//msgall msg ou create
+		for(i=8;i<size-1;i++){ //size-1 car \n
+			nick[i-8]=msg[i];
+		}
 	}
 	return nick;
 }
 
+//check if the message starts with "/" and return the command
+short if_slash_client(char* msg1){
+	int size = strlen(msg1);
+	char* msg = malloc(512*sizeof(char));
+	strcpy(msg,msg1);
+	char* cmd = malloc(7*sizeof(char));
+	int i=0;
+	int ok=0;
+	for(i=0;i<7;i++){ //size-1 car \n
+		cmd[i]='\0';
+	}
+	i=0;
+	while(ok==0){
+		if(msg[i]==' ' || msg[i]=='\n'){
+			msg[i]='\0';
+			ok = 1;
+		}
+		i++;
+	}
+
+	if(msg[0]=='/'){
+
+		i=1;
+		ok=0;
+		while(ok==0){
+			if(msg[i]==' ' || msg[i]=='\n'|| msg[i]=='\0'){
+				cmd[i-1]='\0';
+				ok = 1;
+			}
+			else{
+				cmd[i-1]=msg[i];
+			}
+			i++;
+		}
+
+		if(strcmp(cmd,"nick")==0){
+			free(msg);
+			free(cmd);
+			return 1;
+		}
+		if(strcmp(cmd,"who")==0){
+			free(msg);
+			free(cmd);
+			return 2;
+		}
+		if(strcmp(cmd,"quit")==0){
+			free(msg);
+			free(cmd);
+			return 3;
+		}
+		if(strcmp(cmd,"whois")==0){
+			free(msg);
+			free(cmd);
+			return 4;
+		}
+		if(strcmp(cmd,"msgall")==0){
+			free(msg);
+			free(cmd);
+			return 5;
+		}
+		if(strcmp(cmd,"create")==0){
+			free(msg);
+			free(cmd);
+			return 7;
+		}
+		if(strcmp(cmd,"join")==0){
+			free(msg);
+			free(cmd);
+			return 8;
+		}
+	}
+
+	return 0;
+}
+
+///////////////////////////////////MAIN////////////////////////////////////////
 
 int main(int argc,char** argv){
 	int error;
 	int client_sock;
 	short ok_from_serv=0;
 	char* msg = malloc(L*sizeof(char));
+	char* canal_name = malloc(50*sizeof(char));
 	struct addrinfo hints;
 	struct addrinfo* infoptr;
 	struct sockaddr_in server_sock;
 	int first = 0;
 	int first_connection = 0;
 	int i;
+	int sl_check=0;
+	short stop =0;
 	buffer = malloc(L*sizeof(char));
 	pseudo = malloc(30*sizeof(char));
 
@@ -202,31 +296,41 @@ int main(int argc,char** argv){
 		memset (buffer, '\0', L);
 		signal(SIGINT, sigintHandler);
 		while(1){
-
+			sl_check=0;
 			if(first_connection==0){
-				printf("\nPlease enter your pseudo:\n");
+				printf("\nPlease enter your pseudo:\n> ");
 				fflush(stdout);
 				//get user input
 				fgets(msg,L,stdin);
-				pseudo = get_nick_client(msg);
-				if(strcmp(msg, "/quit\n") == 0 || strcmp(msg, "/who\n") == 0){
-					if (strcmp(msg, "/quit\n") == 0){
+
+				sl_check = if_slash_client(buffer);
+				if(sl_check!=0){
+
+					if(sl_check == 1){//nick
+						pseudo = get_nick_client(msg,sl_check);
+						handle_client_message(client_sock,msg);
+						memset (buffer, '\0', L);
+						//read what the server has to say
+						do_read(client_sock);
+					}
+
+					else if(sl_check==3){ //quit
 						strcpy(buffer, msg);
 						handle_client_message(client_sock,msg);
 						return 0;
 					}
-					if (strcmp(msg, "/who\n") == 0){
-						strcpy(buffer, msg);
+
+					else{
+						memset (buffer, '\0', L);
+						sprintf(buffer," Veuillez vous connecter pour effectuer cette action");
 						handle_client_message(client_sock,msg);
 						memset (buffer, '\0', L);
-						do_read_who(client_sock,1);
-						while (buffer[strlen(buffer)-1] != '1'){
-							memset (buffer, '\0', L);
-							do_read_who(client_sock,0);
-						}
+						//read what the server has to say
+						do_read(client_sock);
 					}
-				}
-				else{
+
+				}// Fin slash
+				else if(sl_check ==0){
 					//send message to the server
 					handle_client_message(client_sock,msg);
 					memset (buffer, '\0', L);
@@ -237,17 +341,13 @@ int main(int argc,char** argv){
 			}
 			else if (first_connection==1){
 				printf("\nPlease enter your line:\n");
+				printf("%s> ",pseudo);
 				fflush(stdout);
 				fgets(msg,L,stdin);
+				sl_check = if_slash_client(buffer);
+				if(sl_check!=0){
 
-				if(strcmp(msg, "/quit\n") == 0 || strcmp(msg, "/who\n") == 0){
-					if (strcmp(msg, "/quit\n") == 0){
-						strcpy(buffer, msg);
-						handle_client_message(client_sock,msg);
-						return 0;
-					}
-
-					if (strcmp(msg, "/who\n") == 0){
+					if(sl_check == 2){//Who
 						strcpy(buffer, msg);
 						handle_client_message(client_sock,msg);
 						memset (buffer, '\0', L);
@@ -256,16 +356,49 @@ int main(int argc,char** argv){
 							memset (buffer, '\0', L);
 							do_read_who(client_sock,0);
 						}
-
 					}
-				}
-				else{
+
+					if(sl_check==3){ //quit
+						strcpy(buffer, msg);
+						handle_client_message(client_sock,msg);
+						return 0;
+					}
+					if(sl_check==7 || sl_check==8){ //create ou join
+						strcpy(buffer, msg);
+						canal_name=get_nick_client(msg,sl_check);
+						handle_client_message(client_sock,msg);
+						do_read(client_sock);
+						while(stop == 0){
+							printf("\nPlease enter your line:\n");
+							printf("%s[%s]> ",pseudo,canal_name);
+							fflush(stdout);
+							fgets(msg,L,stdin);
+							handle_client_message(client_sock,msg);
+							memset (buffer, '\0', L);
+							//read what the server has to say
+							do_read(client_sock);
+						}
+						return 0;
+					}
+					else{
+						//send message to the server
+						handle_client_message(client_sock,msg);
+						memset (buffer, '\0', L);
+						//read what the server has to say
+						do_read(client_sock);
+					}
+//					if(sl_check==7 || sl_check==8){//create ou join
+//					}
+
+				}// Fin slash
+				else if(sl_check ==0){
 					//send message to the server
 					handle_client_message(client_sock,msg);
 					memset (buffer, '\0', L);
 					//read what the server has to say
 					do_read(client_sock);
 				}
+
 			}
 		}
 

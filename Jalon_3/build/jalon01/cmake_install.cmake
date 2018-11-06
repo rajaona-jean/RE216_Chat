@@ -1,4 +1,4 @@
-# Install script for directory: /home/rajaona/Documents/C/Projet/RE216_Chat/Jalon_3/src/jalon01
+# Install script for directory: /home/rajaona/Documents/C/Projet/RE216_Chat/Jalon_4/src/jalon01
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)

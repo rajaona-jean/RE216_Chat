@@ -1,4 +1,5 @@
 file(REMOVE_RECURSE
+  "CMakeFiles/RE216_JALON01_SERVER.dir/canal.c.o"
   "CMakeFiles/RE216_JALON01_SERVER.dir/user.c.o"
   "CMakeFiles/RE216_JALON01_SERVER.dir/server.c.o"
   "RE216_JALON01_SERVER.pdb"
