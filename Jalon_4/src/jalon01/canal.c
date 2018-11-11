@@ -49,10 +49,14 @@ char* members_canal_i(struct Canals* canal,int i){
 	return canal->members[i];
 }
 
+int nb_canal_members(struct Canals* canal){
+	return canal->members_nb;
+}
+
 void add_canal(struct First_c *c_liste,char* pseudo,char* canal_name, int nb_members){
 	//Ajout à la fin de la liste chainé
 
-	struct Canals* previous = malloc(sizeof(struct Canals));
+	struct Canals* previous;
 	struct Canals* new = malloc(sizeof(struct Canals));
 	int i;
 	char** m = malloc(nb_members*sizeof(char*));
@@ -89,24 +93,25 @@ void del_canal(struct First_c *c_liste,char* pseudo){
 	previous = c_liste->first;// c'est le canal global
 	cur_canal = previous->next;
 
-	while(del!=1 && stop!=1){
+	while(del!=1 && (cur_canal!= NULL)){
 
 		if(!strcmp(cur_canal->canal_name,pseudo)){
 			todel = cur_canal;
 			name = cur_canal->canal_name;
 			previous->next = cur_canal->next;
+			free(todel->members);
 			free(todel);
 			del = 1;
 			fprintf(stdout,"%s a bien été supprimé\n",name);
 		}
-		previous = cur_canal;
-		if(cur_canal->next == NULL)
-			stop=1;
+
+		if(cur_canal->next==NULL || del==1)
+			stop = 1;
 		else
 			cur_canal = cur_canal->next;
 	}
 
-	if( stop != 0 && del==0)
+	if( del==0)
 		fprintf(stdout,"Aucun canal de ce nom\n");
 
 }
@@ -159,43 +164,6 @@ short join_canal(struct First_c* c_liste,char* pseudo, char* canal_name){
 	return *find1;
 }
 
-void quit_canal(struct First_c* c_liste,char* pseudo, char* canal_name){
-	struct Canals* previous;
-	struct Canals* cur_canal;
-	int find1 = 0 ;
-	int stop = 0;
-	int i = 0;
-
-
-	if (c_liste == NULL){ // si la liste est NULL on s'arrete tout de suite
-		printf("error: Pas d'utilisateurs dans la liste\n");
-		exit(EXIT_FAILURE);
-	}
-
-	previous = c_liste->first;// c'est le serveur
-	cur_canal = previous->next;
-
-	while(find1!=1 && stop!=1){
-		if(!strcmp(cur_canal->canal_name,canal_name)){
-			find1 = 1;
-			while(stop==0){
-				if(strcmp(cur_canal->members[i],pseudo)==0){
-					cur_canal->members[i] = "\0";
-					stop=1;
-					if(i==0){
-						del_canal(c_liste,canal_name);
-					}
-				}
-				i++;
-			}
-		}
-		previous = cur_canal;
-		cur_canal = cur_canal->next;
-
-		if(cur_canal == NULL)
-			stop=1;
-	}
-}
 
 void see_canal_members(struct First_c* c_liste, char* canal_name){
 	struct Canals* previous;
@@ -237,6 +205,9 @@ void see_canal_members(struct First_c* c_liste, char* canal_name){
 	}
 }
 
+void set_canal_members_name_i(struct Canals* canal,char* name,int i){
+	canal->members[i]=name;
+}
 //int main(int argc, char** argv){
 //
 //

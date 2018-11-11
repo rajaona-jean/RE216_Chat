@@ -151,6 +151,25 @@ char* do_read(int client_sock){
 	return buffer;
 }
 
+char* do_read_canal(int client_sock){
+	int txt_size ;
+	int size_buff = L;
+	txt_size = recv(client_sock,buffer,size_buff,0);
+	if(txt_size!=-1){
+		printf(" %s\n",buffer);
+		fflush(stdout);
+	}
+	else {
+		/*printf(" [MESSAGE FROM SERVER]: %s\n",buffer);
+		fflush(stdout);
+		memset(buffer, 0, strlen(buffer));*/
+		error("recv");close(client_sock); exit(EXIT_FAILURE);
+	}
+
+	return buffer;
+}
+
+
 char* do_read_who(int client_sock, int q){
 	int txt_size;
 	int size_buff = L;
@@ -189,7 +208,7 @@ char* get_nick_client(char * msg, short q){
 	for(i=0; i<size-1; i++)
 		nick[i]='\0';
 
-	if( q == 1 || q==8){//nick pseudo ou join
+	if( q == 1 || q==8 || q==3){//nick pseudo ou join ou quit
 		for(i=6;i<size-1;i++){ //size-1 car \n
 			nick[i-6]=msg[i];
 		}
@@ -212,6 +231,7 @@ char* get_nick_client(char * msg, short q){
 short if_slash_client(char* msg1){
 	int size = strlen(msg1);
 	char* msg = malloc(512*sizeof(char));
+	memset(msg,'\0',512);
 	strcpy(msg,msg1);
 	char* cmd = malloc(7*sizeof(char));
 	int i=0;
@@ -299,6 +319,7 @@ int main(int argc,char** argv){
 
 	char* msg = malloc(L*sizeof(char));
 	char* canal_name = malloc(50*sizeof(char));
+	char* tmp = malloc(L*sizeof(char));
 
 	struct addrinfo hints;
 	struct addrinfo* infoptr;
@@ -359,8 +380,7 @@ int main(int argc,char** argv){
 				fflush(stdout);
 				//get user input
 				fgets(msg,L,stdin);
-
-				*sl_check = if_slash_client(buffer);
+				*sl_check = if_slash_client(msg);
 				if(*sl_check!=0){
 
 					if(*sl_check == 1){//nick
@@ -372,14 +392,12 @@ int main(int argc,char** argv){
 					}
 
 					else if(*sl_check==3){ //quit
-						strcpy(buffer, msg);
 						handle_client_message(client_sock,msg);
 						return 0;
 					}
 
 					else{
-						memset (buffer, '\0', L);
-						sprintf(buffer," Veuillez vous connecter pour effectuer cette action");
+						sprintf(msg,"Veuillez vous connecter pour effectuer cette action");
 						handle_client_message(client_sock,msg);
 						memset (buffer, '\0', L);
 						//read what the server has to say
@@ -410,12 +428,11 @@ int main(int argc,char** argv){
 					if(fdc[1].revents == POLLIN){
 
 						fgets(msg,L,stdin);
-						*sl_check = if_slash_client(buffer);
+						*sl_check = if_slash_client(msg);
 						if(*sl_check!=0){
 
 							if(*sl_check == 2){//Who
-								strcpy(buffer, msg);
-								strcat(buffer,"\0");
+								strcat(msg,"\0");
 								handle_client_message(client_sock,msg);
 								memset (buffer, '\0', L);
 								do_read_who(client_sock,1);
@@ -426,16 +443,22 @@ int main(int argc,char** argv){
 							}
 
 							else if(*sl_check==3){ //quit
-								strcpy(buffer, msg);
+
 								handle_client_message(client_sock,msg);
 								return 0;
 							}
 
 							else if(*sl_check==7 || *sl_check==8){ //create ou join
-								strcpy(buffer, msg);
+								strcat(msg,"\0");
+								stop = 0;
 								canal_name=get_nick_client(msg,*sl_check);
 								handle_client_message(client_sock,msg);
 								do_read(client_sock);
+
+								if(msg[strlen(msg)-1]=='.'){
+									stop = 1;
+								}
+
 								while(stop == 0){
 									printf("\nPlease enter your line:\n");
 									printf("%s[%s]> ",pseudo,canal_name);
@@ -445,26 +468,27 @@ int main(int argc,char** argv){
 									if(fdc[1].revents == POLLIN){
 										fgets(msg,L,stdin);
 										handle_client_message(client_sock,msg);
-										memset (buffer, '\0', L);
-										//read what the server has to say
-										do_read(client_sock);
-										*sl_check=if_slash_client(buffer);
+										*sl_check=if_slash_client(msg);
+
 										if(*sl_check==3){ //quit
-											strcpy(buffer, msg);
-											handle_client_message(client_sock,msg);
-											return 0;
+											tmp = get_nick_client(msg,*sl_check);
+											if(strcmp(tmp,canal_name)==0){
+												stop = 1;
+											}
 										}
 									}
 									else if(fdc[0].revents == POLLIN){
 										memset (buffer, '\0', L);
-										do_read(client_sock);
+										msg=do_read_canal(client_sock);
+										if(strcmp(msg,tmp)==0){
+											stop = 1;
+										}
 									}
 								}
 
 							}
 							else{
-								//send message to the server
-								handle_client_message(client_sock,msg);
+
 								memset (buffer, '\0', L);
 								//read what the server has to say
 								do_read(client_sock);

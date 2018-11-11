@@ -192,13 +192,13 @@ while(start != 2){
 char* get_nick(char * msg, short q){
 	strcat(msg,"\0");
 	int size = strlen(msg);
-	char* nick = malloc((size-1)*sizeof(char));
+	char* nick = malloc(size*sizeof(char));
 
 	int i;
-	for(i=0; i<size-1; i++)
+	for(i=0; i<size; i++)
 		nick[i]='\0';
 
-	if( q == 1 || q == 8){//nick pseudo
+	if( q == 1 || q == 8 || q==3){//nick pseudo ou join canal_name ou quit canal_name
 		for(i=6;i<size-1;i++){ //size-1 car \n
 			nick[i-6]=msg[i];
 		}
@@ -237,7 +237,7 @@ short if_slash(char* msg1){
 		cmd[i]='\0';
 	}
 	i=0;
-	while(ok==0){
+	while(ok==0 && i<512){
 		if(msg[i]==' ' || msg[i]=='\n'){
 			msg[i]='\0';
 			ok = 1;
@@ -327,7 +327,7 @@ short if_slash(char* msg1){
 }
 
 
-void speak_with_canal(struct Liste* liste,struct First_c* c_liste, char* canal_name, int server_sock){
+void speak_with_canal(struct Liste* liste,struct First_c* c_liste,char* pseudo, char* canal_name, int server_sock){
 	struct Canals* previous;
 	struct Canals* cur_canal;
 	int find1 = 0 ;
@@ -343,20 +343,18 @@ void speak_with_canal(struct Liste* liste,struct First_c* c_liste, char* canal_n
 
 	previous = first_canal(c_liste);
 	cur_canal = next_canal(previous);
+	if(cur_canal == NULL)
+		stop=1;
 
 	while(find1!=1 && stop!=1){
 		if(!strcmp(name_canal(cur_canal),canal_name)){
-			printf(" %s members:\n",name_canal(cur_canal));
-			fflush(stdout);
 			find1 = 1;
-			while(stop==0){
-				if(strcmp(members_canal_i(cur_canal,i),"\0")!=0){
+			i = 0;
+			while(i<nb_canal_members(cur_canal)){
+				if((strcmp(members_canal_i(cur_canal,i),"\0"))!=0 && (strcmp(members_canal_i(cur_canal,i),pseudo)!=0)){
 					client_sock=sock_from_pseudo(liste,members_canal_i(cur_canal,i));
 					do_write(client_sock,server_sock);
-				}
-				if(strcmp(members_canal_i(cur_canal,i),"\0")==0){
-					memset(buffer,'\0',512);
-					stop=1;
+
 				}
 				i++;
 			}
@@ -369,6 +367,82 @@ void speak_with_canal(struct Liste* liste,struct First_c* c_liste, char* canal_n
 	}
 }
 
+void deco_members_from_canal(struct Liste* liste,struct First_c* c_liste, char* canal_name){
+	struct Canals* previous;
+	struct Canals* cur_canal;
+	int find1 = 0 ;
+	int stop = 0;
+	int i = 1; //not the creator of the canal
+
+
+	if (c_liste == NULL){ // si la liste est NULL on s'arrete tout de suite
+		printf("error: Pas d'utilisateurs dans la liste\n");
+		exit(EXIT_FAILURE);
+	}
+
+	previous = first_canal(c_liste);// c'est le canal global
+	cur_canal = next_canal(previous);
+
+	while(find1!=1 && stop!=1){
+		if(!strcmp(name_canal(cur_canal),canal_name)){
+			find1 = 1;
+			while(i < nb_canal_members(cur_canal)){
+				if(strcmp(members_canal_i(cur_canal,i),"\0")!=0)
+					set_canal_name(liste,members_canal_i(cur_canal,i),"global");
+				i++;
+			}
+		}
+
+		cur_canal = next_canal(cur_canal);
+
+		if(cur_canal == NULL)
+			stop=1;
+	}
+}
+
+void quit_canal(struct Liste* liste,struct First_c* c_liste,char* pseudo, char* canal_name, int server_sock){
+	struct Canals* previous;
+	struct Canals* cur_canal;
+	int find1 = 0 ;
+	int stop = 0;
+	int i = 0;
+	int nb_members_in_canal=0;
+
+
+	if (c_liste == NULL){ // si la liste est NULL on s'arrete tout de suite
+		printf("error: Pas d'utilisateurs dans la liste\n");
+		exit(EXIT_FAILURE);
+	}
+
+	previous = first_canal(c_liste);// c'est le canal global
+	cur_canal = next_canal(previous);
+
+	while(find1!=1 && (cur_canal!=NULL)){
+		if(!strcmp(name_canal(cur_canal),canal_name)){
+			find1 = 1;
+			while(i<nb_canal_members(cur_canal)){
+				if(strcmp(members_canal_i(cur_canal,i),"\0")!=0){
+					nb_members_in_canal++;
+				}
+				i++;
+			}
+			i=0;
+			while(stop==0 && i<nb_canal_members(cur_canal)){
+				if(strcmp(members_canal_i(cur_canal,i),pseudo)==0){
+					set_canal_members_name_i(cur_canal,"\0",i);
+					set_canal_name(liste,pseudo,"global");
+					speak_with_canal(liste,c_liste,pseudo,canal_name,server_sock);
+					stop=1;
+					if(nb_members_in_canal==1){
+						del_canal(c_liste,canal_name);
+					}
+				}
+				i++;
+			}
+		}
+		cur_canal = next_canal(cur_canal);
+	}
+}
 
 /////////////////////////MAIN//////////////////////////////////////////////////
 
@@ -399,12 +473,14 @@ int main(int argc, char** argv){
 
 	char* oth_pseudo =malloc(512*sizeof(char)); //pseudo de destination
 	char* message = malloc(512*sizeof(char)) ; //message a envoyer
+	char* tmp = malloc(512*sizeof(char)) ;
 
 
-	char* pseudo;
+	char* pseudo = "";
 	char* oth_user;
-	char* canal_name;
+	char* canal_name = malloc(30*sizeof(char));
 	char* msg_all;
+	char* _accept;
 
 	char* pseudo_destinateur = malloc(512*sizeof(char));
 	char* msg = malloc(512*sizeof(char));
@@ -457,7 +533,11 @@ int main(int argc, char** argv){
 		while(1){
 
 			memset(buffer, '\0', 512);
+			memset(tmp, '\0',512);
+			pseudo="";
+			canal_name="";
 			p = poll(fds,N,-1);
+
 
 			for(i=0;i<N;i++){ // Gestion event (qui crée l'event ?)
 				if(fds[i].revents == POLLIN){// On voit ce que veut le client
@@ -478,8 +558,8 @@ int main(int argc, char** argv){
 
 						if(ok == 1){// tout est ok on demande le pseudo
 							memset(buffer,'\0',512);
-							char* accept="Please login with /nick <your pseudo>";
-							strcpy(buffer,accept);
+							_accept="Please login with /nick <your pseudo>";
+							strcpy(buffer,_accept);
 							do_write(client_sock,server_sock);
 							memset(buffer,'\0',512);
 						}
@@ -563,22 +643,57 @@ int main(int argc, char** argv){
 								msg=do_write(client_sock,server_sock);
 								printf("write\n");
 								fflush(stdout);
-							}
+							}//fin who
 
 							if(sl_check==3){ //quit
-								for(i=1;i<N;i++){
-									if(fds[i].fd == client_sock)
-										fds[i].fd = 0;
-								}
-								if(pseudo_known(liste,client_sock)==1){
-									down_connect(liste,client_sock);
-									down_client_sock(liste,client_sock);
-								}
-								//memset (msg, 0, sizeof(msg));
-								//clean up client socket
-								clean_up_client_socket(client_sock,server_sock,0);
 
-							}
+								if(pseudo_known(liste,client_sock)==0){// pas de pseudo relatif au num de socket
+									do_write(client_sock,server_sock);
+									for(i=1;i<N;i++){
+										if(fds[i].fd == client_sock)
+											fds[i].fd = 0;
+									}
+
+									clean_up_client_socket(client_sock,server_sock,0);
+								}
+								else{
+									canal_name=get_canal_name_from_sock(liste,client_sock);
+									if(strcmp(canal_name,"global")!=0){// quit canal
+										msg = get_nick(buffer,sl_check);
+										if(strcmp(msg,canal_name)==0){
+											pseudo = get_pseudo_from_sock(liste,client_sock);
+											memset(buffer,'\0',512);
+											sprintf(buffer, " %s leaves the canal\n",pseudo);
+											quit_canal(liste,c_liste,pseudo,canal_name,server_sock);
+											memset(buffer,'\0',512);
+										}
+										else{
+											memset(buffer,'\0',512);
+											strcpy(buffer,"You can not quit with a wrong canal name");
+											do_write(client_sock,server_sock);
+											memset(buffer,'\0',512);
+
+										}
+									}
+									else{ // quit
+
+										for(i=1;i<N;i++){
+											if(fds[i].fd == client_sock)
+												fds[i].fd = 0;
+										}
+
+										down_connect(liste,client_sock);
+										down_client_sock(liste,client_sock);
+
+										//memset (msg, 0, sizeof(msg));
+										//clean up client socket
+										clean_up_client_socket(client_sock,server_sock,0);
+									}
+								}
+
+
+							}//fin quit
+
 							if(sl_check==4){//whois
 								oth_user = get_nick(buffer,sl_check);
 								get_info(liste, oth_user, client_sock, server_sock);
@@ -591,10 +706,6 @@ int main(int argc, char** argv){
 								printf("qui envoie %s\n",sender);
 								fflush(stdout);
 
-								/*printf(" message après msg_all :%s\n",msg_all);
-						fflush(stdout);
-						printf(" le pseudo :%s\n",pseudo);
-						fflush(stdout);*/
 								memset(buffer,'\0',512);
 								sprintf(buffer," [%s]: ", sender);
 								strcat(buffer,msg_all);
@@ -678,10 +789,10 @@ int main(int argc, char** argv){
 							}
 
 							if(sl_check==7){//create
+
 								msg = get_nick(buffer,sl_check);
 								pseudo = get_pseudo_from_sock(liste,client_sock);
 								add_canal(c_liste,pseudo,msg,20);
-								join_canal(c_liste,pseudo,msg);
 								set_canal_name(liste,pseudo,msg);
 								memset(buffer,'\0',512);
 								sprintf(buffer," Cannal: %s created",msg);
@@ -704,34 +815,42 @@ int main(int argc, char** argv){
 									do_write(client_sock,server_sock);
 								}
 							}
-					}// Fin slash
-					else if(sl_check ==0){
-						if(pseudo_known(liste,client_sock)==1){
-							canal_name=get_canal_name_from_sock(liste,client_sock);
-							if(!strcmp(canal_name,"global")){
-								msg=do_write(client_sock,server_sock);
+						}// Fin slash
+						else if(sl_check ==0){
+							if(pseudo_known(liste,client_sock)==1){
+								canal_name=get_canal_name_from_sock(liste,client_sock);
+								if(!strcmp(canal_name,"global")){
+									do_write(client_sock,server_sock);
+									memset(buffer,'\0',512);
+								}
+								else{
+									pseudo = get_pseudo_from_sock(liste,client_sock);
+									strcpy(tmp,buffer);
+									memset(buffer,'\0',512);
+									sprintf(buffer," [from %s]: %s",pseudo,tmp);
+									speak_with_canal(liste,c_liste,pseudo,canal_name,server_sock);
+									memset(buffer,'\0',512);
+								}
+							}
+							else{
 								memset(buffer,'\0',512);
-							}
-							else{// speak to the canal
-								speak_with_canal(liste,c_liste,canal_name,server_sock);
+								sprintf(buffer,"Veuillez vous connecter pour effectuer cette action");
+								do_write(client_sock,server_sock);
+								memset(buffer,'\0',512);
+
 							}
 						}
-						else{
-							do_write(client_sock,server_sock);
-							memset(buffer,'\0',512);
-						}
-					}
 
-				} // Fin du dialogue
-			}// Fin d
+					} // Fin du dialogue
+				}// Fin d
 
-		} // end of if, gestion evenement
+			} // end of if, gestion evenement
 
 
-	} //end of for
-}//end of while
+		} //end of for
+	}//end of while
 
 
 
-return 0;
+	return 0;
 }
