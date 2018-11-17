@@ -15,7 +15,9 @@
 #include <sys/stat.h>
 #include <fcntl.h>
 
-
+#include "canal.h"
+#include "user.h"
+#include "server.h"
 #include "send.h"
 
 #define MAX_USER 4
@@ -23,7 +25,7 @@
 char buffer[512];
 int N = MAX_USER+1; //on compte le serveur
 
-int do_socket(){
+int do_socket2(){
 	int s = socket(AF_INET,SOCK_STREAM,0);
 	if (s == -1){
 		fprintf(stdout , " client_serveur: Erreur création de socket\n");
@@ -42,7 +44,7 @@ struct sockaddr_in init_sender(int port){
 	struct sockaddr_in sin;
 	memset(&sin,0,sizeof(sin));
 	sin.sin_family = AF_INET;
-	sin.sin_port = ntohs(port);
+	sin.sin_port = htons(port);
 	sin.sin_addr.s_addr = htonl(INADDR_ANY);
 	return sin;
 }
@@ -53,7 +55,7 @@ int do_bind2(int server_sock, struct sockaddr_in sin){
 }
 
 
-int do_accept(int server_sock,struct sockaddr_in* c_sin){
+int do_accept2(int server_sock,struct sockaddr_in* c_sin){
 	//	socklen_t* c_sin_size =(socklen_t*) sizeof(&c_sin);
 	//	printf("%d",c_sin_size);
 	//	fflush(stdout);
@@ -62,7 +64,7 @@ int do_accept(int server_sock,struct sockaddr_in* c_sin){
 	return client_sock;
 }
 
-char* do_write(int client_sock,int server_sock){
+char* do_write2(int client_sock,int server_sock){
 	char* msg = buffer;
 	int size_txt = strlen(msg);
 	int s = send(client_sock,msg,size_txt,0);
@@ -76,22 +78,22 @@ char* do_write(int client_sock,int server_sock){
 	return msg;
 }
 
-void receive_file(char*ip_addr,int port,char* path){
+void send_file(/*char* path*/){
 
 	char buffer2[512];
-	struct sockaddr_in sin = init_sender(ip_addr,port);
+	struct sockaddr_in sin = init_sender(8080);
 	struct sockaddr_in c_sin;
-	int s = do_socket();
+	int s = do_socket2();
 
 	//do_bind
-	int b = do_bind(s,sin);
+	int b = do_bind2(s,sin);
 
 	//do_listen
 	listen(s,20);
 
 
 	//do_accept
-	int sock_2 = do_accept(s,&c_sin);
+	int sock_2 = do_accept2(s,&c_sin);
 	int n=2;
 	//int l = sizeof(path);
 
@@ -101,6 +103,8 @@ void receive_file(char*ip_addr,int port,char* path){
 	fds[0].events = POLLIN;
 	fds[1].fd = STDIN_FILENO;
 	fds[1].events = POLLIN;
+
+
 
 
 	//char* NomFichier=malloc((l-1)*sizeof(char)); //fichier a envoyer
@@ -124,7 +128,7 @@ void receive_file(char*ip_addr,int port,char* path){
 		/*if (fds[0].revents == POLLIN){
 
 			//printf("le nom du fichier est [%s]\n",NomFichier);
-			FILE* fichier =fopen(path , "r");
+			//FILE* fichier =fopen(path , "r");
 			if ( fichier != NULL) // ce test échoue si le fichier n'est pas ouvert
 			{
 				while (fin_buffer == 0)

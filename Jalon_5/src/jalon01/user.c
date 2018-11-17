@@ -357,6 +357,81 @@ char* get_pseudo_from_sock(struct Liste *liste,int client_sock){
 	return pseudo;
 }
 
+//gte the ip_adress of a client
+char* get_user_ip_adress(struct Liste *liste,int client_sock){
+	struct Users* previous;
+	struct Users* cur_user;
+	short* find1 = malloc(sizeof(short));
+	int stop = 0;
+	*find1 = 0;
+	char* ip_addr= malloc(20*sizeof(char));
+
+
+	if (liste == NULL){ // si la liste est NULL on s'arrete tout de suite
+		printf("error: Pas d'utilisateurs dans la liste\n");
+		exit(EXIT_FAILURE);
+	}
+
+	previous = liste->first;// c'est le serveur
+	cur_user = previous->next;
+
+	while(*find1!=1 && stop!=1){
+
+		if(cur_user->user_sock == client_sock){
+			if(cur_user->pseudo != NULL){
+				*find1 = 1;
+				ip_addr = cur_user->ip_addr;
+
+			}
+		}
+		previous = cur_user;
+		cur_user = cur_user->next;
+
+		if(cur_user == NULL)
+			stop=1;
+	}
+
+	return ip_addr;
+}
+
+//gte port of a client
+int get_user_port(struct Liste *liste,int client_sock){
+	struct Users* previous;
+	struct Users* cur_user;
+	short* find1 = malloc(sizeof(short));
+	int stop = 0;
+	*find1 = 0;
+	int port=0;
+
+
+	if (liste == NULL){ // si la liste est NULL on s'arrete tout de suite
+		printf("error: Pas d'utilisateurs dans la liste\n");
+		exit(EXIT_FAILURE);
+	}
+
+	previous = liste->first;// c'est le serveur
+	cur_user = previous->next;
+
+	while(*find1!=1 && stop!=1){
+
+		if(cur_user->user_sock == client_sock){
+			if(cur_user->pseudo != NULL){
+				*find1 = 1;
+				port = cur_user->port;
+
+			}
+		}
+		previous = cur_user;
+		cur_user = cur_user->next;
+
+		if(cur_user == NULL)
+			stop=1;
+	}
+
+	return port;
+}
+
+
 
 int client_sock_from_pseudo(struct Liste *liste,char* pseudo){
 	struct Users* previous;

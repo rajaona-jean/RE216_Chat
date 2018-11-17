@@ -40,6 +40,8 @@ arpa/inet.h
 signal.h
 -
 
+/net/t/jrajaona/Documents/C/Projet/RE216_Chat/Jalon_5/src/jalon01/receive.h
+
 /net/t/jrajaona/Documents/C/Projet/RE216_Chat/Jalon_5/src/jalon01/send.c
 stdio.h
 -
@@ -79,10 +81,8 @@ user.h
 /net/t/jrajaona/Documents/C/Projet/RE216_Chat/Jalon_5/src/jalon01/user.h
 server.h
 /net/t/jrajaona/Documents/C/Projet/RE216_Chat/Jalon_5/src/jalon01/server.h
-send.h
-/net/t/jrajaona/Documents/C/Projet/RE216_Chat/Jalon_5/src/jalon01/send.h
-
-/net/t/jrajaona/Documents/C/Projet/RE216_Chat/Jalon_5/src/jalon01/send.h
+receive.h
+/net/t/jrajaona/Documents/C/Projet/RE216_Chat/Jalon_5/src/jalon01/receive.h
 
 /net/t/jrajaona/Documents/C/Projet/RE216_Chat/Jalon_5/src/jalon01/server.h
 

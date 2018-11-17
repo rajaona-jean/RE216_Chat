@@ -831,13 +831,26 @@ int main(int argc, char** argv){
 
 								//récupérer la reponse du destinataire
 								do_read(client_sock_2,server_sock,&sin,1);
-								printf("buffer file :[%s]\n",buffer);
-								fflush(stdout);
 								do_write(client_sock,server_sock);
 
 								memset(buffer,'\0',512);
-								strcpy(buffer ,"[SERVER] : OK , as you like");
+								strcpy(buffer ,"[SERVER] : OK ");
 								do_write(client_sock_2,server_sock);
+
+								int port ;
+								char* ip_addr= malloc(20*sizeof(char));
+								port = get_user_port(liste,client_sock_2);
+								ip_addr = get_user_ip_adress(liste,client_sock_2);
+								memset(buffer, '\0',512);
+								sprintf(buffer ,"%s %d\n",ip_addr,port);
+								do_write(client_sock_2,server_sock);
+								//do_write(client_sock,server_sock);
+
+								/*printf("port du user2 [%d]\n",port);
+								fflush(stdout);
+								printf("ip_addr du user 2 [%s]\n",ip_addr);
+								fflush(stdout);*/
+
 
 								//									if(strcmp(buffer,"Yes\n")==0){ //Yes
 								//										printf("User 2 wants to receive file");
