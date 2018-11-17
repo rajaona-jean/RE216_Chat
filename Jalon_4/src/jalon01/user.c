@@ -517,8 +517,8 @@ void set_info(struct Liste* liste, char* pseudo, int client_sock, struct sockadd
 			cur_user->time = date();
 			cur_user->canal_name = "global";
 
-//			printf("set info :cur_user->ip: %s | cur_user->port: %d | date: %s | cur_user->co: %d | cur_user->user_sock: %d\n",cur_user->ip_addr, cur_user->port, cur_user->time, cur_user->connect, cur_user->user_sock);
-//			fflush(stdout);
+			printf("set info :cur_user->ip: %s | cur_user->port: %d | date: %s | cur_user->co: %d | cur_user->user_sock: %d\n",cur_user->ip_addr, cur_user->port, cur_user->time, cur_user->connect, cur_user->user_sock);
+			fflush(stdout);
 		}
 		cur_user = cur_user->next;
 

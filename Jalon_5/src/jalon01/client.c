@@ -537,7 +537,7 @@ int main(int argc,char** argv){
 								if (strcmp(buffer,"Yes\n") == 0){
 									printf("Client 1 recoit yes envoi de fichier \n");
 									fflush(stdout);
-									//send
+
 								}
 								else{
 									printf("Sorry , %s refused the file \n",oth_pseudo);
@@ -553,6 +553,7 @@ int main(int argc,char** argv){
 								memset (buffer, '\0', L);
 								//read what the server has to say
 								do_read(client_sock);
+
 								//								if (strcmp(buffer,"Yes") == 0){
 								//									printf("CLIENT RECEIVED SEND_FILE !!!!\n");
 								//									fflush(stdout);
@@ -582,6 +583,20 @@ int main(int argc,char** argv){
 							memset (buffer, '\0', L);
 							//read what the server has to say
 							do_read(client_sock);
+							printf("msg [%s]\n",msg);
+							fflush(stdout);
+
+
+							if (strcmp(msg,"Yes\n") == 0){
+								memset (buffer, '\0', L);
+								do_read(client_sock);
+								printf("msg apres yes [%s]\n",buffer);
+								fflush(stdout);
+
+
+								//path  port et adresse ip
+								//receive_file()
+							}
 
 						}
 

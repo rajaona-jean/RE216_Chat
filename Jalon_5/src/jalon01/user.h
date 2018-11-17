@@ -17,8 +17,12 @@ short verify_pseudo(struct Liste *liste,char* pseudo);
 short verify_connect(struct Liste *liste,char* pseudo);
 short pseudo_known(struct Liste *liste,int client_sock);
 //get pseudo from socket
-char* get_pseudo_from_sock(struct Liste *liste,int client_sock);//Rita
+char* get_pseudo_from_sock(struct Liste *liste,int client_sock);
 //get client_sock from user_sock
+char* get_user_ip_adress(struct Liste *liste,int client_sock);
+
+int get_user_port(struct Liste *liste,int client_sock);
+
 int client_sock_from_pseudo(struct Liste *liste,char* pseudo);
 void edit_pseudo_from_sock(struct Liste *liste,int client_sock,char* new_pseudo);
 void down_client_sock(struct Liste* liste,int client_sock);
