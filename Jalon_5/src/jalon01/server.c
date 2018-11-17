@@ -104,7 +104,7 @@ int do_accept(int server_sock,struct sockaddr_in* c_sin,int q){
 	int c_sin_size = sizeof(struct sockaddr_in);
 	printf("do_accept: %d ", c_sin_size);
 	fflush(stdout);
-	int client_sock = accept(server_sock,(struct sockaddr*)&c_sin,&c_sin_size);
+	int client_sock = accept(server_sock,(struct sockaddr*)c_sin,&c_sin_size);
 	if(client_sock == -1){
 		close(server_sock); error("accept");
 	}
@@ -529,7 +529,7 @@ int main(int argc, char** argv){
 
 					if(i==0){// On accepte la connexion
 						//et on cherche le bon emplacement pour ajouter le client dans le fds
-
+						memset(&c_sin,0,sizeof(c_sin));
 						client_sock = do_accept(server_sock,&c_sin,0);
 						ok = 0;
 						j = 0;
