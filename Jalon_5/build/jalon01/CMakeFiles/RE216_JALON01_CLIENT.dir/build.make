@@ -38,10 +38,10 @@ EQUALS = =
 CMAKE_EDIT_COMMAND = /usr/bin/ccmake
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /net/t/jrajaona/Documents/C/Projet/RE216_Chat/Jalon_5/src
+CMAKE_SOURCE_DIR = /net/t/romari/Desktop/RE216_Chat/Jalon_5/src
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /net/t/jrajaona/Documents/C/Projet/RE216_Chat/Jalon_5/build
+CMAKE_BINARY_DIR = /net/t/romari/Desktop/RE216_Chat/Jalon_5/build
 
 # Include any dependencies generated for this target.
 include jalon01/CMakeFiles/RE216_JALON01_CLIENT.dir/depend.make
@@ -53,18 +53,18 @@ include jalon01/CMakeFiles/RE216_JALON01_CLIENT.dir/progress.make
 include jalon01/CMakeFiles/RE216_JALON01_CLIENT.dir/flags.make
 
 jalon01/CMakeFiles/RE216_JALON01_CLIENT.dir/send.c.o: jalon01/CMakeFiles/RE216_JALON01_CLIENT.dir/flags.make
-jalon01/CMakeFiles/RE216_JALON01_CLIENT.dir/send.c.o: /net/t/jrajaona/Documents/C/Projet/RE216_Chat/Jalon_5/src/jalon01/send.c
-	$(CMAKE_COMMAND) -E cmake_progress_report /net/t/jrajaona/Documents/C/Projet/RE216_Chat/Jalon_5/build/CMakeFiles $(CMAKE_PROGRESS_1)
+jalon01/CMakeFiles/RE216_JALON01_CLIENT.dir/send.c.o: /net/t/romari/Desktop/RE216_Chat/Jalon_5/src/jalon01/send.c
+	$(CMAKE_COMMAND) -E cmake_progress_report /net/t/romari/Desktop/RE216_Chat/Jalon_5/build/CMakeFiles $(CMAKE_PROGRESS_1)
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building C object jalon01/CMakeFiles/RE216_JALON01_CLIENT.dir/send.c.o"
-	cd /net/t/jrajaona/Documents/C/Projet/RE216_Chat/Jalon_5/build/jalon01 && /usr/bin/cc  $(C_DEFINES) $(C_FLAGS) -o CMakeFiles/RE216_JALON01_CLIENT.dir/send.c.o   -c /net/t/jrajaona/Documents/C/Projet/RE216_Chat/Jalon_5/src/jalon01/send.c
+	cd /net/t/romari/Desktop/RE216_Chat/Jalon_5/build/jalon01 && /usr/bin/cc  $(C_DEFINES) $(C_FLAGS) -o CMakeFiles/RE216_JALON01_CLIENT.dir/send.c.o   -c /net/t/romari/Desktop/RE216_Chat/Jalon_5/src/jalon01/send.c
 
 jalon01/CMakeFiles/RE216_JALON01_CLIENT.dir/send.c.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/RE216_JALON01_CLIENT.dir/send.c.i"
-	cd /net/t/jrajaona/Documents/C/Projet/RE216_Chat/Jalon_5/build/jalon01 && /usr/bin/cc  $(C_DEFINES) $(C_FLAGS) -E /net/t/jrajaona/Documents/C/Projet/RE216_Chat/Jalon_5/src/jalon01/send.c > CMakeFiles/RE216_JALON01_CLIENT.dir/send.c.i
+	cd /net/t/romari/Desktop/RE216_Chat/Jalon_5/build/jalon01 && /usr/bin/cc  $(C_DEFINES) $(C_FLAGS) -E /net/t/romari/Desktop/RE216_Chat/Jalon_5/src/jalon01/send.c > CMakeFiles/RE216_JALON01_CLIENT.dir/send.c.i
 
 jalon01/CMakeFiles/RE216_JALON01_CLIENT.dir/send.c.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/RE216_JALON01_CLIENT.dir/send.c.s"
-	cd /net/t/jrajaona/Documents/C/Projet/RE216_Chat/Jalon_5/build/jalon01 && /usr/bin/cc  $(C_DEFINES) $(C_FLAGS) -S /net/t/jrajaona/Documents/C/Projet/RE216_Chat/Jalon_5/src/jalon01/send.c -o CMakeFiles/RE216_JALON01_CLIENT.dir/send.c.s
+	cd /net/t/romari/Desktop/RE216_Chat/Jalon_5/build/jalon01 && /usr/bin/cc  $(C_DEFINES) $(C_FLAGS) -S /net/t/romari/Desktop/RE216_Chat/Jalon_5/src/jalon01/send.c -o CMakeFiles/RE216_JALON01_CLIENT.dir/send.c.s
 
 jalon01/CMakeFiles/RE216_JALON01_CLIENT.dir/send.c.o.requires:
 .PHONY : jalon01/CMakeFiles/RE216_JALON01_CLIENT.dir/send.c.o.requires
@@ -76,18 +76,18 @@ jalon01/CMakeFiles/RE216_JALON01_CLIENT.dir/send.c.o.provides: jalon01/CMakeFile
 jalon01/CMakeFiles/RE216_JALON01_CLIENT.dir/send.c.o.provides.build: jalon01/CMakeFiles/RE216_JALON01_CLIENT.dir/send.c.o
 
 jalon01/CMakeFiles/RE216_JALON01_CLIENT.dir/client.c.o: jalon01/CMakeFiles/RE216_JALON01_CLIENT.dir/flags.make
-jalon01/CMakeFiles/RE216_JALON01_CLIENT.dir/client.c.o: /net/t/jrajaona/Documents/C/Projet/RE216_Chat/Jalon_5/src/jalon01/client.c
-	$(CMAKE_COMMAND) -E cmake_progress_report /net/t/jrajaona/Documents/C/Projet/RE216_Chat/Jalon_5/build/CMakeFiles $(CMAKE_PROGRESS_2)
+jalon01/CMakeFiles/RE216_JALON01_CLIENT.dir/client.c.o: /net/t/romari/Desktop/RE216_Chat/Jalon_5/src/jalon01/client.c
+	$(CMAKE_COMMAND) -E cmake_progress_report /net/t/romari/Desktop/RE216_Chat/Jalon_5/build/CMakeFiles $(CMAKE_PROGRESS_2)
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Building C object jalon01/CMakeFiles/RE216_JALON01_CLIENT.dir/client.c.o"
-	cd /net/t/jrajaona/Documents/C/Projet/RE216_Chat/Jalon_5/build/jalon01 && /usr/bin/cc  $(C_DEFINES) $(C_FLAGS) -o CMakeFiles/RE216_JALON01_CLIENT.dir/client.c.o   -c /net/t/jrajaona/Documents/C/Projet/RE216_Chat/Jalon_5/src/jalon01/client.c
+	cd /net/t/romari/Desktop/RE216_Chat/Jalon_5/build/jalon01 && /usr/bin/cc  $(C_DEFINES) $(C_FLAGS) -o CMakeFiles/RE216_JALON01_CLIENT.dir/client.c.o   -c /net/t/romari/Desktop/RE216_Chat/Jalon_5/src/jalon01/client.c
 
 jalon01/CMakeFiles/RE216_JALON01_CLIENT.dir/client.c.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/RE216_JALON01_CLIENT.dir/client.c.i"
-	cd /net/t/jrajaona/Documents/C/Projet/RE216_Chat/Jalon_5/build/jalon01 && /usr/bin/cc  $(C_DEFINES) $(C_FLAGS) -E /net/t/jrajaona/Documents/C/Projet/RE216_Chat/Jalon_5/src/jalon01/client.c > CMakeFiles/RE216_JALON01_CLIENT.dir/client.c.i
+	cd /net/t/romari/Desktop/RE216_Chat/Jalon_5/build/jalon01 && /usr/bin/cc  $(C_DEFINES) $(C_FLAGS) -E /net/t/romari/Desktop/RE216_Chat/Jalon_5/src/jalon01/client.c > CMakeFiles/RE216_JALON01_CLIENT.dir/client.c.i
 
 jalon01/CMakeFiles/RE216_JALON01_CLIENT.dir/client.c.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/RE216_JALON01_CLIENT.dir/client.c.s"
-	cd /net/t/jrajaona/Documents/C/Projet/RE216_Chat/Jalon_5/build/jalon01 && /usr/bin/cc  $(C_DEFINES) $(C_FLAGS) -S /net/t/jrajaona/Documents/C/Projet/RE216_Chat/Jalon_5/src/jalon01/client.c -o CMakeFiles/RE216_JALON01_CLIENT.dir/client.c.s
+	cd /net/t/romari/Desktop/RE216_Chat/Jalon_5/build/jalon01 && /usr/bin/cc  $(C_DEFINES) $(C_FLAGS) -S /net/t/romari/Desktop/RE216_Chat/Jalon_5/src/jalon01/client.c -o CMakeFiles/RE216_JALON01_CLIENT.dir/client.c.s
 
 jalon01/CMakeFiles/RE216_JALON01_CLIENT.dir/client.c.o.requires:
 .PHONY : jalon01/CMakeFiles/RE216_JALON01_CLIENT.dir/client.c.o.requires
@@ -111,7 +111,7 @@ jalon01/RE216_JALON01_CLIENT: jalon01/CMakeFiles/RE216_JALON01_CLIENT.dir/client
 jalon01/RE216_JALON01_CLIENT: jalon01/CMakeFiles/RE216_JALON01_CLIENT.dir/build.make
 jalon01/RE216_JALON01_CLIENT: jalon01/CMakeFiles/RE216_JALON01_CLIENT.dir/link.txt
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --red --bold "Linking C executable RE216_JALON01_CLIENT"
-	cd /net/t/jrajaona/Documents/C/Projet/RE216_Chat/Jalon_5/build/jalon01 && $(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/RE216_JALON01_CLIENT.dir/link.txt --verbose=$(VERBOSE)
+	cd /net/t/romari/Desktop/RE216_Chat/Jalon_5/build/jalon01 && $(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/RE216_JALON01_CLIENT.dir/link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.
 jalon01/CMakeFiles/RE216_JALON01_CLIENT.dir/build: jalon01/RE216_JALON01_CLIENT
@@ -122,10 +122,10 @@ jalon01/CMakeFiles/RE216_JALON01_CLIENT.dir/requires: jalon01/CMakeFiles/RE216_J
 .PHONY : jalon01/CMakeFiles/RE216_JALON01_CLIENT.dir/requires
 
 jalon01/CMakeFiles/RE216_JALON01_CLIENT.dir/clean:
-	cd /net/t/jrajaona/Documents/C/Projet/RE216_Chat/Jalon_5/build/jalon01 && $(CMAKE_COMMAND) -P CMakeFiles/RE216_JALON01_CLIENT.dir/cmake_clean.cmake
+	cd /net/t/romari/Desktop/RE216_Chat/Jalon_5/build/jalon01 && $(CMAKE_COMMAND) -P CMakeFiles/RE216_JALON01_CLIENT.dir/cmake_clean.cmake
 .PHONY : jalon01/CMakeFiles/RE216_JALON01_CLIENT.dir/clean
 
 jalon01/CMakeFiles/RE216_JALON01_CLIENT.dir/depend:
-	cd /net/t/jrajaona/Documents/C/Projet/RE216_Chat/Jalon_5/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /net/t/jrajaona/Documents/C/Projet/RE216_Chat/Jalon_5/src /net/t/jrajaona/Documents/C/Projet/RE216_Chat/Jalon_5/src/jalon01 /net/t/jrajaona/Documents/C/Projet/RE216_Chat/Jalon_5/build /net/t/jrajaona/Documents/C/Projet/RE216_Chat/Jalon_5/build/jalon01 /net/t/jrajaona/Documents/C/Projet/RE216_Chat/Jalon_5/build/jalon01/CMakeFiles/RE216_JALON01_CLIENT.dir/DependInfo.cmake --color=$(COLOR)
+	cd /net/t/romari/Desktop/RE216_Chat/Jalon_5/build && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /net/t/romari/Desktop/RE216_Chat/Jalon_5/src /net/t/romari/Desktop/RE216_Chat/Jalon_5/src/jalon01 /net/t/romari/Desktop/RE216_Chat/Jalon_5/build /net/t/romari/Desktop/RE216_Chat/Jalon_5/build/jalon01 /net/t/romari/Desktop/RE216_Chat/Jalon_5/build/jalon01/CMakeFiles/RE216_JALON01_CLIENT.dir/DependInfo.cmake --color=$(COLOR)
 .PHONY : jalon01/CMakeFiles/RE216_JALON01_CLIENT.dir/depend
 

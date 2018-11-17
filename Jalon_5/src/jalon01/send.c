@@ -44,7 +44,7 @@ struct sockaddr_in init_sender(int port){
 	struct sockaddr_in sin;
 	memset(&sin,0,sizeof(sin));
 	sin.sin_family = AF_INET;
-	sin.sin_port = htons(port);
+	sin.sin_port = ntohs(port);
 	sin.sin_addr.s_addr = htonl(INADDR_ANY);
 	return sin;
 }
