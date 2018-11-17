@@ -335,6 +335,9 @@ int main(int argc,char** argv){
 	char* path = malloc(512*sizeof(char));
 	char* oth_pseudo= malloc(512*sizeof(char));
 	char* message_send =malloc(512*sizeof(char));
+	char* info = malloc(512*sizeof(char));
+	char* ip_addr =  malloc(512*sizeof(char));
+	char* port =  malloc(3*sizeof(char));
 
 	struct addrinfo hints;
 	struct addrinfo* infoptr;
@@ -378,7 +381,7 @@ int main(int argc,char** argv){
 
 
 		if (first==0){
-			msg=do_read(client_sock);
+			strcpy(msg,do_read(client_sock));
 
 			if (strcmp(msg, "Server cannot accept incoming connections anymore. Try again later.") == 0)
 				break;
@@ -494,7 +497,7 @@ int main(int argc,char** argv){
 									}
 									else if(fdc[0].revents == POLLIN){
 										memset (buffer, '\0', L);
-										msg=do_read_canal(client_sock);
+										strcpy(msg,do_read_canal(client_sock));
 										if(strcmp(msg,tmp)==0){
 											stop = 1;
 										}
@@ -588,12 +591,30 @@ int main(int argc,char** argv){
 
 
 							if (strcmp(msg,"Yes\n") == 0){
-								memset (buffer, '\0', L);
-								do_read(client_sock);
 								printf("msg apres yes [%s]\n",buffer);
 								fflush(stdout);
 
+								strcpy(info,buffer);
+								i = 0;
+								c = 0;
+								int m =0;
+								while(i<strlen(info)){
+									if(info[i]==' '){
+										c++;
+										m=13;
+									}
+									i++;
+									if(c==3){
+										ip_addr[i-13]=info[i];
+										m++;
+									}
+									if(c==4){
+										port[i-m-1]=info[i];
+									}
 
+								}
+								printf("ip_addr [%s], port [%d]\n",ip_addr,atoi(port));
+								fflush(stdout);
 								//path  port et adresse ip
 								//receive_file()
 							}

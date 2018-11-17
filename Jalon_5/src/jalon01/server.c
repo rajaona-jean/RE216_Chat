@@ -455,7 +455,8 @@ int main(int argc, char** argv){
 	short pseudo_of_sock = 0;
 	short ok = 0;
 
-
+	int port ;
+	char* ip_addr= malloc(20*sizeof(char));
 	char* oth_pseudo =malloc(512*sizeof(char)); //pseudo de destination
 	char* message = malloc(512*sizeof(char)) ; //message a envoyer
 	char* tmp = malloc(512*sizeof(char)) ;
@@ -833,16 +834,11 @@ int main(int argc, char** argv){
 								do_read(client_sock_2,server_sock,&sin,1);
 								do_write(client_sock,server_sock);
 
-								memset(buffer,'\0',512);
-								strcpy(buffer ,"[SERVER] : OK ");
-								do_write(client_sock_2,server_sock);
-
-								int port ;
-								char* ip_addr= malloc(20*sizeof(char));
 								port = get_user_port(liste,client_sock_2);
 								ip_addr = get_user_ip_adress(liste,client_sock_2);
-								memset(buffer, '\0',512);
-								sprintf(buffer ,"%s %d\n",ip_addr,port);
+
+								memset(buffer,'\0',512);
+								sprintf(buffer,"[SERVER] : OK %s %d\n",ip_addr,port);
 								do_write(client_sock_2,server_sock);
 								//do_write(client_sock,server_sock);
 
