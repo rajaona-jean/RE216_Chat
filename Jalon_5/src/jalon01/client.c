@@ -597,15 +597,19 @@ int main(int argc,char** argv){
 								strcpy(info,buffer);
 								i = 0;
 								c = 0;
-								int m =0;
+								int m = 13;
 								while(i<strlen(info)){
 									if(info[i]==' '){
 										c++;
-										m=13;
 									}
 									i++;
 									if(c==3){
-										ip_addr[i-13]=info[i];
+										if(info[i]==' '){
+											ip_addr[i-14]='\0';
+										}
+										else{
+											ip_addr[i-14]=info[i];
+										}
 										m++;
 									}
 									if(c==4){
