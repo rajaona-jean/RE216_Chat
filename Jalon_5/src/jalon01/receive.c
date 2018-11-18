@@ -20,12 +20,19 @@
 #include "client.h"
 
 
-char buffer[512];
+char buffer2[512];
 
-
+void setsock(int socket_fd){
+	int option = 1;
+	int error = setsockopt(socket_fd,SOL_SOCKET,(SO_REUSEPORT | SO_REUSEADDR),(char*)&option,sizeof(option));
+	if(error == -1){
+		perror("setsockopt");
+	}
+}
 
 int do_socket2(){
 	int s = socket(AF_INET,SOCK_STREAM,0);
+	setsock(s);
 	if (s == -1){
 		fprintf(stdout , " client_serveur: Erreur création de socket\n");
 		fflush(stdout);
@@ -54,7 +61,7 @@ int do_listen2(int server_sock,int connect_nb){
 	return 0;
 }
 
-struct sockaddr_in init_sender(int port){
+struct sockaddr_in init_sender(char* ip_addr,int port){
 	struct sockaddr_in sin;
 	memset(&sin,0,sizeof(sin));
 	sin.sin_family = AF_INET;
@@ -83,7 +90,7 @@ int do_accept2(int server_sock,struct sockaddr_in* c_sin){
 
 void receive_file(char*ip_addr,int port,char* path){
 
-	struct sockaddr_in sin = init_sender(port);
+	struct sockaddr_in sin = init_sender(ip_addr,port);
 	struct sockaddr_in c_sin;
 	int fin_fich = 0; //quand s'erreter
 	int s = do_socket2();
@@ -95,20 +102,22 @@ void receive_file(char*ip_addr,int port,char* path){
 	do_listen2(s,1);
 
 	//do_accept
-	int sock_2 = do_accept2(s,&c_sin);
+	int client_sock = do_accept2(s,&c_sin);
 
 
-	memset(buffer,'\0',512);
+	memset(buffer2,'\0',512);
 	//char buffer;
-	FILE * fich = fopen(path,"w");
-	if(fich != NULL )
+	FILE * fich = fopen(path,"w+");
+	if(fich == NULL )
 	{
 		while( fin_fich == 0) ///dernier octet du fichier
 		{
 
-			recv(s, buffer, sizeof( buffer) , MSG_MORE);
-			fwrite(buffer , 1 , strlen(buffer)*sizeof(char) , fich);
-			fin_fich = feof(fich);
+			recv(s, buffer2, 512, 0);
+			fputs(buffer2 , fich);
+			printf(" %s",buffer2);
+			fflush(stdout);
+
 
 		}
 		fclose(fich);

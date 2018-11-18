@@ -538,55 +538,64 @@ int main(int argc,char** argv){
 								}
 								printf(" Path: %s\n",path);
 								fflush(stdout);
-								handle_client_message(client_sock,msg);
-								memset (buffer, '\0', L);
-								do_read(client_sock);
-
-								memset(msg,'\0',512);
-								for(i=0;i<4;i++){
-									msg[i]=buffer[i];
-								}
-								if (strcmp(msg,"Yes\n") == 0){
-									printf(" File is sending..... \n");
-									fflush(stdout);
-									memset(info,'\0',512);
-									memset(port,'\0',3);
-									memset(ip_addr,'\0',512);
-									strcpy(info,buffer);
-									i = 0;
-									c = 0;
-									int m = 17;
-									while(i<strlen(info)){
-										if(info[i]==' '){
-											c++;
-										}
-										i++;
-										if(c==3){
-											if(info[i]==' '){
-												ip_addr[i-18]='\0';
-											}
-											else{
-												ip_addr[i-18]=info[i];
-											}
-											m++;
-										}
-										if(c==4){
-											if(info[i]=='\n'){
-												port[i-m-1]='\0';
-											}
-											else{
-												port[i-m-1]=info[i];
-											}
-										}
-
+								FILE* fichier = fopen(path,"r");
+								if(fichier != NULL){
+									fclose(fichier);
+									handle_client_message(client_sock,msg);
+									memset (buffer, '\0', L);
+									do_read(client_sock);
+									memset(msg,'\0',512);
+									for(i=0;i<4;i++){
+										msg[i]=buffer[i];
 									}
-									send_file(ip_addr,atoi(port),path);
+									if (strcmp(msg,"Yes\n") == 0){
+										printf(" File is sending..... \n");
+										fflush(stdout);
+										memset(info,'\0',512);
+										memset(port,'\0',3);
+										memset(ip_addr,'\0',512);
+										strcpy(info,buffer);
+										i = 0;
+										c = 0;
+										int m = 17;
+										while(i<strlen(info)){
+											if(info[i]==' '){
+												c++;
+											}
+											i++;
+											if(c==3){
+												if(info[i]==' '){
+													ip_addr[i-18]='\0';
+												}
+												else{
+													ip_addr[i-18]=info[i];
+												}
+												m++;
+											}
+											if(c==4){
+												if(info[i]=='\n'){
+													port[i-m-1]='\0';
+												}
+												else{
+													port[i-m-1]=info[i];
+												}
+											}
 
+										}
+										send_file(ip_addr,8081,path);
+									}
+									else{
+										fclose(fichier);
+										printf("Sorry , %s refused the file \n",oth_pseudo);
+										fflush(stdout);
+									}
 								}
 								else{
-									printf("Sorry , %s refused the file \n",oth_pseudo);
+									printf(" error file does not exist !!!");
 									fflush(stdout);
 								}
+
+
 
 							}//fin send
 
@@ -597,27 +606,6 @@ int main(int argc,char** argv){
 								memset (buffer, '\0', L);
 								//read what the server has to say
 								do_read(client_sock);
-
-								//								if (strcmp(buffer,"Yes") == 0){
-								//									printf("CLIENT RECEIVED SEND_FILE !!!!\n");
-								//									fflush(stdout);
-								//									int sock_client_2 ;
-								//									memset (buffer, '\0', L);
-								//									do_read(client_sock);
-								//									printf("Buffer apres do_read client 222[%s]\n",buffer);
-								//									fflush(stdout);
-								//
-								//
-								//									//sprintf(buffer," %s ",path);
-								//									send_file(/*path*/);
-								//
-								//								}
-								//
-								//								if (strcmp(msg, "no") == 0){
-								//
-								//									//appel de focntion receive_file
-								//
-								//								}
 							}
 
 						}// Fin slash
@@ -666,7 +654,7 @@ int main(int argc,char** argv){
 								fflush(stdout);
 								fgets(path,L,stdin);
 
-								receive_file(ip_addr,atoi(port),path);
+								receive_file(ip_addr,8081,path);
 							}
 
 						}

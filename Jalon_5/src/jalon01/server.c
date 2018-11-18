@@ -839,45 +839,6 @@ int main(int argc, char** argv){
 								do_write(client_sock_2,server_sock);
 								do_write(client_sock,server_sock);
 
-								/*printf("port du user2 [%d]\n",port);
-								fflush(stdout);
-								printf("ip_addr du user 2 [%s]\n",ip_addr);
-								fflush(stdout);*/
-
-
-								//									if(strcmp(buffer,"Yes\n")==0){ //Yes
-								//										printf("User 2 wants to receive file");
-								//										fflush(stdout);
-								//										//envoi de confirmation au destinateur
-								//										memset(buffer,'\0',512);
-								//										strcpy(buffer,"SEND");
-								//										do_write(client_sock,server_sock);
-								//										memset(buffer,'\0',512);
-								//										//sprintf(buffer," %s  ",path);
-								//										//do_write(client_sock,server_sock);
-								//
-								//
-								//
-								//									}
-								//
-								//									else if(strcmp(buffer,"No\n")==0){ //NO
-								//										memset(buffer,'\0',512);
-								//										strcpy(buffer,"Sorry , User  ");
-								//										sprintf(buffer," %s  ", oth_pseudo);
-								//										strcat(buffer," refused to accept the file");
-								//										do_write(client_sock,server_sock);
-								//										memset(buffer,'\0',512);
-								//									}
-
-
-
-
-								//envoi du fichier
-								//send_file(client_sock,path);
-
-
-
-
 							}
 
 

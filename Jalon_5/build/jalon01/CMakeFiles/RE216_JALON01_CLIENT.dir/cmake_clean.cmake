@@ -1,4 +1,4 @@
-file(REMOVE_RECURSE
+FILE(REMOVE_RECURSE
   "CMakeFiles/RE216_JALON01_CLIENT.dir/receive.c.o"
   "CMakeFiles/RE216_JALON01_CLIENT.dir/send.c.o"
   "CMakeFiles/RE216_JALON01_CLIENT.dir/client.c.o"
@@ -7,6 +7,6 @@ file(REMOVE_RECURSE
 )
 
 # Per-language clean rules from dependency scanning.
-foreach(lang C)
-  include(CMakeFiles/RE216_JALON01_CLIENT.dir/cmake_clean_${lang}.cmake OPTIONAL)
-endforeach()
+FOREACH(lang C)
+  INCLUDE(CMakeFiles/RE216_JALON01_CLIENT.dir/cmake_clean_${lang}.cmake OPTIONAL)
+ENDFOREACH(lang)

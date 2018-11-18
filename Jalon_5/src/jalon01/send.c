@@ -18,7 +18,7 @@
 #include "send.h"
 #include "client.h"
 
-char buffer[512];
+char buffer3[512];
 
 //int do_socket(){
 //	int s = socket(AF_INET,SOCK_STREAM,0);
@@ -59,7 +59,7 @@ void do_connect2(int client_socket,struct sockaddr_in server_sock){
 void send_file(char* ip_addr,int port,char* path){
 
 	char dest[512];
-	int fin_fich;
+	int fin_fich = 0;
 	int client_sock;
 	struct sockaddr_in server;
 
@@ -71,12 +71,20 @@ void send_file(char* ip_addr,int port,char* path){
 	do_connect2(client_sock,server);
 
 	FILE * fich = fopen(path,"r");
+	int taille_fich = 0;
+	fseek(fich, 0,SEEK_END);
+	taille_fich = ftell(fich);
+	rewind(fich);
+
+	printf("taille fichier: %d",taille_fich);
+	fflush(stdout);
+
 	if(fich != NULL )
 	{
 		while( fin_fich == 0) ///dernier octet du fichier
 		{
-			send(client_sock, buffer, sizeof( buffer) , MSG_MORE);
-			fwrite(buffer , 1 , strlen(buffer)*sizeof(char) , fich);
+			fgets(buffer3 , 512 , fich);
+			send(client_sock, buffer3, 512 , 0);
 			fin_fich = feof(fich);
 
 		}

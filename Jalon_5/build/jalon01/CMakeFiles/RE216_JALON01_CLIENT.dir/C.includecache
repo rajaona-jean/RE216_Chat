@@ -1,4 +1,4 @@
-#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+#IncludeRegexLine: ^[ 	]*#[ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
 
 #IncludeRegexScan: ^.*$
 
@@ -6,9 +6,9 @@
 
 #IncludeRegexTransform: 
 
-/home/rajaona/Documents/C/Projet/RE216_Chat/Jalon_5/src/jalon01/client.h
+/net/t/jrajaona/Documents/C/Projet/RE216_Chat/Jalon_5/src/jalon01/client.h
 
-/home/rajaona/Documents/C/Projet/RE216_Chat/Jalon_5/src/jalon01/send.c
+/net/t/jrajaona/Documents/C/Projet/RE216_Chat/Jalon_5/src/jalon01/receive.c
 stdio.h
 -
 stdlib.h
@@ -41,10 +41,10 @@ sys/stat.h
 -
 fcntl.h
 -
-send.h
-/home/rajaona/Documents/C/Projet/RE216_Chat/Jalon_5/src/jalon01/send.h
+receive.h
+/net/t/jrajaona/Documents/C/Projet/RE216_Chat/Jalon_5/src/jalon01/receive.h
 client.h
-/home/rajaona/Documents/C/Projet/RE216_Chat/Jalon_5/src/jalon01/client.h
+/net/t/jrajaona/Documents/C/Projet/RE216_Chat/Jalon_5/src/jalon01/client.h
 
-/home/rajaona/Documents/C/Projet/RE216_Chat/Jalon_5/src/jalon01/send.h
+/net/t/jrajaona/Documents/C/Projet/RE216_Chat/Jalon_5/src/jalon01/receive.h
 
