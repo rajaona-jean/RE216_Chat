@@ -43,18 +43,18 @@ char buffer[512];
 //	return server_sock;
 //}
 //
-//void do_connect(int client_socket,struct sockaddr_in server_sock){
-//	int err = -1;
-//	while(err==-1)
-//		err=connect(client_socket,(struct sockaddr *)&server_sock,sizeof(struct sockaddr_in));
-//	if(err == -1){
-//		error("connect");close(client_socket);exit(EXIT_FAILURE);
-//	}
-//	else{
-//		printf(" Connecting to server... done!\n");
-//		fflush(stdout);
-//	}
-//}
+void do_connect2(int client_socket,struct sockaddr_in server_sock){
+	int err = -1;
+	while(err==-1)
+		err=connect(client_socket,(struct sockaddr *)&server_sock,sizeof(struct sockaddr_in));
+	if(err == -1){
+		error("connect");close(client_socket);exit(EXIT_FAILURE);
+	}
+	else{
+		printf(" Connecting to server... done!\n");
+		fflush(stdout);
+	}
+}
 
 void send_file(char* ip_addr,int port,char* path){
 
@@ -68,7 +68,7 @@ void send_file(char* ip_addr,int port,char* path){
 	//init
 	server = init_server_addr(ip_addr,port,server);
 	//connect to remote socket
-	do_connect(client_sock,server);
+	do_connect2(client_sock,server);
 
 	FILE * fich = fopen(path,"r");
 	if(fich != NULL )

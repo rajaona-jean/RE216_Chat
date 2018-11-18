@@ -542,7 +542,11 @@ int main(int argc,char** argv){
 								memset (buffer, '\0', L);
 								do_read(client_sock);
 
-								if (strcmp(buffer,"Yes\n") == 0){
+								memset(msg,'\0',512);
+								for(i=0;i<4;i++){
+									msg[i]=buffer[i];
+								}
+								if (strcmp(msg,"Yes\n") == 0){
 									printf(" File is sending..... \n");
 									fflush(stdout);
 									memset(info,'\0',512);
@@ -551,7 +555,7 @@ int main(int argc,char** argv){
 									strcpy(info,buffer);
 									i = 0;
 									c = 0;
-									int m = 13;
+									int m = 17;
 									while(i<strlen(info)){
 										if(info[i]==' '){
 											c++;
@@ -559,15 +563,20 @@ int main(int argc,char** argv){
 										i++;
 										if(c==3){
 											if(info[i]==' '){
-												ip_addr[i-14]='\0';
+												ip_addr[i-18]='\0';
 											}
 											else{
-												ip_addr[i-14]=info[i];
+												ip_addr[i-18]=info[i];
 											}
 											m++;
 										}
 										if(c==4){
-											port[i-m-1]=info[i];
+											if(info[i]=='\n'){
+												port[i-m-1]='\0';
+											}
+											else{
+												port[i-m-1]=info[i];
+											}
 										}
 
 									}

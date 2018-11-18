@@ -1,6 +1,6 @@
-#ifndef RECEIVE_H_
-#define RECEIVE_H_
+#ifndef SEND_H_
+#define SEND_H_
 
 void send_file(char* ip_addr,int port,char* path);
 
-#endif /* RECEIVE_H_ */
+#endif /* SEND_H_ */
