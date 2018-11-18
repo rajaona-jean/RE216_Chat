@@ -15,6 +15,10 @@
 #include <arpa/inet.h>
 #include <signal.h>
 
+#include "send.h"
+#include "receive.h"
+
+
 #define MAX_USER 4
 
 const int L = 512;
@@ -537,9 +541,37 @@ int main(int argc,char** argv){
 								handle_client_message(client_sock,msg);
 								memset (buffer, '\0', L);
 								do_read(client_sock);
+
 								if (strcmp(buffer,"Yes\n") == 0){
-									printf("Client 1 recoit yes envoi de fichier \n");
+									printf(" File is sending..... \n");
 									fflush(stdout);
+									memset(info,'\0',512);
+									memset(port,'\0',3);
+									memset(ip_addr,'\0',512);
+									strcpy(info,buffer);
+									i = 0;
+									c = 0;
+									int m = 13;
+									while(i<strlen(info)){
+										if(info[i]==' '){
+											c++;
+										}
+										i++;
+										if(c==3){
+											if(info[i]==' '){
+												ip_addr[i-14]='\0';
+											}
+											else{
+												ip_addr[i-14]=info[i];
+											}
+											m++;
+										}
+										if(c==4){
+											port[i-m-1]=info[i];
+										}
+
+									}
+									send_file(ip_addr,atoi(port),path);
 
 								}
 								else{
@@ -594,6 +626,7 @@ int main(int argc,char** argv){
 								printf("msg apres yes [%s]\n",buffer);
 								fflush(stdout);
 
+								memset(info,'\0',512);
 								strcpy(info,buffer);
 								i = 0;
 								c = 0;
@@ -620,7 +653,11 @@ int main(int argc,char** argv){
 								printf("ip_addr [%s], port [%d]\n",ip_addr,atoi(port));
 								fflush(stdout);
 								//path  port et adresse ip
-								//receive_file()
+								printf(" Where do you want to save the file ?\n  >");
+								fflush(stdout);
+								fgets(path,L,stdin);
+
+								receive_file(ip_addr,atoi(port),path);
 							}
 
 						}

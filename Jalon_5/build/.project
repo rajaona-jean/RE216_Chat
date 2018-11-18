@@ -202,6 +202,11 @@
 			<locationURI>virtual:/virtual</locationURI>
 		</link>
 		<link>
+			<name>[Targets]/[exe] RE216_JALON01_CLIENT/Source Files/receive.c</name>
+			<type>1</type>
+			<location>/home/rajaona/Documents/C/Projet/RE216_Chat/Jalon_5/src/jalon01/receive.c</location>
+		</link>
+		<link>
 			<name>[Targets]/[exe] RE216_JALON01_CLIENT/Source Files/send.c</name>
 			<type>1</type>
 			<location>/home/rajaona/Documents/C/Projet/RE216_Chat/Jalon_5/src/jalon01/send.c</location>

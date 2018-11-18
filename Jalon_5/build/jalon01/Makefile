@@ -194,6 +194,33 @@ client.c.s:
 	cd /home/rajaona/Documents/C/Projet/RE216_Chat/Jalon_5/build && $(MAKE) -f jalon01/CMakeFiles/RE216_JALON01_CLIENT.dir/build.make jalon01/CMakeFiles/RE216_JALON01_CLIENT.dir/client.c.s
 .PHONY : client.c.s
 
+receive.o: receive.c.o
+
+.PHONY : receive.o
+
+# target to build an object file
+receive.c.o:
+	cd /home/rajaona/Documents/C/Projet/RE216_Chat/Jalon_5/build && $(MAKE) -f jalon01/CMakeFiles/RE216_JALON01_CLIENT.dir/build.make jalon01/CMakeFiles/RE216_JALON01_CLIENT.dir/receive.c.o
+.PHONY : receive.c.o
+
+receive.i: receive.c.i
+
+.PHONY : receive.i
+
+# target to preprocess a source file
+receive.c.i:
+	cd /home/rajaona/Documents/C/Projet/RE216_Chat/Jalon_5/build && $(MAKE) -f jalon01/CMakeFiles/RE216_JALON01_CLIENT.dir/build.make jalon01/CMakeFiles/RE216_JALON01_CLIENT.dir/receive.c.i
+.PHONY : receive.c.i
+
+receive.s: receive.c.s
+
+.PHONY : receive.s
+
+# target to generate assembly for a file
+receive.c.s:
+	cd /home/rajaona/Documents/C/Projet/RE216_Chat/Jalon_5/build && $(MAKE) -f jalon01/CMakeFiles/RE216_JALON01_CLIENT.dir/build.make jalon01/CMakeFiles/RE216_JALON01_CLIENT.dir/receive.c.s
+.PHONY : receive.c.s
+
 send.o: send.c.o
 
 .PHONY : send.o
@@ -291,6 +318,9 @@ help:
 	@echo "... client.o"
 	@echo "... client.i"
 	@echo "... client.s"
+	@echo "... receive.o"
+	@echo "... receive.i"
+	@echo "... receive.s"
 	@echo "... send.o"
 	@echo "... send.i"
 	@echo "... send.s"

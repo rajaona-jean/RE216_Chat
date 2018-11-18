@@ -41,9 +41,6 @@ void setsock(int socket_fd){
 	}
 }
 
-
-
-
 void error(const char *msg)
 {
 	perror(msg);
@@ -840,7 +837,7 @@ int main(int argc, char** argv){
 								memset(buffer,'\0',512);
 								sprintf(buffer,"[SERVER] : OK %s %d\n",ip_addr,port);
 								do_write(client_sock_2,server_sock);
-								//do_write(client_sock,server_sock);
+								do_write(client_sock,server_sock);
 
 								/*printf("port du user2 [%d]\n",port);
 								fflush(stdout);

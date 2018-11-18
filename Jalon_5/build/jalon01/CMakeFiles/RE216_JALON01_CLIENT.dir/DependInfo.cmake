@@ -5,6 +5,7 @@ set(CMAKE_DEPENDS_LANGUAGES
 # The set of files for implicit dependencies of each language:
 set(CMAKE_DEPENDS_CHECK_C
   "/home/rajaona/Documents/C/Projet/RE216_Chat/Jalon_5/src/jalon01/client.c" "/home/rajaona/Documents/C/Projet/RE216_Chat/Jalon_5/build/jalon01/CMakeFiles/RE216_JALON01_CLIENT.dir/client.c.o"
+  "/home/rajaona/Documents/C/Projet/RE216_Chat/Jalon_5/src/jalon01/receive.c" "/home/rajaona/Documents/C/Projet/RE216_Chat/Jalon_5/build/jalon01/CMakeFiles/RE216_JALON01_CLIENT.dir/receive.c.o"
   "/home/rajaona/Documents/C/Projet/RE216_Chat/Jalon_5/src/jalon01/send.c" "/home/rajaona/Documents/C/Projet/RE216_Chat/Jalon_5/build/jalon01/CMakeFiles/RE216_JALON01_CLIENT.dir/send.c.o"
   )
 set(CMAKE_C_COMPILER_ID "GNU")

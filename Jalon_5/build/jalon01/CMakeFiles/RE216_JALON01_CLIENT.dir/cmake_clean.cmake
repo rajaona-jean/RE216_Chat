@@ -1,4 +1,5 @@
 file(REMOVE_RECURSE
+  "CMakeFiles/RE216_JALON01_CLIENT.dir/receive.c.o"
   "CMakeFiles/RE216_JALON01_CLIENT.dir/send.c.o"
   "CMakeFiles/RE216_JALON01_CLIENT.dir/client.c.o"
   "RE216_JALON01_CLIENT.pdb"

@@ -4,6 +4,7 @@ project(RE216_JALON01)
 
 #add here source files you need to compile and link to the client app
 SET(SRC_CLIENT
+	receive.c
 	send.c
 	client.c
 	)
@@ -14,8 +15,8 @@ add_executable(RE216_JALON01_CLIENT ${SRC_CLIENT})
 
 #add here source files you need to compile and link to the server app
 SET(SRC_SERVER
-canal.c				
-user.c
+	canal.c				
+	user.c
         server.c)
 
 

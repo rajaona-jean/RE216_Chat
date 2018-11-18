@@ -57,9 +57,22 @@ include jalon01/CMakeFiles/RE216_JALON01_CLIENT.dir/progress.make
 # Include the compile flags for this target's objects.
 include jalon01/CMakeFiles/RE216_JALON01_CLIENT.dir/flags.make
 
+jalon01/CMakeFiles/RE216_JALON01_CLIENT.dir/receive.c.o: jalon01/CMakeFiles/RE216_JALON01_CLIENT.dir/flags.make
+jalon01/CMakeFiles/RE216_JALON01_CLIENT.dir/receive.c.o: /home/rajaona/Documents/C/Projet/RE216_Chat/Jalon_5/src/jalon01/receive.c
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/rajaona/Documents/C/Projet/RE216_Chat/Jalon_5/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building C object jalon01/CMakeFiles/RE216_JALON01_CLIENT.dir/receive.c.o"
+	cd /home/rajaona/Documents/C/Projet/RE216_Chat/Jalon_5/build/jalon01 && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/RE216_JALON01_CLIENT.dir/receive.c.o   -c /home/rajaona/Documents/C/Projet/RE216_Chat/Jalon_5/src/jalon01/receive.c
+
+jalon01/CMakeFiles/RE216_JALON01_CLIENT.dir/receive.c.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/RE216_JALON01_CLIENT.dir/receive.c.i"
+	cd /home/rajaona/Documents/C/Projet/RE216_Chat/Jalon_5/build/jalon01 && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /home/rajaona/Documents/C/Projet/RE216_Chat/Jalon_5/src/jalon01/receive.c > CMakeFiles/RE216_JALON01_CLIENT.dir/receive.c.i
+
+jalon01/CMakeFiles/RE216_JALON01_CLIENT.dir/receive.c.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/RE216_JALON01_CLIENT.dir/receive.c.s"
+	cd /home/rajaona/Documents/C/Projet/RE216_Chat/Jalon_5/build/jalon01 && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /home/rajaona/Documents/C/Projet/RE216_Chat/Jalon_5/src/jalon01/receive.c -o CMakeFiles/RE216_JALON01_CLIENT.dir/receive.c.s
+
 jalon01/CMakeFiles/RE216_JALON01_CLIENT.dir/send.c.o: jalon01/CMakeFiles/RE216_JALON01_CLIENT.dir/flags.make
 jalon01/CMakeFiles/RE216_JALON01_CLIENT.dir/send.c.o: /home/rajaona/Documents/C/Projet/RE216_Chat/Jalon_5/src/jalon01/send.c
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/rajaona/Documents/C/Projet/RE216_Chat/Jalon_5/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building C object jalon01/CMakeFiles/RE216_JALON01_CLIENT.dir/send.c.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/rajaona/Documents/C/Projet/RE216_Chat/Jalon_5/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building C object jalon01/CMakeFiles/RE216_JALON01_CLIENT.dir/send.c.o"
 	cd /home/rajaona/Documents/C/Projet/RE216_Chat/Jalon_5/build/jalon01 && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/RE216_JALON01_CLIENT.dir/send.c.o   -c /home/rajaona/Documents/C/Projet/RE216_Chat/Jalon_5/src/jalon01/send.c
 
 jalon01/CMakeFiles/RE216_JALON01_CLIENT.dir/send.c.i: cmake_force
@@ -72,7 +85,7 @@ jalon01/CMakeFiles/RE216_JALON01_CLIENT.dir/send.c.s: cmake_force
 
 jalon01/CMakeFiles/RE216_JALON01_CLIENT.dir/client.c.o: jalon01/CMakeFiles/RE216_JALON01_CLIENT.dir/flags.make
 jalon01/CMakeFiles/RE216_JALON01_CLIENT.dir/client.c.o: /home/rajaona/Documents/C/Projet/RE216_Chat/Jalon_5/src/jalon01/client.c
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/rajaona/Documents/C/Projet/RE216_Chat/Jalon_5/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building C object jalon01/CMakeFiles/RE216_JALON01_CLIENT.dir/client.c.o"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/home/rajaona/Documents/C/Projet/RE216_Chat/Jalon_5/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building C object jalon01/CMakeFiles/RE216_JALON01_CLIENT.dir/client.c.o"
 	cd /home/rajaona/Documents/C/Projet/RE216_Chat/Jalon_5/build/jalon01 && /usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/RE216_JALON01_CLIENT.dir/client.c.o   -c /home/rajaona/Documents/C/Projet/RE216_Chat/Jalon_5/src/jalon01/client.c
 
 jalon01/CMakeFiles/RE216_JALON01_CLIENT.dir/client.c.i: cmake_force
@@ -85,17 +98,19 @@ jalon01/CMakeFiles/RE216_JALON01_CLIENT.dir/client.c.s: cmake_force
 
 # Object files for target RE216_JALON01_CLIENT
 RE216_JALON01_CLIENT_OBJECTS = \
+"CMakeFiles/RE216_JALON01_CLIENT.dir/receive.c.o" \
 "CMakeFiles/RE216_JALON01_CLIENT.dir/send.c.o" \
 "CMakeFiles/RE216_JALON01_CLIENT.dir/client.c.o"
 
 # External object files for target RE216_JALON01_CLIENT
 RE216_JALON01_CLIENT_EXTERNAL_OBJECTS =
 
+jalon01/RE216_JALON01_CLIENT: jalon01/CMakeFiles/RE216_JALON01_CLIENT.dir/receive.c.o
 jalon01/RE216_JALON01_CLIENT: jalon01/CMakeFiles/RE216_JALON01_CLIENT.dir/send.c.o
 jalon01/RE216_JALON01_CLIENT: jalon01/CMakeFiles/RE216_JALON01_CLIENT.dir/client.c.o
 jalon01/RE216_JALON01_CLIENT: jalon01/CMakeFiles/RE216_JALON01_CLIENT.dir/build.make
 jalon01/RE216_JALON01_CLIENT: jalon01/CMakeFiles/RE216_JALON01_CLIENT.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/rajaona/Documents/C/Projet/RE216_Chat/Jalon_5/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Linking C executable RE216_JALON01_CLIENT"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/home/rajaona/Documents/C/Projet/RE216_Chat/Jalon_5/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Linking C executable RE216_JALON01_CLIENT"
 	cd /home/rajaona/Documents/C/Projet/RE216_Chat/Jalon_5/build/jalon01 && $(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/RE216_JALON01_CLIENT.dir/link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.

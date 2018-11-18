@@ -16,14 +16,15 @@
 #include <fcntl.h>
 
 
-#include "send.h"
+#include "receive.h"
+#include "client.h"
 
-#define MAX_USER 4
 
 char buffer[512];
-int N = MAX_USER+1; //on compte le serveur
 
-int do_socket(){
+
+
+int do_socket2(){
 	int s = socket(AF_INET,SOCK_STREAM,0);
 	if (s == -1){
 		fprintf(stdout , " client_serveur: Erreur création de socket\n");
@@ -31,12 +32,27 @@ int do_socket(){
 		error("socket");close(s); exit(EXIT_FAILURE);
 	}
 	else{
-		fprintf(stdout , " client_serveur: Socket créée %d\n", s);
+		fprintf(stdout , " socket crée\n");
 		fflush(stdout);
 	}
 	return s;
 }
 
+int do_listen2(int server_sock,int connect_nb){
+	int err;
+	err = listen(server_sock,20);
+	if(err == 0){
+		printf(" [serveur]: LISTEN: OK\n");
+		fflush(stdout);
+
+	}
+	else{
+		printf(" listen\n");
+		fflush(stdout);
+		close(server_sock); error("listen");
+	}
+	return 0;
+}
 
 struct sockaddr_in init_sender(int port){
 	struct sockaddr_in sin;
@@ -53,97 +69,56 @@ int do_bind2(int server_sock, struct sockaddr_in sin){
 }
 
 
-int do_accept(int server_sock,struct sockaddr_in* c_sin){
+int do_accept2(int server_sock,struct sockaddr_in* c_sin){
 	//	socklen_t* c_sin_size =(socklen_t*) sizeof(&c_sin);
 	//	printf("%d",c_sin_size);
 	//	fflush(stdout);
 	int c_sin_size = sizeof(c_sin);
 	int client_sock = accept(server_sock,(struct sockaddr*)&c_sin,&c_sin_size);
+	printf(" connection done");
+	fflush(stdout);
 	return client_sock;
 }
 
-char* do_write(int client_sock,int server_sock){
-	char* msg = buffer;
-	int size_txt = strlen(msg);
-	int s = send(client_sock,msg,size_txt,0);
-	if(s!=-1){
-		//		printf(" serveur: taille du message: %d \n server: taille du message envoyé: %d\n",size_txt, s);
-		//		fflush(stdout);
-	}
-	else{
-		close(server_sock);error("send");
-	}
-	return msg;
-}
 
 void receive_file(char*ip_addr,int port,char* path){
 
-	char buffer2[512];
-	struct sockaddr_in sin = init_sender(ip_addr,port);
+	struct sockaddr_in sin = init_sender(port);
 	struct sockaddr_in c_sin;
-	int s = do_socket();
+	int fin_fich = 0; //quand s'erreter
+	int s = do_socket2();
 
 	//do_bind
-	int b = do_bind(s,sin);
+	int b = do_bind2(s,sin);
 
 	//do_listen
-	listen(s,20);
-
+	do_listen2(s,1);
 
 	//do_accept
-	int sock_2 = do_accept(s,&c_sin);
-	int n=2;
-	//int l = sizeof(path);
+	int sock_2 = do_accept2(s,&c_sin);
 
-	struct pollfd fds[512] ;
-	memset(fds,0,sizeof(fds));
-	fds[0].fd = sock_2; //2eme user
-	fds[0].events = POLLIN;
-	fds[1].fd = STDIN_FILENO;
-	fds[1].events = POLLIN;
-
-
-	//char* NomFichier=malloc((l-1)*sizeof(char)); //fichier a envoyer
-
-	int fin_buffer = 0; //quand s'erreter
 
 	memset(buffer,'\0',512);
 	//char buffer;
-	int i = 0 , j = 1;
-	/*for(i,j; path[j] != '\0';i++,j++){
-		NomFichier[i] = path[j];
-		printf("nom fichier %c\n",NomFichier[i]);
+	FILE * fich = fopen(path,"w");
+	if(fich != NULL )
+	{
+		while( fin_fich == 0) ///dernier octet du fichier
+		{
+
+			recv(s, buffer, sizeof( buffer) , MSG_MORE);
+			fwrite(buffer , 1 , strlen(buffer)*sizeof(char) , fich);
+			fin_fich = feof(fich);
+
+		}
+		fclose(fich);
+
+	}else{
+		printf(" No file to send\n");
 		fflush(stdout);
-	}*/
-	memset(buffer2,'\0',512);
-	strcpy(buffer2,"I want to send you a file do you accept?");
-	send(sock_2,buffer2,512,0);
-	//send(client_sock,path,size_txt,0);
-	for(;;){
-		int p=poll(fds,n,-1);
-		/*if (fds[0].revents == POLLIN){
-
-			//printf("le nom du fichier est [%s]\n",NomFichier);
-			FILE* fichier =fopen(path , "r");
-			if ( fichier != NULL) // ce test échoue si le fichier n'est pas ouvert
-			{
-				while (fin_buffer == 0)
-				{
-					if( fread( buffer , sizeof(char) , 512 , fichier ) <= 0) //fin du buffer
-					fin_buffer = 1;
-
-					send(fds[0].fd, buffer, sizeof(buffer), 0);
-					printf("%s\n" , buffer);
-					memset(buffer,'\0',512);
-				}
-
-				printf("envoi %s fini \n", path);
-				fclose(fichier);
-			}
-			//else
-			printf("erreur ouverture fichier\n");
-
-		}*/
 	}
+
+
+
 
 }
