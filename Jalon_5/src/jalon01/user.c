@@ -438,7 +438,9 @@ int client_sock_from_pseudo(struct Liste *liste,char* pseudo){
 	struct Users* cur_user;
 	int find = 0;
 	int stop = 0;
-	int sock_dest = 0;
+	int* sock_dest = malloc(sizeof(int));
+
+	*sock_dest = -1;
 
 	if (liste == NULL){ // si la liste est NULL on s'arrete tout de suite
 		printf("error: Pas d'utilisateurs dans la liste\n");
@@ -453,20 +455,19 @@ int client_sock_from_pseudo(struct Liste *liste,char* pseudo){
 		if(!strcmp(cur_user->pseudo,pseudo)){
 			if(cur_user->user_sock != 0){
 				find = 1;
-				sock_dest = cur_user->user_sock;
+				*sock_dest = cur_user->user_sock;
 				printf("sock trouvée\n");
 				fflush(stdout);
 			}
 		}
 
-		previous = cur_user;
 		cur_user = cur_user->next;
 
 		if(cur_user == NULL)
 			stop=1;
 	}
 
-	return sock_dest;
+	return *sock_dest;
 }
 
 void down_connect(struct Liste *liste,int client_sock){
@@ -754,7 +755,7 @@ void fill_users(struct Liste* liste,int nb_user,char** user_list){
 
 	int i;
 	for(i=0;i<nb_user;i++){
-		add_user(liste,user_list[i],3);
+		add_user(liste,user_list[i],-1);
 	}
 
 }

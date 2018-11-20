@@ -18,7 +18,7 @@
 #include "send.h"
 #include "client.h"
 
-char buffer3[512];
+
 
 //int do_socket(){
 //	int s = socket(AF_INET,SOCK_STREAM,0);
@@ -57,11 +57,13 @@ void do_connect2(int client_socket,struct sockaddr_in server_sock){
 }
 
 void send_file(char* ip_addr,int port,char* path){
-
-	char dest[512];
+	char buffer3[512];
 	int fin_fich = 0;
 	int client_sock;
 	struct sockaddr_in server;
+	int* taille_fich = malloc(sizeof(int));
+	*taille_fich = 0;
+	int bit_sent = -1;
 
 	//get the socket
 	client_sock = do_socket();
@@ -71,27 +73,35 @@ void send_file(char* ip_addr,int port,char* path){
 	do_connect2(client_sock,server);
 
 	FILE * fich = fopen(path,"r");
-	int taille_fich = 0;
+
 	fseek(fich, 0,SEEK_END);
-	taille_fich = ftell(fich);
+	*taille_fich = ftell(fich);
 	rewind(fich);
 
-	printf("taille fichier: %d",taille_fich);
+	printf(" taille fichier: %d\n",*taille_fich);
 	fflush(stdout);
+
+	while(bit_sent == -1)
+		bit_sent = send(client_sock, taille_fich, sizeof(int) , 0);
 
 	if(fich != NULL )
 	{
 		while( fin_fich == 0) ///dernier octet du fichier
 		{
 			fgets(buffer3 , 512 , fich);
+
 			send(client_sock, buffer3, 512 , 0);
 			fin_fich = feof(fich);
 
 		}
 		fclose(fich);
+		printf(" End\n");
+		fflush(stdout);
 
 	}else{
 		printf(" No file to send\n");
 		fflush(stdout);
 	}
+	free(taille_fich);
+	close(client_sock);
 }

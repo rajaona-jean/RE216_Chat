@@ -472,8 +472,6 @@ int main(int argc, char** argv){
 		user_liste[i] = malloc(28*sizeof(char));
 	}
 
-
-
 	liste=init(3);
 	init_users(liste,user_nb,user_liste);
 	fill_users(liste,user_nb,user_liste);
@@ -818,26 +816,34 @@ int main(int argc, char** argv){
 
 								}
 								int client_sock_2 = client_sock_from_pseudo(liste,oth_pseudo);  //numero socket du client 2
-								printf("pseudo du destinataire [%s]\n",oth_pseudo);
 
-								fflush(stdout);
-								//demande confrimation
-								memset(buffer,'\0',512);
-								strcpy(buffer ,"[SERVER] : DO you accept [Yes/No] ?");
-								do_write(client_sock_2,server_sock);
-								memset(buffer,'\0',512);
+								if(client_sock_2 != -1){
+									printf("pseudo du destinataire [%s]\n",oth_pseudo);
 
-								//récupérer la reponse du destinataire
-								do_read(client_sock_2,server_sock,&sin,1);
-								do_write(client_sock,server_sock);
+									fflush(stdout);
+									//demande confrimation
+									memset(buffer,'\0',512);
+									strcpy(buffer ,"[SERVER] : DO you accept [Yes/No] ?");
+									do_write(client_sock_2,server_sock);
+									memset(buffer,'\0',512);
 
-								port = get_user_port(liste,client_sock_2);
-								ip_addr = get_user_ip_adress(liste,client_sock_2);
+									//récupérer la reponse du destinataire
+									do_read(client_sock_2,server_sock,&sin,1);
+									do_write(client_sock,server_sock);
 
-								memset(buffer,'\0',512);
-								sprintf(buffer,"[SERVER] : OK %s %d\n",ip_addr,port);
-								do_write(client_sock_2,server_sock);
-								do_write(client_sock,server_sock);
+									port = get_user_port(liste,client_sock_2);
+									ip_addr = get_user_ip_adress(liste,client_sock_2);
+
+									memset(buffer,'\0',512);
+									sprintf(buffer,"[SERVER] : OK %s %d\n",ip_addr,port);
+									do_write(client_sock_2,server_sock);
+									do_write(client_sock,server_sock);
+								}
+								else{
+									memset(buffer,'\0',512);
+									sprintf(buffer," %s does not exist\n",oth_pseudo);
+									do_write(client_sock,server_sock);
+								}
 
 							}
 
@@ -879,7 +885,17 @@ int main(int argc, char** argv){
 		} //end of for
 	}//end of while
 
-
+//	free(ip_addr);
+//	free(oth_pseudo);
+//	free(message);
+//	free(tmp);
+//	free(canal_name);
+//	free(pseudo_destinateur);
+//	free(msg);
+//	for(i=0; i<user_nb;i++){
+//		free(user_liste[i]);
+//	}
+//	free(user_liste);
 
 	return 0;
 }

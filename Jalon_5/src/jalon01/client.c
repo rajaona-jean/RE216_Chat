@@ -532,12 +532,15 @@ int main(int argc,char** argv){
 									}
 
 									else if(stop ==1){
+
 										path[k-c-1] = message_send[k]; //chemin du fichier
 									}
 
 								}
 								printf(" Path: %s\n",path);
 								fflush(stdout);
+								if(strcmp(path,""))
+									path="./";
 								FILE* fichier = fopen(path,"r");
 								if(fichier != NULL){
 									fclose(fichier);
@@ -585,13 +588,12 @@ int main(int argc,char** argv){
 										send_file(ip_addr,8081,path);
 									}
 									else{
-										fclose(fichier);
-										printf("Sorry , %s refused the file \n",oth_pseudo);
+										printf(" File can not be sent, please try again\n",oth_pseudo);
 										fflush(stdout);
 									}
 								}
 								else{
-									printf(" error file does not exist !!!");
+									printf(" error file does not exist !!!\n");
 									fflush(stdout);
 								}
 
@@ -653,6 +655,7 @@ int main(int argc,char** argv){
 								printf(" Where do you want to save the file ?\n  >");
 								fflush(stdout);
 								fgets(path,L,stdin);
+								path[strlen(path)-1]='\0';
 
 								receive_file(ip_addr,8081,path);
 							}

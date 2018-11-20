@@ -20,7 +20,7 @@
 #include "client.h"
 
 
-char buffer2[512];
+
 
 void setsock(int socket_fd){
 	int option = 1;
@@ -82,18 +82,22 @@ int do_accept2(int server_sock,struct sockaddr_in* c_sin){
 	//	fflush(stdout);
 	int c_sin_size = sizeof(c_sin);
 	int client_sock = accept(server_sock,(struct sockaddr*)&c_sin,&c_sin_size);
-	printf(" connection done");
+	printf(" connection done\n");
 	fflush(stdout);
 	return client_sock;
 }
 
 
 void receive_file(char*ip_addr,int port,char* path){
-
+	char buffer2[512];
 	struct sockaddr_in sin = init_sender(ip_addr,port);
 	struct sockaddr_in c_sin;
 	int fin_fich = 0; //quand s'erreter
 	int s = do_socket2();
+	int* taille_fichier = malloc(sizeof(int));
+	int bit_receive = 0;
+
+	*taille_fichier = 0;
 
 	//do_bind
 	int b = do_bind2(s,sin);
@@ -104,17 +108,18 @@ void receive_file(char*ip_addr,int port,char* path){
 	//do_accept
 	int client_sock = do_accept2(s,&c_sin);
 
+	recv(client_sock, taille_fichier, sizeof(int), 0);
 
 	memset(buffer2,'\0',512);
-	//char buffer;
-	FILE * fich = fopen(path,"w+");
-	if(fich == NULL )
+	FILE * fich = fopen(path,"a");
+	if(fich != NULL )
 	{
-		while( fin_fich == 0) ///dernier octet du fichier
+		while( bit_receive < *taille_fichier) ///dernier octet du fichier
 		{
 
-			recv(s, buffer2, 512, 0);
+			recv(client_sock, buffer2, 512, 0);
 			fputs(buffer2 , fich);
+			bit_receive= ftell(fich);
 			printf(" %s",buffer2);
 			fflush(stdout);
 
@@ -123,11 +128,12 @@ void receive_file(char*ip_addr,int port,char* path){
 		fclose(fich);
 
 	}else{
-		printf(" No file to send\n");
+		printf(" Can not save the file, please do it again\n");
 		fflush(stdout);
 	}
 
-
-
+	close(client_sock);
+	close(s);
+	free(taille_fichier);
 
 }
