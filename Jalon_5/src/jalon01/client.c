@@ -43,20 +43,6 @@ void error(const char *msg)
 	exit(1);
 }
 
-/*void get_addr_info(struct addrinfo hints,struct addrinfo *infoptr){
-int a = getaddrinfo("127.0.0.1","80",&hints,&infoptr);
-if(a == 0){
-printf(" client: get addr info: OK\n");
-fflush(stdout);
-}
-else{
-gai_strerror(errno);
-printf(" client: get addr info: ERREUR\n");
-fflush(stdout);
-}
-}*/
-
-
 int do_socket(){
 	int s = socket(AF_INET,SOCK_STREAM,0);
 	if (s == -1){
@@ -516,6 +502,7 @@ int main(int argc,char** argv){
 								strcat(msg,"\0");
 								memset(message_send,'\0',512);
 								memset(path,'\0',512);
+								memset(oth_pseudo,'\0',512);
 
 								message_send = get_nick_client(msg,*sl_check);
 								int length = strlen(message_send);
@@ -537,15 +524,12 @@ int main(int argc,char** argv){
 									}
 
 								}
-								printf(" Path: %s\n",path);
-								fflush(stdout);
 								if(strcmp(path,"")==0)
 									path="./";
 								FILE* fichier = NULL;
 								if(path[0]=='.'){
 									if(path[1]=='/')
 										fichier=fopen(path,"r");
-
 								}
 								if(fichier != NULL){
 									fclose(fichier);
@@ -622,14 +606,7 @@ int main(int argc,char** argv){
 							memset (buffer, '\0', L);
 							//read what the server has to say
 							do_read(client_sock);
-							printf("msg [%s]\n",msg);
-							fflush(stdout);
-
-
 							if (strcmp(msg,"Yes\n") == 0){
-								printf("msg apres yes [%s]\n",buffer);
-								fflush(stdout);
-
 								memset(info,'\0',512);
 								strcpy(info,buffer);
 								i = 0;
@@ -654,8 +631,6 @@ int main(int argc,char** argv){
 									}
 
 								}
-								printf("ip_addr [%s], port [%d]\n",ip_addr,atoi(port));
-								fflush(stdout);
 								//path  port et adresse ip
 								printf(" Where do you want to save the file ?\n  >");
 								fflush(stdout);

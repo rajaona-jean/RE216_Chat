@@ -456,8 +456,6 @@ int client_sock_from_pseudo(struct Liste *liste,char* pseudo){
 			if(cur_user->user_sock != 0){
 				find = 1;
 				*sock_dest = cur_user->user_sock;
-				printf("sock trouvée\n");
-				fflush(stdout);
 			}
 		}
 
@@ -489,9 +487,7 @@ void down_connect(struct Liste *liste,int client_sock){
 
 		if(cur_user->user_sock==client_sock && cur_user->connect ==1){
 			find1 = 1;
-			cur_user->connect = 0;
-			fprintf(stdout,"verify :cur_user->co: %d\n",cur_user->connect);
-			fflush(stdout);
+			cur_user->connect = 0;;
 		}
 		previous = cur_user;
 		cur_user = cur_user->next;
@@ -592,9 +588,6 @@ void set_info(struct Liste* liste, char* pseudo, int client_sock, struct sockadd
 			cur_user->port = ntohs(c_sin.sin_port);
 			cur_user->time = date();
 			cur_user->canal_name = "global";
-
-//			printf("set info :cur_user->ip: %s | cur_user->port: %d | date: %s | cur_user->co: %d | cur_user->user_sock: %d\n",cur_user->ip_addr, cur_user->port, cur_user->time, cur_user->connect, cur_user->user_sock);
-//			fflush(stdout);
 		}
 		cur_user = cur_user->next;
 
@@ -667,7 +660,7 @@ short see_connected_user(struct Liste *liste, int client_sock,int server_sock, i
 	struct Users* cur_user;
 	short* find = malloc(sizeof(short));
 	*find = 0;
-	cur_user = liste->first;
+	cur_user = liste->first->next;
 	while (cur_user->next != NULL){
 		if(cur_user->connect == 1){
 			if(cur_user->user_sock==client_sock){
@@ -711,7 +704,7 @@ void init_users(struct Liste* liste,int nb_mot,char** user_liste){
 	int ok = 1;
 	fich = fopen("./../src/jalon01/users.txt","r");
 	if(fich==NULL){
-		printf("oups");
+		printf("Erreur remplissage de la liste des utilisateurs");
 	}
 
 	int i=0; //ligne
@@ -780,8 +773,6 @@ int sock_from_pseudo(struct Liste* liste,char* pseudo){
 			find1 = 1;
 
 			client_sock=cur_user->user_sock;
-			//			printf("set info :cur_user->ip: %s | cur_user->port: %d | date: %s | cur_user->co: %d | cur_user->user_sock: %d\n",cur_user->ip_addr, cur_user->port, cur_user->time, cur_user->connect, cur_user->user_sock);
-			//			fflush(stdout);
 		}
 		previous = cur_user;
 		cur_user = cur_user->next;
@@ -791,29 +782,3 @@ int sock_from_pseudo(struct Liste* liste,char* pseudo){
 	}
 	return client_sock;
 }
-
-//int main(int argc, char** argv){
-//
-//	struct Liste* liste;
-//	int user_nb = nb_of_user();
-//	char user_liste[user_nb][28];
-//
-//	liste=init(3);
-//	init_users(liste,user_nb,user_liste);
-//	fill_users(liste,user_nb,user_liste);
-//
-//
-//
-//	see_user(liste);
-//	edit_pseudo(liste,"Theo","Martin");
-//
-//	verify_pseudo(liste,"Kevin");
-//
-//
-//	char* a=date();
-//
-//	printf(" %s\n",a);
-//
-//	return 0;
-//
-//}

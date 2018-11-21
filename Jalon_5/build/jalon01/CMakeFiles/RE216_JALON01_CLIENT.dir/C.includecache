@@ -1,4 +1,4 @@
-#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+#IncludeRegexLine: ^[ 	]*#[ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
 
 #IncludeRegexScan: ^.*$
 
@@ -6,18 +6,16 @@
 
 #IncludeRegexTransform: 
 
-/home/rajaona/Documents/C/Projet/RE216_Chat/Jalon_5/src/jalon01/client.c
-stdlib.h
--
-unistd.h
--
+/net/t/romari/Desktop/RE216_Chat/Jalon_5/src/jalon01/client.h
+
+/net/t/romari/Desktop/RE216_Chat/Jalon_5/src/jalon01/receive.c
 stdio.h
+-
+stdlib.h
 -
 string.h
 -
-time.h
--
-pthread.h
+unistd.h
 -
 poll.h
 -
@@ -25,24 +23,28 @@ sys/types.h
 -
 sys/socket.h
 -
-sys/time.h
--
-netdb.h
+netinet/in.h
 -
 errno.h
 -
-netinet/in.h
--
-arpa/inet.h
+sys/time.h
 -
 signal.h
 -
-send.h
-/home/rajaona/Documents/C/Projet/RE216_Chat/Jalon_5/src/jalon01/send.h
+arpa/inet.h
+-
+pthread.h
+-
+sys/types.h
+-
+sys/stat.h
+-
+fcntl.h
+-
 receive.h
-/home/rajaona/Documents/C/Projet/RE216_Chat/Jalon_5/src/jalon01/receive.h
+/net/t/romari/Desktop/RE216_Chat/Jalon_5/src/jalon01/receive.h
+client.h
+/net/t/romari/Desktop/RE216_Chat/Jalon_5/src/jalon01/client.h
 
-/home/rajaona/Documents/C/Projet/RE216_Chat/Jalon_5/src/jalon01/receive.h
-
-/home/rajaona/Documents/C/Projet/RE216_Chat/Jalon_5/src/jalon01/send.h
+/net/t/romari/Desktop/RE216_Chat/Jalon_5/src/jalon01/receive.h
 

@@ -89,7 +89,7 @@ int do_accept2(int server_sock,struct sockaddr_in* c_sin){
 
 
 void receive_file(char*ip_addr,int port,char* path){
-	char buffer2[512];
+	char*  buffer2 =  malloc(512*sizeof(char));
 	struct sockaddr_in sin = init_sender(ip_addr,port);
 	struct sockaddr_in c_sin;
 	int fin_fich = 0; //quand s'erreter
@@ -105,18 +105,18 @@ void receive_file(char*ip_addr,int port,char* path){
 	//do_listen
 	do_listen2(s,1);
 
+	memset(&c_sin,0,sizeof(c_sin));
 	//do_accept
 	int client_sock = do_accept2(s,&c_sin);
 
 	recv(client_sock, taille_fichier, sizeof(int), 0);
-
 	memset(buffer2,'\0',512);
+
 	FILE * fich = fopen(path,"a");
 	if(fich != NULL )
 	{
 		while( bit_receive < *taille_fichier) ///dernier octet du fichier
 		{
-
 			recv(client_sock, buffer2, 512, 0);
 			fputs(buffer2 , fich);
 			bit_receive= ftell(fich);
@@ -133,6 +133,7 @@ void receive_file(char*ip_addr,int port,char* path){
 	}
 
 	close(client_sock);
+	free(buffer2);
 	close(s);
 	free(taille_fichier);
 
