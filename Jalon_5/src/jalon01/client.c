@@ -539,9 +539,14 @@ int main(int argc,char** argv){
 								}
 								printf(" Path: %s\n",path);
 								fflush(stdout);
-								if(strcmp(path,""))
+								if(strcmp(path,"")==0)
 									path="./";
-								FILE* fichier = fopen(path,"r");
+								FILE* fichier = NULL;
+								if(path[0]=='.'){
+									if(path[1]=='/')
+										fichier=fopen(path,"r");
+
+								}
 								if(fichier != NULL){
 									fclose(fichier);
 									handle_client_message(client_sock,msg);
@@ -588,7 +593,7 @@ int main(int argc,char** argv){
 										send_file(ip_addr,8081,path);
 									}
 									else{
-										printf(" File can not be sent, please try again\n",oth_pseudo);
+										printf(" File can not be sent, please try again\n");
 										fflush(stdout);
 									}
 								}

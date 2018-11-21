@@ -1,4 +1,4 @@
-#IncludeRegexLine: ^[ 	]*#[ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
 
 #IncludeRegexScan: ^.*$
 
@@ -6,9 +6,29 @@
 
 #IncludeRegexTransform: 
 
-/net/t/jrajaona/Documents/C/Projet/RE216_Chat/Jalon_5/src/jalon01/canal.h
+/home/rajaona/Documents/C/Projet/RE216_Chat/Jalon_5/src/jalon01/canal.c
+stdio.h
+-
+stdlib.h
+-
+string.h
+-
+time.h
+-
+netinet/in.h
+-
+arpa/inet.h
+-
+canal.h
+/home/rajaona/Documents/C/Projet/RE216_Chat/Jalon_5/src/jalon01/canal.h
+user.h
+/home/rajaona/Documents/C/Projet/RE216_Chat/Jalon_5/src/jalon01/user.h
+server.h
+/home/rajaona/Documents/C/Projet/RE216_Chat/Jalon_5/src/jalon01/server.h
 
-/net/t/jrajaona/Documents/C/Projet/RE216_Chat/Jalon_5/src/jalon01/server.c
+/home/rajaona/Documents/C/Projet/RE216_Chat/Jalon_5/src/jalon01/canal.h
+
+/home/rajaona/Documents/C/Projet/RE216_Chat/Jalon_5/src/jalon01/server.c
 stdio.h
 -
 stdlib.h
@@ -36,13 +56,35 @@ arpa/inet.h
 pthread.h
 -
 canal.h
-/net/t/jrajaona/Documents/C/Projet/RE216_Chat/Jalon_5/src/jalon01/canal.h
+/home/rajaona/Documents/C/Projet/RE216_Chat/Jalon_5/src/jalon01/canal.h
 user.h
-/net/t/jrajaona/Documents/C/Projet/RE216_Chat/Jalon_5/src/jalon01/user.h
+/home/rajaona/Documents/C/Projet/RE216_Chat/Jalon_5/src/jalon01/user.h
 server.h
-/net/t/jrajaona/Documents/C/Projet/RE216_Chat/Jalon_5/src/jalon01/server.h
+/home/rajaona/Documents/C/Projet/RE216_Chat/Jalon_5/src/jalon01/server.h
 
-/net/t/jrajaona/Documents/C/Projet/RE216_Chat/Jalon_5/src/jalon01/server.h
+/home/rajaona/Documents/C/Projet/RE216_Chat/Jalon_5/src/jalon01/server.h
 
-/net/t/jrajaona/Documents/C/Projet/RE216_Chat/Jalon_5/src/jalon01/user.h
+/home/rajaona/Documents/C/Projet/RE216_Chat/Jalon_5/src/jalon01/user.c
+stdio.h
+-
+stdlib.h
+-
+string.h
+-
+time.h
+-
+netinet/in.h
+-
+arpa/inet.h
+-
+pthread.h
+-
+canal.h
+/home/rajaona/Documents/C/Projet/RE216_Chat/Jalon_5/src/jalon01/canal.h
+user.h
+/home/rajaona/Documents/C/Projet/RE216_Chat/Jalon_5/src/jalon01/user.h
+server.h
+/home/rajaona/Documents/C/Projet/RE216_Chat/Jalon_5/src/jalon01/server.h
+
+/home/rajaona/Documents/C/Projet/RE216_Chat/Jalon_5/src/jalon01/user.h
 
