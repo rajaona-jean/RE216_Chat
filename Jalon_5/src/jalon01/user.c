@@ -499,7 +499,7 @@ void down_connect(struct Liste *liste,int client_sock){
 }
 
 //check if a client_sock is affected to a pseudo
-short pseudo_known(struct Liste *liste,int client_sock){
+short* pseudo_known(struct Liste *liste,int client_sock){
 	struct Users* previous;
 	struct Users* cur_user;
 	short* find1 = malloc(sizeof(short));
@@ -530,7 +530,7 @@ short pseudo_known(struct Liste *liste,int client_sock){
 			stop=1;
 	}
 
-	return *find1;
+	return find1;
 }
 
 void down_client_sock(struct Liste* liste,int client_sock){
@@ -656,7 +656,7 @@ void see_user(struct Liste *liste){
 
 
 //list of connected users
-short see_connected_user(struct Liste *liste, int client_sock,int server_sock, int see_user){
+short* see_connected_user(struct Liste *liste, int client_sock,int server_sock, int see_user){
 	struct Users* cur_user;
 	short* find = malloc(sizeof(short));
 	*find = 0;
@@ -676,7 +676,7 @@ short see_connected_user(struct Liste *liste, int client_sock,int server_sock, i
 	}
 
 
-	return *find;
+	return find;
 }
 
 int nb_of_user(){

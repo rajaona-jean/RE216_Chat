@@ -120,8 +120,6 @@ void receive_file(char*ip_addr,int port,char* path){
 			recv(client_sock, buffer2, 512, 0);
 			fputs(buffer2 , fich);
 			bit_receive= ftell(fich);
-			printf(" %s",buffer2);
-			fflush(stdout);
 
 
 		}

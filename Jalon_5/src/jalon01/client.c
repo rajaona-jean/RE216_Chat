@@ -439,6 +439,10 @@ int main(int argc,char** argv){
 						*sl_check = if_slash_client(msg);
 						if(*sl_check!=0){
 
+							if(*sl_check == 1){//nick
+								pseudo = get_nick_client(msg,*sl_check);
+							}
+
 							if(*sl_check == 2){//Who
 								strcat(msg,"\0");
 								handle_client_message(client_sock,msg);
@@ -478,7 +482,7 @@ int main(int argc,char** argv){
 										handle_client_message(client_sock,msg);
 										*sl_check=if_slash_client(msg);
 
-										if(*sl_check==3){ //quit
+										if(*sl_check==3){ //quit canal_name
 											tmp = get_nick_client(msg,*sl_check);
 											if(strcmp(tmp,canal_name)==0){
 												stop = 1;

@@ -15,7 +15,7 @@ void init_users(struct Liste* liste,int nb_mot,char** user_liste);
 void fill_users(struct Liste* liste,int nb_user,char** user_list);
 short verify_pseudo(struct Liste *liste,char* pseudo);
 short verify_connect(struct Liste *liste,char* pseudo);
-short pseudo_known(struct Liste *liste,int client_sock);
+short* pseudo_known(struct Liste *liste,int client_sock);
 //get pseudo from socket
 char* get_pseudo_from_sock(struct Liste *liste,int client_sock);
 //get client_sock from user_sock
@@ -26,7 +26,7 @@ int get_user_port(struct Liste *liste,int client_sock);
 int client_sock_from_pseudo(struct Liste *liste,char* pseudo);
 void edit_pseudo_from_sock(struct Liste *liste,int client_sock,char* new_pseudo);
 void down_client_sock(struct Liste* liste,int client_sock);
-short see_connected_user(struct Liste *liste, int client_sock,int server_sock, int see_user);
+short* see_connected_user(struct Liste *liste, int client_sock,int server_sock, int see_user);
 void down_connect(struct Liste *liste,int client_sock);
 void set_info(struct Liste* liste, char* pseudo, int client_sock, struct sockaddr_in c_sin);
 void get_info(struct Liste* liste, char* pseudo, int client_sock,int server_sock);
